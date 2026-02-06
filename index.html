@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Hoja de Vida – Persona Jurídica</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<h1>Hoja de Vida – Persona Jurídica</h1>
+
+<form id="form">
+
+  <!-- I. IDENTIFICACIÓN -->
+  <fieldset>
+    <legend>I. Identificación</legend>
+    <input name="razonSocial" placeholder="Razón social">
+    <input name="sigla" placeholder="Sigla">
+    <input name="nit" placeholder="NIT">
+  </fieldset>
+
+  <!-- II. SERVICIOS -->
+  <fieldset>
+    <legend>II. Servicios</legend>
+    <input name="servicio1" placeholder="Servicio 1">
+    <input name="servicio2" placeholder="Servicio 2">
+    <input name="servicio3" placeholder="Servicio 3">
+    <input name="servicio4" placeholder="Servicio 4">
+    <input name="servicio5" placeholder="Servicio 5">
+    <input name="servicio6" placeholder="Servicio 6">
+  </fieldset>
+
+  <!-- IV. REPRESENTANTE -->
+  <fieldset>
+    <legend>IV. Representante Legal</legend>
+    <input name="primerApellido" placeholder="Primer apellido">
+    <input name="segundoApellido" placeholder="Segundo apellido">
+    <input name="nombres" placeholder="Nombres">
+    <input name="documento" placeholder="Documento">
+  </fieldset>
+
+  <button type="submit">📄 Generar PDF</button>
+
+</form>
+
+<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
