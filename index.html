@@ -14,7 +14,7 @@
     <!-- I. IDENTIFICACIÓN -->
     <fieldset>
       <legend>I. Identificación</legend>
-      <input name="razonSocial" placeholder="Razón social">
+      <input name="razonSocial" placeholder="Razón social" value="FUDES" >
       <input name="sigla" placeholder="Sigla">
       <input name="nit" placeholder="NIT">
     </fieldset>
@@ -39,7 +39,11 @@
     <button type="submit">📄 Generar PDF</button>
   </form>
   <div>
-    <canvas id="pdf-preview" width="630" height="900" style="border:1px solid #333; background:#fff; box-shadow:0 2px 8px #0002;"></canvas>
+    <!-- Canvas oculto: para renderizar PDF con PDF.js -->
+    <canvas id="pdf-canvas-hidden" style="display:none;"></canvas>
+    
+    <!-- Canvas visible: para mostrar preview con Canvas API -->
+    <canvas id="pdf-preview" style="border:1px solid #333; background:#fff; box-shadow:0 2px 8px #0002;"></canvas>
     <div style="font-size:13px;color:#333;margin-top:8px;">Vista previa plantilla.pdf</div>
   </div>
 </div>
@@ -48,37 +52,5 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
 <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
 <script src="app.js"></script>
-<script>
-// Vista previa PDF en canvas
-document.addEventListener('DOMContentLoaded', function() {
-  const canvas = document.getElementById('pdf-preview');
-  const ctx = canvas.getContext('2d');
-  const url = 'plantilla.pdf';
-  if (window['pdfjsLib']) {
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-    pdfjsLib.getDocument(url).promise.then(pdf => {
-      pdf.getPage(1).then(page => {
-        // Escala mayor para mejor nitidez
-        const scale = 1.5;
-        const viewport = page.getViewport({ scale });
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
-        // Fondo blanco
-        ctx.fillStyle = '#fff';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        const renderContext = {
-          canvasContext: ctx,
-          viewport: viewport
-        };
-        page.render(renderContext);
-      });
-    });
-  } else {
-    ctx.font = '16px Arial';
-    ctx.fillStyle = '#888';
-    ctx.fillText('No se pudo cargar PDF.js', 10, 30);
-  }
-});
-</script>
 </body>
 </html>
