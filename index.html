@@ -7,43 +7,73 @@
 </head>
 <body>
 
+
 <h1>Hoja de Vida – Persona Jurídica</h1>
+<div style="display: flex; gap: 32px; align-items: flex-start;">
+  <form id="form">
+    <!-- I. IDENTIFICACIÓN -->
+    <fieldset>
+      <legend>I. Identificación</legend>
+      <input name="razonSocial" placeholder="Razón social">
+      <input name="sigla" placeholder="Sigla">
+      <input name="nit" placeholder="NIT">
+    </fieldset>
+    <!-- II. SERVICIOS -->
+    <fieldset>
+      <legend>II. Servicios</legend>
+      <input name="servicio1" placeholder="Servicio 1">
+      <input name="servicio2" placeholder="Servicio 2">
+      <input name="servicio3" placeholder="Servicio 3">
+      <input name="servicio4" placeholder="Servicio 4">
+      <input name="servicio5" placeholder="Servicio 5">
+      <input name="servicio6" placeholder="Servicio 6">
+    </fieldset>
+    <!-- IV. REPRESENTANTE -->
+    <fieldset>
+      <legend>IV. Representante Legal</legend>
+      <input name="primerApellido" placeholder="Primer apellido">
+      <input name="segundoApellido" placeholder="Segundo apellido">
+      <input name="nombres" placeholder="Nombres">
+      <input name="documento" placeholder="Documento">
+    </fieldset>
+    <button type="submit">📄 Generar PDF</button>
+  </form>
+  <div>
+    <canvas id="pdf-preview" width="420" height="595" style="border:1px solid #ccc; background:#fff;"></canvas>
+    <div style="font-size:12px;color:#888;margin-top:8px;">Vista previa plantilla.pdf</div>
+  </div>
+</div>
 
-<form id="form">
-
-  <!-- I. IDENTIFICACIÓN -->
-  <fieldset>
-    <legend>I. Identificación</legend>
-    <input name="razonSocial" placeholder="Razón social">
-    <input name="sigla" placeholder="Sigla">
-    <input name="nit" placeholder="NIT">
-  </fieldset>
-
-  <!-- II. SERVICIOS -->
-  <fieldset>
-    <legend>II. Servicios</legend>
-    <input name="servicio1" placeholder="Servicio 1">
-    <input name="servicio2" placeholder="Servicio 2">
-    <input name="servicio3" placeholder="Servicio 3">
-    <input name="servicio4" placeholder="Servicio 4">
-    <input name="servicio5" placeholder="Servicio 5">
-    <input name="servicio6" placeholder="Servicio 6">
-  </fieldset>
-
-  <!-- IV. REPRESENTANTE -->
-  <fieldset>
-    <legend>IV. Representante Legal</legend>
-    <input name="primerApellido" placeholder="Primer apellido">
-    <input name="segundoApellido" placeholder="Segundo apellido">
-    <input name="nombres" placeholder="Nombres">
-    <input name="documento" placeholder="Documento">
-  </fieldset>
-
-  <button type="submit">📄 Generar PDF</button>
-
-</form>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
 <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
 <script src="app.js"></script>
+<script>
+// Vista previa PDF en canvas
+document.addEventListener('DOMContentLoaded', function() {
+  const canvas = document.getElementById('pdf-preview');
+  const ctx = canvas.getContext('2d');
+  const url = 'plantilla.pdf';
+  if (window['pdfjsLib']) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    pdfjsLib.getDocument(url).promise.then(pdf => {
+      pdf.getPage(1).then(page => {
+        const viewport = page.getViewport({ scale: 0.8 });
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        const renderContext = {
+          canvasContext: ctx,
+          viewport: viewport
+        };
+        page.render(renderContext);
+      });
+    });
+  } else {
+    ctx.font = '16px Arial';
+    ctx.fillStyle = '#888';
+    ctx.fillText('No se pudo cargar PDF.js', 10, 30);
+  }
+});
+</script>
 </body>
 </html>
