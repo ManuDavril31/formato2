@@ -28,7 +28,8 @@ const pdfCoordinates = {
   orden_dstr: { x: 106, y: 586 },    // Para marcar "Distrital"
   orden_mpl: { x: 136, y: 586 },     // Para marcar "Municipal"
   orden_otro: { x: 166, y: 586 },    // Para marcar "Otro"
-  
+  ordenCual: { x: 223, y: 586 },  
+    
   // II. SERVICIOS
   servicio1: { x: 80, y: 495 },
   servicio2: { x: 320, y: 495 },
@@ -198,6 +199,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   const inputs = form.querySelectorAll('input[name]')
   const ordenSelect = document.getElementById('orden')
+  const ordenCualInput = document.querySelector('input[name="ordenCual"]')
+  
+  // Función para mostrar/ocultar campo ordenCual
+  const toggleOrdenCualField = () => {
+    if (ordenSelect.value === 'otro') {
+      ordenCualInput.style.display = 'block'
+    } else {
+      ordenCualInput.style.display = 'none'
+      ordenCualInput.value = ''  // Limpiar valor si está oculto
+    }
+  }
+  
+  // Inicializar estado del campo ordenCual
+  toggleOrdenCualField()
   
   // Escuchar cambios en inputs
   inputs.forEach(input => {
@@ -209,6 +224,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   // Escuchar cambios en el select "orden"
   ordenSelect.addEventListener('change', () => {
+    toggleOrdenCualField()
     const formData = Object.fromEntries(new FormData(form))
     updateCanvasPreview(formData)
   })
