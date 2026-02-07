@@ -50,3 +50,18 @@ button {
 button:hover {
   background: #003d82;
 }
+
+select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.select-indicator {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 18px;
+  color: #28a745;
+  font-weight: bold;
+}

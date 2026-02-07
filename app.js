@@ -6,17 +6,38 @@ const { PDFDocument, StandardFonts, rgb } = PDFLib
 // Preview con Canvas API (rápido) + Exportación con PDF-lib (exacta)
 // ============================================================
 
+// Configuración de selects que marcan con X
+const selectMarkings = {
+  orden: {
+    'nal': 'orden_nal',
+    'dptl': 'orden_dptl',
+    'dstr': 'orden_dstr',
+    'mpl': 'orden_mpl',
+    'otro': 'orden_otro'
+  }
+}
+
 // Mapeo de coordenadas: nombre del campo -> posición en PDF
 const pdfCoordinates = {
+  // I. IDENTIFICACIÓN
   razonSocial: { x: 135, y: 640 },
   sigla: { x: 80, y: 650 },
   nit: { x: 400, y: 650 },
+  orden_nal: { x: 46, y: 586 },     // Para marcar "Nacional"
+  orden_dptl: { x: 46, y: 573 },    // Para marcar "Departamental"
+  orden_dstr: { x: 46, y: 560 },    // Para marcar "Distrital"
+  orden_mpl: { x: 46, y: 547 },     // Para marcar "Municipal"
+  orden_otro: { x: 46, y: 534 },    // Para marcar "Otro"
+  
+  // II. SERVICIOS
   servicio1: { x: 80, y: 495 },
   servicio2: { x: 320, y: 495 },
   servicio3: { x: 80, y: 470 },
   servicio4: { x: 320, y: 470 },
   servicio5: { x: 80, y: 445 },
   servicio6: { x: 320, y: 445 },
+  
+  // IV. REPRESENTANTE LEGAL
   primerApellido: { x: 80, y: 260 },
   segundoApellido: { x: 240, y: 260 },
   nombres: { x: 380, y: 260 },
@@ -25,6 +46,13 @@ const pdfCoordinates = {
 
 let baseCanvasImage = null
 const scale = 1.5
+
+// Función helper: obtener coordenada de X según el select
+function getMarkingCoords(selectName, value) {
+  const mapping = selectMarkings[selectName]
+  if (!mapping || !mapping[value]) return null
+  return pdfCoordinates[mapping[value]]
+}
 
 // ============================================================
 // PASO 1: INICIALIZACIÓN (UNA SOLA VEZ AL CARGAR PÁGINA)
@@ -95,6 +123,17 @@ function updateCanvasPreview(formData) {
       ctx.fillText(String(formData[field]), canvasX, canvasY)
     }
   })
+  
+  // Dibujar X según la opción seleccionada
+  const coords = getMarkingCoords('orden', formData.orden)
+  if (coords) {
+    const xCoord = coords.x * scale
+    const yCoord = canvas.height - (coords.y * scale)
+    
+    ctx.font = 'bold 18px Arial'
+    ctx.fillStyle = '#000'
+    ctx.fillText('X', xCoord, yCoord)
+  }
 }
 
 // ============================================================
@@ -125,6 +164,18 @@ async function generateFinalPDF(formData) {
     }
   })
 
+  // Dibujar X según la opción seleccionada
+  const markingCoords = getMarkingCoords('orden', formData.orden)
+  if (markingCoords) {
+    page.drawText('X', {
+      x: markingCoords.x,
+      y: markingCoords.y,
+      size: 14,
+      font,
+      color: rgb(0, 0, 0)
+    })
+  }
+
   // Agregar fecha
   draw(new Date().toLocaleDateString(), 400, 150)
 
@@ -146,6 +197,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   updateCanvasPreview(formData)
   
   const inputs = form.querySelectorAll('input[name]')
+  const ordenSelect = document.getElementById('orden')
   
   // Escuchar cambios en inputs
   inputs.forEach(input => {
@@ -153,6 +205,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       const formData = Object.fromEntries(new FormData(form))
       updateCanvasPreview(formData)  // Preview rápido (<50ms)
     })
+  })
+  
+  // Escuchar cambios en el select "orden"
+  ordenSelect.addEventListener('change', () => {
+    const formData = Object.fromEntries(new FormData(form))
+    updateCanvasPreview(formData)
   })
 })
 
