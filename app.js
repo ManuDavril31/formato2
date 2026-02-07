@@ -24,10 +24,10 @@ const pdfCoordinates = {
   sigla: { x: 80, y: 650 },
   nit: { x: 400, y: 650 },
   orden_nal: { x: 46, y: 586 },     // Para marcar "Nacional"
-  orden_dptl: { x: 46, y: 573 },    // Para marcar "Departamental"
-  orden_dstr: { x: 46, y: 560 },    // Para marcar "Distrital"
-  orden_mpl: { x: 46, y: 547 },     // Para marcar "Municipal"
-  orden_otro: { x: 46, y: 534 },    // Para marcar "Otro"
+  orden_dptl: { x: 76, y: 586 },    // Para marcar "Departamental"
+  orden_dstr: { x: 106, y: 586 },    // Para marcar "Distrital"
+  orden_mpl: { x: 136, y: 586 },     // Para marcar "Municipal"
+  orden_otro: { x: 166, y: 586 },    // Para marcar "Otro"
   
   // II. SERVICIOS
   servicio1: { x: 80, y: 495 },
