@@ -28,7 +28,8 @@ const pdfCoordinates = {
   orden_dstr: { x: 106, y: 586 },    // Para marcar "Distrital"
   orden_mpl: { x: 136, y: 586 },     // Para marcar "Municipal"
   orden_otro: { x: 166, y: 586 },    // Para marcar "Otro"
-  ordenCual: { x: 223, y: 586 },  
+  ordenCual: { x: 223, y: 586 },
+  tipo: { x: 304, y: 586 },
     
   // II. SERVICIOS
   servicio1: { x: 80, y: 495 },
@@ -121,7 +122,12 @@ function updateCanvasPreview(formData) {
       const canvasX = coords.x * scale
       const canvasY = canvas.height - (coords.y * scale)
       
-      ctx.fillText(String(formData[field]), canvasX, canvasY)
+      // Aplicar letter-spacing solo al campo "tipo"
+      if (field === 'tipo') {
+        drawTextWithLetterSpacing(ctx, String(formData[field]), canvasX, canvasY, 3)
+      } else {
+        ctx.fillText(String(formData[field]), canvasX, canvasY)
+      }
     }
   })
   
@@ -134,6 +140,15 @@ function updateCanvasPreview(formData) {
     ctx.font = 'bold 18px Arial'
     ctx.fillStyle = '#000'
     ctx.fillText('X', xCoord, yCoord)
+  }
+}
+
+// Función helper: dibujar texto con letter-spacing personalizado
+function drawTextWithLetterSpacing(ctx, text, x, y, letterSpacing) {
+  let currentX = x
+  for (let char of text) {
+    ctx.fillText(char, currentX, y)
+    currentX += ctx.measureText(char).width + letterSpacing
   }
 }
 
@@ -158,10 +173,35 @@ async function generateFinalPDF(formData) {
     })
   }
 
+  // Función para dibujar texto con letter-spacing
+  const drawWithLetterSpacing = (text, x, y, size = 12, letterSpacing = 2) => {
+    if (!text) return
+    let currentX = x
+    const textStr = String(text)
+    
+    for (let char of textStr) {
+      page.drawText(char, {
+        x: currentX,
+        y,
+        size,
+        font,
+        color: rgb(0, 0, 0)
+      })
+      // Calcular ancho del carácter actual
+      const charWidthInPoints = font.widthOfTextAtSize(char, size)
+      currentX += charWidthInPoints + letterSpacing
+    }
+  }
+
   // Escribir todos los campos en el PDF
   Object.entries(pdfCoordinates).forEach(([field, coords]) => {
     if (formData[field]) {
-      draw(formData[field], coords.x, coords.y)
+      // Aplicar letter-spacing solo al campo "tipo"
+      if (field === 'tipo') {
+        drawWithLetterSpacing(formData[field], coords.x, coords.y, 12, 2)
+      } else {
+        draw(formData[field], coords.x, coords.y)
+      }
     }
   })
 
@@ -199,6 +239,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   const inputs = form.querySelectorAll('input[name]')
   const ordenSelect = document.getElementById('orden')
+  const tipoSelect = document.getElementById('tipo')
   const ordenCualInput = document.querySelector('input[name="ordenCual"]')
   
   // Función para mostrar/ocultar campo ordenCual
@@ -225,6 +266,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Escuchar cambios en el select "orden"
   ordenSelect.addEventListener('change', () => {
     toggleOrdenCualField()
+    const formData = Object.fromEntries(new FormData(form))
+    updateCanvasPreview(formData)
+  })
+  
+  // Escuchar cambios en el select "tipo"
+  tipoSelect.addEventListener('change', () => {
     const formData = Object.fromEntries(new FormData(form))
     updateCanvasPreview(formData)
   })
