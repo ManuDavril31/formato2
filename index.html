@@ -36,7 +36,10 @@
       <input name="nombres" placeholder="Nombres">
       <input name="documento" placeholder="Documento">
     </fieldset>
-    <button type="submit">📄 Generar PDF</button>
+    <div style="display: flex; gap: 10px;">
+      <button type="submit">📄 Generar PDF</button>
+      <button type="button" id="btn-preview">👁️ Vista Previa</button>
+    </div>
   </form>
   <div>
     <!-- Canvas oculto: para renderizar PDF con PDF.js -->

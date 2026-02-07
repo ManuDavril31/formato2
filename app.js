@@ -8,7 +8,7 @@ const { PDFDocument, StandardFonts, rgb } = PDFLib
 
 // Mapeo de coordenadas: nombre del campo -> posición en PDF
 const pdfCoordinates = {
-  razonSocial: { x: 85, y: 650 },
+  razonSocial: { x: 135, y: 640 },
   sigla: { x: 80, y: 650 },
   nit: { x: 400, y: 650 },
   servicio1: { x: 80, y: 495 },
@@ -81,8 +81,8 @@ function updateCanvasPreview(formData) {
   // Restaurar la imagen base sin regenerar PDF
   ctx.putImageData(baseCanvasImage, 0, 0)
   
-  // Superponer texto con Canvas API
-  ctx.font = 'bold 14px Arial'
+  // Superponer texto con Canvas API (mismo estilo que el PDF)
+  ctx.font = 'bold 12px Helvetica, Arial, sans-serif'
   ctx.fillStyle = '#000'
   
   // Iterar cada campo y dibujarlo
@@ -105,9 +105,9 @@ async function generateFinalPDF(formData) {
   const pdfBytes = await fetch('plantilla.pdf').then(res => res.arrayBuffer())
   const pdfDoc = await PDFDocument.load(pdfBytes)
   const page = pdfDoc.getPages()[0]
-  const font = await pdfDoc.embedFont(StandardFonts.Helvetica)
+  const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
 
-  const draw = (text, x, y, size = 10) => {
+  const draw = (text, x, y, size = 12) => {
     if (!text) return
     page.drawText(String(text), {
       x,
@@ -137,9 +137,14 @@ async function generateFinalPDF(formData) {
 
 // Al cargar página: inicializar + escuchar inputs
 document.addEventListener('DOMContentLoaded', async () => {
+  const form = document.getElementById('form')
+  
   await initializePDF()
   
-  const form = document.getElementById('form')
+  // ⭐ IMPORTANTE: Mostrar valores por defecto que ya están en los inputs
+  const formData = Object.fromEntries(new FormData(form))
+  updateCanvasPreview(formData)
+  
   const inputs = form.querySelectorAll('input[name]')
   
   // Escuchar cambios en inputs
@@ -166,4 +171,20 @@ document.getElementById('form').addEventListener('submit', async (e) => {
   link.href = URL.createObjectURL(blob)
   link.download = 'Hoja_de_Vida_Persona_Juridica.pdf'
   link.click()
+})
+
+// Botón de Vista Previa: abrir PDF en nueva pestaña
+document.getElementById('btn-preview').addEventListener('click', async (e) => {
+  e.preventDefault()
+
+  const form = document.getElementById('form')
+  const data = Object.fromEntries(new FormData(form))
+  
+  // Generar PDF
+  const pdfBytes = await generateFinalPDF(data)
+  const blob = new Blob([pdfBytes], { type: 'application/pdf' })
+  
+  // Abrir en nueva pestaña
+  const pdfUrl = URL.createObjectURL(blob)
+  window.open(pdfUrl, '_blank')
 })
