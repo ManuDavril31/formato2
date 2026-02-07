@@ -21,8 +21,8 @@ const selectMarkings = {
 const pdfCoordinates = {
   // I. IDENTIFICACIÓN
   razonSocial: { x: 135, y: 640 },
-  sigla: { x: 80, y: 650 },
-  nit: { x: 400, y: 650 },
+  sigla: { x: 55, y: 626 },
+  nit: { x: 440, y: 626 },
   orden_nal: { x: 46, y: 586 },     // Para marcar "Nacional"
   orden_dptl: { x: 76, y: 586 },    // Para marcar "Departamental"
   orden_dstr: { x: 106, y: 586 },    // Para marcar "Distrital"

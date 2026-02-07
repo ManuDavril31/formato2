@@ -14,20 +14,31 @@
     <!-- I. IDENTIFICACIÓN -->
     <fieldset>
       <legend>I. Identificación</legend>
-      <input name="razonSocial" placeholder="Razón social" value="FUDES" >
-      <input name="sigla" placeholder="Sigla">
-      <input name="nit" placeholder="NIT">
+      <input name="razonSocial" placeholder="Razón social" value="fundacion para el desarrollo social" >
+      <input name="sigla" placeholder="Sigla" value="FUDES">
+      <input name="nit" placeholder="NIT" value="123581">
       <label for="orden">Determinar el orden</label>
       <select name="orden" id="orden">
-          <option value="">Seleccionar...</option>
+          <option value="" selected>Seleccionar...</option>
           <option value="nal" >Nacional</option>
           <option value="dptl">Departamental</option>
           <option value="dstr">Distrital</option>
           <option value="mpl" >Municipal</option>
-          <option value="otro" selected>Otro</option>
+          <option value="otro">Otro</option>
         </select>
         <!-- Si se selecciona "Otro", mostrar este campo para especificar cuál -->
         <input type="text" name="ordenCual" placeholder="Si es otro, ¿Cuál?" value="MTRS">
+      <label for="tipo">Determinar el tipo</label>
+      <select name="tipo" id="tipo">
+          <option value="" selected>Seleccionar...</option>
+          <option value="01" >01. MDA</option>
+          <option value="02">02. SUA</option>
+          <option value="03">03. EP</option>
+          <option value="04" >04. EUA/ESE</option>
+          <option value="05" >05. EICE</option>
+          <option value="06" >06. SEM</option>
+          <option value="08">08. OTRO</option>
+        </select>
 
     </fieldset>
     <!-- II. SERVICIOS -->
