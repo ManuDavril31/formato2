@@ -137,8 +137,9 @@ const pdfCoordinates = {
   caracterde_representante: { x: 383, y: 275 },
   caracterde_apoderado: { x: 444, y: 275 },
   capacidad_contratacion: { x: 468, y: 275 },
-  inhabilidad_si: { x: 383, y: 238 },
-  inhabilidad_no: { x: 413, y: 238 }
+  inhabilidad_si: { x: 382, y: 236 },
+  inhabilidad_no: { x: 412, y: 236 },
+  observaciones: { x: 100, y: 210 }
 }
 
 let baseCanvasImage = null
