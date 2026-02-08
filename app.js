@@ -149,6 +149,36 @@ function updateCanvasPreview(formData) {
     ctx.fillStyle = '#000'
     ctx.fillText('X', xCoord, yCoord)
   }
+
+  // Dibujar marcas de agua grandes y diagonales a lo largo del canvas
+  drawCanvasWatermarks(ctx, canvas.width, canvas.height)
+}
+
+// Dibuja múltiples marcas de agua diagonales grandes en el canvas
+function drawCanvasWatermarks(ctx, width, height) {
+  const text = 'formatounico.com'
+  // tamaño relativo al ancho del canvas para que se vea ancho
+  const fontSize = Math.max(90, Math.floor(width * 0.14))
+  ctx.save()
+  ctx.globalAlpha = 0.28
+  ctx.fillStyle = 'rgba(68,68,68,0.28)'
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'middle'
+  ctx.font = `bold ${fontSize}px Arial, sans-serif`
+
+  // Posiciones a lo largo de una diagonal, distribuidas uniformemente
+  const positions = [0.12, 0.32, 0.52, 0.72, 0.92]
+  positions.forEach((px) => {
+    const x = Math.floor(width * px)
+    const y = Math.floor(height * (0.2 + (px - 0.12) * 0.7))
+    ctx.save()
+    ctx.translate(x, y)
+    ctx.rotate(-Math.PI / 4)
+    ctx.fillText(text, 0, 0)
+    ctx.restore()
+  })
+
+  ctx.restore()
 }
 
 // Función helper: dibujar texto con letter-spacing personalizado
