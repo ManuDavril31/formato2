@@ -11,7 +11,10 @@
       <form id="form">
         <!-- I. IDENTIFICACIÓN -->
         <fieldset>
-          <legend>I. Identificación</legend>
+          <legend>
+            I. Identificación
+            <button type="button" class="collapse-btn">−</button>
+          </legend>
           <input
             name="razonSocial"
             placeholder="Razón social"
@@ -98,7 +101,9 @@
         </fieldset>
         <!-- II. SERVICIOS -->
         <fieldset>
-          <legend>II. Servicios</legend>
+          <legend>
+            II. Servicios <button type="button" class="collapse-btn">−</button>
+          </legend>
           <input
             name="servicio1"
             placeholder="Servicio 1"
@@ -132,7 +137,10 @@
         </fieldset>
         <!-- III. EXPERIENCIA  O SITUACION ACTUAL -->
         <fieldset>
-          <legend>III. Experiencia o Situación Actual</legend>
+          <legend>
+            III. Experiencia o Situación Actual
+            <button type="button" class="collapse-btn">−</button>
+          </legend>
           <input name="primerApellido" placeholder="Primer apellido" />
           <input name="segundoApellido" placeholder="Segundo apellido" />
           <input name="nombres" placeholder="Nombres" />
@@ -140,7 +148,10 @@
         </fieldset>
         <!-- IV. REPRESENTANTE -->
         <fieldset>
-          <legend>IV. Representante Legal</legend>
+          <legend>
+            IV. Representante Legal
+            <button type="button" class="collapse-btn">−</button>
+          </legend>
           <input name="primerApellido" placeholder="Primer apellido" />
           <input name="segundoApellido" placeholder="Segundo apellido" />
           <input name="nombres" placeholder="Nombres" />
@@ -174,5 +185,22 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
     <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
     <script src="app.js"></script>
+    <script>
+      document.querySelectorAll(".collapse-btn").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          const fieldset = btn.closest("fieldset");
+          const content = Array.from(fieldset.children).filter(
+            (el) => el.tagName !== "LEGEND",
+          );
+          if (btn.textContent === "−") {
+            content.forEach((el) => (el.style.display = "none"));
+            btn.textContent = "+";
+          } else {
+            content.forEach((el) => (el.style.display = ""));
+            btn.textContent = "−";
+          }
+        });
+      });
+    </script>
   </body>
 </html>
