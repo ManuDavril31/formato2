@@ -315,11 +315,11 @@ if (mainCanvas) {
     overlay.style.zIndex = '3000'
 
     // contenedor para la imagen escalada
-    const box = document.createElement('div')
-    box.style.maxWidth = '90vw'
-    box.style.maxHeight = '90vh'
-    box.style.boxSizing = 'border-box'
-    box.style.padding = '8px'
+      const box = document.createElement('div')
+      box.style.maxWidth = '98vw'
+      box.style.maxHeight = '98vh'
+      box.style.boxSizing = 'border-box'
+      box.style.padding = '4px'
 
     // crear canvas temporal para copiar la imagen y escalar preservando ratio
     const temp = document.createElement('canvas')
@@ -327,10 +327,10 @@ if (mainCanvas) {
     const srcW = mainCanvas.width
     const srcH = mainCanvas.height
 
-    // calcular escala para que no supere 90vw/90vh
-    const maxW = Math.floor(window.innerWidth * 0.9)
-    const maxH = Math.floor(window.innerHeight * 0.9)
-    let scale = Math.min(maxW / srcW, maxH / srcH, 1)
+    // calcular escala para que no supere 99vw/99vh y permitir un aumento mayor (hasta 1.6x)
+    const maxW = Math.floor(window.innerWidth * 0.99)
+    const maxH = Math.floor(window.innerHeight * 0.99)
+    let scale = Math.min(maxW / srcW, maxH / srcH, 1.6)
     const destW = Math.floor(srcW * scale)
     const destH = Math.floor(srcH * scale)
 
