@@ -56,15 +56,18 @@ const pdfCoordinates = {
   // III. EXPERIENCIA
   experiencia1: { x: 35, y: 393 },
   // Posiciones para marcar 'X' según tipoEmpresa1
-  tipoEmpresa1_publica: { x: 293, y: 393 },
-  tipoEmpresa1_privada: { x: 323, y: 393 },
+  tipoEmpresa1_publica: { x: 293, y: 391 },
+  tipoEmpresa1_privada: { x: 323, y: 391 },
+  telefono_exp1: { x: 343, y: 392 },
+  fecha_term_exp1: { x: 420, y: 392 },
+  valorContrato_exp1: { x: 502, y: 392 },
 
   
   // IV. REPRESENTANTE LEGAL
   primerApellido: { x: 80, y: 260 },
   segundoApellido: { x: 240, y: 260 },
   nombres: { x: 380, y: 260 },
-  documento: { x: 200, y: 235 }
+  documento: { x: 200, y: 230 },
 }
 
 let baseCanvasImage = null
