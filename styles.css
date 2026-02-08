@@ -74,9 +74,11 @@ form {
 }
 
 #pdf-preview {
-  max-width: 100%;
+  /* Mostrar el canvas más pequeño en desktop para mejor equilibrio visual */
+  width: 85%;
   height: auto;
   display: block;
+  margin: 0 auto;
 }
 
 #pdf-preview-mobile {
@@ -262,6 +264,11 @@ select {
 
   .canvas-wrapper {
     display: none;
+  }
+
+  /* En mobile el canvas debe ocupar todo el ancho cuando se muestra en modal */
+  #pdf-preview {
+    width: 100%;
   }
 
   .fixed-actions {
