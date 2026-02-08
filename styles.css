@@ -562,6 +562,14 @@ button:active {
   .field {
     display: block;
   }
+  /* Mantener la vista de preview siempre visible en desktop */
+  .preview-container {
+    position: sticky;
+    top: 32px;
+    align-self: flex-start;
+    max-height: calc(100vh - 48px);
+    overflow: auto;
+  }
 }
 
 /* =====================================================
