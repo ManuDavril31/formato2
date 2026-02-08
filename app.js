@@ -327,6 +327,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Click en canvas: mostrar preview grande (desktop only), sin zoom o pan
 const mainCanvas = document.getElementById('pdf-preview')
+// Evitar menú contextual al hacer clic derecho sobre el canvas principal
+if (mainCanvas) mainCanvas.addEventListener('contextmenu', (ev) => ev.preventDefault())
 if (mainCanvas) {
   mainCanvas.addEventListener('click', (e) => {
     const isMobile = window.innerWidth <= 768
@@ -368,6 +370,8 @@ if (mainCanvas) {
 
     temp.width = destW
     temp.height = destH
+    // Evitar menú contextual sobre la vista previa temporal
+    temp.addEventListener('contextmenu', (ev) => ev.preventDefault())
     ctx.drawImage(mainCanvas, 0, 0, srcW, srcH, 0, 0, destW, destH)
     temp.style.width = destW + 'px'
     temp.style.height = destH + 'px'
