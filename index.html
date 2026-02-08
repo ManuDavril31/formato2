@@ -168,14 +168,18 @@
 
       <div class="preview-container canvas-wrapper">
         <!-- Canvas visible: para mostrar preview en escritorio -->
-        <canvas
-          id="pdf-preview"
-          style="
-            border: 1px solid #333;
-            background: #fff;
-            box-shadow: 0 2px 8px #0002;
-          "
-        ></canvas>
+        <div class="canvas-zoom-wrapper">
+          <canvas
+            id="pdf-preview"
+            style="
+              border: 1px solid #333;
+              background: #fff;
+              box-shadow: 0 2px 8px #0002;
+              display: block;
+            "
+          ></canvas>
+          <div class="canvas-overlay"><span>Zoom</span></div>
+        </div>
         <div style="font-size: 13px; color: #333; margin-top: 8px">
           Vista previa plantilla.pdf
         </div>
