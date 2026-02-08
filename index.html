@@ -45,8 +45,9 @@
               </select>
             </div>
             <div class="field">
-              <label>Si es otro, ¿Cuál?</label>
+              <label for="ordenCual">Si es otro, ¿Cuál?</label>
               <input
+                id="ordenCual"
                 type="text"
                 name="ordenCual"
                 placeholder="Si es otro, ¿Cuál?"
@@ -382,6 +383,30 @@
           }
         });
       });
+
+      // Mostrar/ocultar campo 'ordenCual' según selección en #orden
+      (function () {
+        const ordenSelect = document.getElementById('orden');
+        const ordenCualField = document.querySelector('#ordenCual') ? document.getElementById('ordenCual').closest('.field') : null;
+        const ordenCualInput = document.getElementById('ordenCual');
+
+        function updateOrdenCual() {
+          if (!ordenCualField || !ordenSelect) return;
+          if (ordenSelect.value === 'otro') {
+            ordenCualField.style.display = '';
+            try { ordenCualInput.focus(); } catch (e) {}
+          } else {
+            ordenCualField.style.display = 'none';
+            if (ordenCualInput) ordenCualInput.value = '';
+          }
+        }
+
+        if (ordenSelect) {
+          ordenSelect.addEventListener('change', updateOrdenCual);
+        }
+        // Inicializar estado en carga
+        updateOrdenCual();
+      })();
     </script>
   </body>
 </html>
