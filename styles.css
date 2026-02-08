@@ -43,26 +43,45 @@ h1 {
 
 .main-container {
   display: flex;
-  gap: 32px;
+  gap: 24px;
   align-items: flex-start;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 form {
   background: white;
   padding: 20px;
   border-radius: 6px;
-  width: 100%;
-  max-width: 750px;
-  min-width: 280px;
+  /* Forzar 40% del ancho del contenedor sin desplazar texto */
+  flex: 0 0 40%;
+  max-width: 640px; /* reasonable cap */
+  min-width: 320px;
+  box-sizing: border-box;
 }
 
 .preview-container {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  flex: 1 1 60%;
+  min-width: 280px;
+  box-sizing: border-box;
 }
 
 .canvas-wrapper {
+  display: block;
+}
+
+#pdf-preview {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+#pdf-preview-mobile {
+  max-width: 100%;
+  height: auto;
   display: block;
 }
 
@@ -229,6 +248,7 @@ select {
     margin-bottom: 16px;
   }
 
+  /* On small screens keep stacked but canvas hidden by default (modal used) */
   .main-container {
     flex-direction: column;
     gap: 0;
