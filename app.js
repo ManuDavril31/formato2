@@ -380,18 +380,23 @@ document.addEventListener('DOMContentLoaded', async () => {
   const claseSelect = document.getElementById('clase')
   const ordenCualInput = document.querySelector('input[name="ordenCual"]')
   
-  // Función para mostrar/ocultar campo ordenCual
+  // Función para mostrar/ocultar campo ordenCual (protegida)
   const toggleOrdenCualField = () => {
-    if (ordenSelect.value === 'otro') {
-      ordenCualInput.style.display = 'block'
-    } else {
-      ordenCualInput.style.display = 'none'
-      ordenCualInput.value = ''  // Limpiar valor si está oculto
+    if (!ordenSelect || !ordenCualInput) return
+    try {
+      if (ordenSelect.value === 'otro') {
+        ordenCualInput.style.display = 'block'
+      } else {
+        ordenCualInput.style.display = 'none'
+        ordenCualInput.value = ''  // Limpiar valor si está oculto
+      }
+    } catch (e) {
+      console.warn('toggleOrdenCualField falló:', e)
     }
   }
-  
-  // Inicializar estado del campo ordenCual
-  toggleOrdenCualField()
+
+  // Inicializar estado del campo ordenCual si los elementos existen
+  if (ordenSelect && ordenCualInput) toggleOrdenCualField()
   
   // Escuchar cambios en inputs
   inputs.forEach(input => {
@@ -402,17 +407,25 @@ document.addEventListener('DOMContentLoaded', async () => {
   })
   
   // Escuchar cambios en el select "orden"
-  ordenSelect.addEventListener('change', () => {
-    toggleOrdenCualField()
-    const formData = Object.fromEntries(new FormData(form))
-    updateCanvasPreview(formData)
-  })
+  if (ordenSelect) {
+    ordenSelect.addEventListener('change', () => {
+      toggleOrdenCualField()
+      const formData = Object.fromEntries(new FormData(form))
+      updateCanvasPreview(formData)
+    })
+  } else {
+    console.warn('No se encontró #orden; listener no registrado.')
+  }
   
   // Escuchar cambios en el select "tipo"
-  tipoSelect.addEventListener('change', () => {
-    const formData = Object.fromEntries(new FormData(form))
-    updateCanvasPreview(formData)
-  })
+  if (tipoSelect) {
+    tipoSelect.addEventListener('change', () => {
+      const formData = Object.fromEntries(new FormData(form))
+      updateCanvasPreview(formData)
+    })
+  } else {
+    console.warn('No se encontró #tipo; listener no registrado.')
+  }
   // Escuchar cambios en los selects "tipoEmpresa1..5"
   [tipoEmpresa1Select, tipoEmpresa2Select, tipoEmpresa3Select, tipoEmpresa4Select, tipoEmpresa5Select].forEach(sel => {
     if (!sel) return
