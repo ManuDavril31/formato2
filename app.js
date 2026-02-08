@@ -170,7 +170,7 @@ async function generateFinalPDF(formData) {
   const page = pdfDoc.getPages()[0]
   const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
 
-  const draw = (text, x, y, size = 12) => {
+  const draw = (text, x, y, size = 10) => {
     if (!text) return
     page.drawText(String(text), {
       x,
@@ -182,7 +182,7 @@ async function generateFinalPDF(formData) {
   }
 
   // Función para dibujar texto con letter-spacing
-  const drawWithLetterSpacing = (text, x, y, size = 12, letterSpacing = 2) => {
+  const drawWithLetterSpacing = (text, x, y, size = 10, letterSpacing = 2) => {
     if (!text) return
     let currentX = x
     const textStr = String(text)
@@ -206,9 +206,9 @@ async function generateFinalPDF(formData) {
     if (formData[field]) {
       // Aplicar letter-spacing solo al campo "tipo" y "clase"
       if (field === 'tipo' || field === 'clase') {
-        drawWithLetterSpacing(formData[field], coords.x, coords.y, 12, 2)
+        drawWithLetterSpacing(formData[field], coords.x, coords.y, 10, 2)
       } else {
-        draw(formData[field], coords.x, coords.y)
+        draw(formData[field], coords.x, coords.y, 10)
       }
     }
   })
