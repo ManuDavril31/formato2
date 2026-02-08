@@ -254,7 +254,7 @@ function updateCanvasPreview(formData) {
         const lines = splitTextAt95(String(formData[field]))
         const lineHeight = 12 * scale // altura de línea en pixels
         lines.forEach((line, idx) => {
-          const lineY = canvasY - (idx * lineHeight)
+          const lineY = canvasY + (idx * lineHeight)
           ctx.fillText(line, canvasX, lineY)
         })
       } else if (field === 'tipo' || field === 'clase') {
