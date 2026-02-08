@@ -264,6 +264,16 @@ function splitTextAt95(text) {
 }
 
 // ============================================================
+// FUNCIÓN HELPER: Convertir fecha de input date (yyyy-mm-dd) a formato dd/mm/aaaa
+// ============================================================
+function convertFechaFromDateInput(fechaStr) {
+  if (!fechaStr) return ''
+  // fechaStr viene como yyyy-mm-dd del input type="date"
+  const [year, month, day] = fechaStr.split('-')
+  return `${day}/${month}/${year}`
+}
+
+// ============================================================
 // PASO 2: PREVIEW EN TIEMPO REAL (CADA KEYSTROKE)
 // ============================================================
 // Restaurar PDF base + dibujar texto con Canvas API (ULTRA RÁPIDO)
@@ -299,6 +309,10 @@ function updateCanvasPreview(formData) {
       } else if (field === 'tipo' || field === 'clase') {
         // Aplicar letter-spacing solo al campo "tipo" y "clase"
         drawTextWithLetterSpacing(ctx, String(formData[field]), canvasX, canvasY, 3)
+      } else if (field === 'fecha_diligenciamiento') {
+        // Convertir fecha de yyyy-mm-dd a dd/mm/aaaa
+        const fechaConvertida = convertFechaFromDateInput(formData[field])
+        ctx.fillText(fechaConvertida, canvasX, canvasY)
       } else {
         ctx.fillText(String(formData[field]), canvasX, canvasY)
       }
@@ -464,6 +478,10 @@ async function generateFinalPDF(formData) {
       } else if (field === 'tipo' || field === 'clase') {
         // Aplicar letter-spacing solo al campo "tipo" y "clase"
         drawWithLetterSpacing(formData[field], coords.x, coords.y, 10, 2)
+      } else if (field === 'fecha_diligenciamiento') {
+        // Convertir fecha de yyyy-mm-dd a dd/mm/aaaa
+        const fechaConvertida = convertFechaFromDateInput(formData[field])
+        draw(fechaConvertida, coords.x, coords.y, 10)
       } else {
         draw(formData[field], coords.x, coords.y, 10)
       }
@@ -581,6 +599,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   await initializePDF()
   
+  // Establecer fecha actual por defecto
+  const fechaDiligenciamiento = document.getElementById('fecha_diligenciamiento')
+  if (fechaDiligenciamiento && !fechaDiligenciamiento.value) {
+    const hoy = new Date()
+    const year = hoy.getFullYear()
+    const month = String(hoy.getMonth() + 1).padStart(2, '0')
+    const day = String(hoy.getDate()).padStart(2, '0')
+    fechaDiligenciamiento.value = `${year}-${month}-${day}`
+  }
+  
   // ⭐ IMPORTANTE: Mostrar valores por defecto que ya están en los inputs
   const formData = Object.fromEntries(new FormData(form))
   updateCanvasPreview(formData)
@@ -689,6 +717,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (firmaInput) {
     firmaInput.addEventListener('change', (e) => {
       loadFirmaImage(e.target.files[0])
+    })
+  }
+
+  // Escuchar cambios en la fecha de diligenciamiento
+  if (fechaDiligenciamiento) {
+    fechaDiligenciamiento.addEventListener('change', () => {
+      const formData = Object.fromEntries(new FormData(form))
+      updateCanvasPreview(formData)
     })
   }
 
