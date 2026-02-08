@@ -130,29 +130,40 @@ form {
 
 .modal-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin-bottom: 16px;
   font-size: 18px;
   font-weight: bold;
+  position: relative;
 }
 
 .modal-close-btn {
-  background: #ddd;
+  background: none;
   border: none;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
+  border-radius: 4px;
+  width: 44px;
+  height: 44px;
   cursor: pointer;
-  font-size: 20px;
+  font-size: 28px;
   padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #555;
+  transition: all 0.2s ease;
+  line-height: 1;
+  position: absolute;
+  right: 0;
 }
 
 .modal-close-btn:hover {
-  background: #ccc;
+  color: #000;
+  background: #f0f0f0;
+}
+
+.modal-close-btn:active {
+  transform: scale(0.9);
 }
 
 fieldset {

@@ -242,7 +242,12 @@
 
       // Cerrar modal
       const closeModal = () => {
-        modalOverlay.classList.remove("active");
+        const modalContent = document.querySelector(".modal-content");
+        modalContent.classList.add("closing");
+        setTimeout(() => {
+          modalOverlay.classList.remove("active");
+          modalContent.classList.remove("closing");
+        }, 300);
       };
 
       modalCloseBtn.addEventListener("click", closeModal);
