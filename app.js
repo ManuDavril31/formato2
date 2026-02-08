@@ -157,20 +157,22 @@ function updateCanvasPreview(formData) {
 // Dibuja múltiples marcas de agua diagonales grandes en el canvas
 function drawCanvasWatermarks(ctx, width, height) {
   const text = 'formatounico.com'
-  // tamaño relativo al ancho del canvas para que se vea ancho
-  const fontSize = Math.max(90, Math.floor(width * 0.14))
+  // tamaño relativo al ancho del canvas para que se vea ancho (ligeramente reducido)
+  const fontSize = Math.max(100, Math.floor(width * 0.16))
   ctx.save()
-  ctx.globalAlpha = 0.28
-  ctx.fillStyle = 'rgba(68,68,68,0.28)'
+  // Ajuste: aclarar color y reducir opacidad ligeramente
+  ctx.globalAlpha = 0.42
+  ctx.fillStyle = '#666666'
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
   ctx.font = `bold ${fontSize}px Arial, sans-serif`
 
   // Posiciones a lo largo de una diagonal, distribuidas uniformemente
   const positions = [0.12, 0.32, 0.52, 0.72, 0.92]
-  positions.forEach((px) => {
+  positions.forEach((px, i) => {
     const x = Math.floor(width * px)
-    const y = Math.floor(height * (0.2 + (px - 0.12) * 0.7))
+    // distribuir verticalmente con un ligero offset para evitar solapamiento
+    const y = Math.floor(height * (0.18 + i * 0.18))
     ctx.save()
     ctx.translate(x, y)
     ctx.rotate(-Math.PI / 4)
