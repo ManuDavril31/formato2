@@ -30,14 +30,23 @@ const pdfCoordinates = {
   orden_otro: { x: 166, y: 586 },    // Para marcar "Otro"
   ordenCual: { x: 223, y: 586 },
   tipo: { x: 304, y: 586 },
+  clase: { x: 464, y: 586 }, // Coordenada ejemplo, ajustar si es necesario
+  // DOMICIOLIO CORRESPONDENCIA,
+  pais: { x: 170, y: 561 },
+  departamento: { x: 353, y: 561 },
+  municipio: { x: 70, y: 548 },
+  direccion: { x: 283, y: 548 },
+  telefonos: { x: 72, y: 535 },
+  fax: { x: 255, y: 535 },
+  apartadoAereo: { x: 500, y: 535 },
     
   // II. SERVICIOS
-  servicio1: { x: 80, y: 495 },
-  servicio2: { x: 320, y: 495 },
-  servicio3: { x: 80, y: 470 },
+  servicio1: { x: 50, y: 485 },
+  servicio2: { x: 320, y: 485 },
+  servicio3: { x: 50, y: 470 },
   servicio4: { x: 320, y: 470 },
-  servicio5: { x: 80, y: 445 },
-  servicio6: { x: 320, y: 445 },
+  servicio5: { x: 50, y: 458 },
+  servicio6: { x: 320, y: 458 },
   
   // IV. REPRESENTANTE LEGAL
   primerApellido: { x: 80, y: 260 },
@@ -121,9 +130,8 @@ function updateCanvasPreview(formData) {
       // Convertir coordenadas PDF a canvas
       const canvasX = coords.x * scale
       const canvasY = canvas.height - (coords.y * scale)
-      
-      // Aplicar letter-spacing solo al campo "tipo"
-      if (field === 'tipo') {
+      // Aplicar letter-spacing solo al campo "tipo" y "clase"
+      if (field === 'tipo' || field === 'clase') {
         drawTextWithLetterSpacing(ctx, String(formData[field]), canvasX, canvasY, 3)
       } else {
         ctx.fillText(String(formData[field]), canvasX, canvasY)
@@ -196,8 +204,8 @@ async function generateFinalPDF(formData) {
   // Escribir todos los campos en el PDF
   Object.entries(pdfCoordinates).forEach(([field, coords]) => {
     if (formData[field]) {
-      // Aplicar letter-spacing solo al campo "tipo"
-      if (field === 'tipo') {
+      // Aplicar letter-spacing solo al campo "tipo" y "clase"
+      if (field === 'tipo' || field === 'clase') {
         drawWithLetterSpacing(formData[field], coords.x, coords.y, 12, 2)
       } else {
         draw(formData[field], coords.x, coords.y)
@@ -240,6 +248,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const inputs = form.querySelectorAll('input[name]')
   const ordenSelect = document.getElementById('orden')
   const tipoSelect = document.getElementById('tipo')
+  const claseSelect = document.getElementById('clase')
   const ordenCualInput = document.querySelector('input[name="ordenCual"]')
   
   // Función para mostrar/ocultar campo ordenCual
@@ -275,6 +284,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     const formData = Object.fromEntries(new FormData(form))
     updateCanvasPreview(formData)
   })
+  // Escuchar cambios en el select "clase"
+  if (claseSelect) {
+    claseSelect.addEventListener('change', () => {
+      const formData = Object.fromEntries(new FormData(form))
+      updateCanvasPreview(formData)
+    })
+  }
 })
 
 // Al enviar formulario: generar PDF final
