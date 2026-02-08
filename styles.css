@@ -75,9 +75,11 @@ form {
 }
 
 #pdf-preview {
+  width: 90%;
   max-width: 100%;
   height: auto;
   display: block;
+  margin: 0 auto;
 }
 
 #pdf-preview-mobile {
