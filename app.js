@@ -578,6 +578,108 @@ document.addEventListener('DOMContentLoaded', async () => {
     })
   }
 
+  // --- Manejo dinámico de servicios (máximo 6) ---
+  const MAX_SVC = 6
+  const addSvcBtn = document.getElementById('add-service-btn')
+  const svcCountLabel = document.getElementById('svc-count')
+
+  function getSvcElementFields(i) {
+    const el = document.getElementById(`servicio${i}`)
+    return el ? [el.closest('.field')] : []
+  }
+
+  function getSvcIndexVisible(i) {
+    const fields = getSvcElementFields(i)
+    if (fields.length === 0) return false
+    return fields[0].style.display !== 'none'
+  }
+
+  function countVisibleSvcs() {
+    let c = 0
+    for (let i = 1; i <= MAX_SVC; i++) if (getSvcIndexVisible(i)) c++
+    return c
+  }
+
+  function showService(i) {
+    const fields = getSvcElementFields(i)
+    fields.forEach(field => {
+      field.style.display = ''
+    })
+    wrapServiceFields(i)
+    attachRemoveButtonSvc(i)
+    updateAddButtonStateSvc()
+  }
+
+  function hideService(i) {
+    const fields = getSvcElementFields(i)
+    fields.forEach(field => {
+      field.style.display = 'none'
+    })
+    unwrapServiceFields(i)
+    updateAddButtonStateSvc()
+  }
+
+  function wrapServiceFields(i) {
+    const fields = getSvcElementFields(i)
+    if (fields.length === 0) return
+    if (fields[0].parentElement.classList.contains('svc-wrapper')) return
+    
+    const wrapper = document.createElement('div')
+    wrapper.className = 'svc-wrapper'
+    fields[0].parentElement.insertBefore(wrapper, fields[0])
+    fields.forEach(field => {
+      wrapper.appendChild(field)
+    })
+  }
+
+  function unwrapServiceFields(i) {
+    const wrapper = document.querySelector(`.svc-wrapper:has(#servicio${i})`)
+    if (!wrapper) return
+    const parent = wrapper.parentElement
+    while (wrapper.firstChild) {
+      parent.insertBefore(wrapper.firstChild, wrapper)
+    }
+    parent.removeChild(wrapper)
+  }
+
+  function attachRemoveButtonSvc(i) {
+    const wrapper = document.querySelector(`.svc-wrapper:has(#servicio${i})`)
+    if (!wrapper) return
+    if (wrapper.querySelector('.remove-svc-btn')) return
+    
+    const btn = document.createElement('button')
+    btn.type = 'button'
+    btn.className = 'remove-svc-btn'
+    btn.title = 'Eliminar servicio'
+    btn.innerHTML = '×'
+    btn.addEventListener('click', () => hideService(i))
+    wrapper.appendChild(btn)
+  }
+
+  function updateAddButtonStateSvc() {
+    const visible = countVisibleSvcs()
+    svcCountLabel.textContent = `(${visible}/${MAX_SVC})`
+    if (visible >= MAX_SVC) addSvcBtn.disabled = true
+    else addSvcBtn.disabled = false
+  }
+
+  // Inicializar: ocultar todos los servicios (0/6)
+  for (let i = 1; i <= MAX_SVC; i++) {
+    hideService(i)
+  }
+  updateAddButtonStateSvc()
+
+  if (addSvcBtn) {
+    addSvcBtn.addEventListener('click', () => {
+      for (let i = 1; i <= MAX_SVC; i++) {
+        if (!getSvcIndexVisible(i)) {
+          showService(i)
+          break
+        }
+      }
+    })
+  }
+
   // Click en canvas: mostrar preview grande (desktop only), sin zoom o pan
   const mainCanvas = document.getElementById('pdf-preview')
   // Evitar menú contextual al hacer clic derecho sobre el canvas principal
