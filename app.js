@@ -485,6 +485,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Agregar botón X en la esquina superior derecha
     attachRemoveButton(i)
+    
+    // Agregar listeners a los inputs dinámicamente
+    attachExperienceInputListeners(i)
+    
     updateAddButtonState()
   }
 
@@ -552,6 +556,38 @@ document.addEventListener('DOMContentLoaded', async () => {
     btn.addEventListener('click', () => hideExperience(i))
     
     wrapper.appendChild(btn)
+  }
+
+  function attachExperienceInputListeners(i) {
+    const names = [
+      `experiencia${i}`,
+      `tipoEmpresa${i}`,
+      `telefono_exp${i}`,
+      `fecha_term_exp${i}`,
+      `valorContrato_exp${i}`
+    ]
+    
+    names.forEach(name => {
+      const el = document.getElementById(name)
+      if (!el) return
+      
+      // Evitar agregar múltiples listeners
+      if (el.dataset.listenerAttached) return
+      el.dataset.listenerAttached = 'true'
+      
+      el.addEventListener('input', () => {
+        const formData = Object.fromEntries(new FormData(form))
+        updateCanvasPreview(formData)
+      })
+      
+      // Para selects, usar 'change' en lugar de 'input'
+      if (el.tagName === 'SELECT') {
+        el.addEventListener('change', () => {
+          const formData = Object.fromEntries(new FormData(form))
+          updateCanvasPreview(formData)
+        })
+      }
+    })
   }
 
   function updateAddButtonState() {
