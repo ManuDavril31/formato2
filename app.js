@@ -479,7 +479,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     fields.forEach(field => {
       field.style.display = ''
     })
-    if (i > 1) attachRemoveButton(i)
+    // Agregar botón de quitar a todas las experiencias (incluso la 1)
+    attachRemoveButton(i)
     updateAddButtonState()
   }
 
@@ -492,8 +493,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function attachRemoveButton(i) {
-    if (i === 1) return // no eliminar la primera
-    
     const fields = getExpElementFields(i)
     if (fields.length === 0) return
     
@@ -517,8 +516,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     else addBtn.disabled = false
   }
 
-  // Inicializar: solo mostrar experiencia 1, ocultar 2-5
-  for (let i = 2; i <= MAX_EXP; i++) {
+  // Inicializar: ocultar todas las experiencias (0/5)
+  for (let i = 1; i <= MAX_EXP; i++) {
     hideExperience(i)
   }
   updateAddButtonState()
