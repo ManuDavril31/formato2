@@ -199,6 +199,35 @@ async function initializePDF() {
 }
 
 // ============================================================
+// FUNCIÓN HELPER: Dividir texto en líneas de máximo 95 caracteres
+// ============================================================
+function splitTextAt95(text) {
+  if (!text || text.length <= 95) return [text]
+  
+  const lines = []
+  let remaining = text
+  
+  while (remaining.length > 0) {
+    if (remaining.length <= 95) {
+      lines.push(remaining)
+      break
+    }
+    
+    // Intentar dividir en un espacio si existe antes de los 95 caracteres
+    let cutPoint = 95
+    const lastSpace = remaining.lastIndexOf(' ', 95)
+    if (lastSpace > 70) { // Si hay espacio razonable
+      cutPoint = lastSpace
+    }
+    
+    lines.push(remaining.substring(0, cutPoint).trimEnd())
+    remaining = remaining.substring(cutPoint).trimStart()
+  }
+  
+  return lines
+}
+
+// ============================================================
 // PASO 2: PREVIEW EN TIEMPO REAL (CADA KEYSTROKE)
 // ============================================================
 // Restaurar PDF base + dibujar texto con Canvas API (ULTRA RÁPIDO)
@@ -219,8 +248,17 @@ function updateCanvasPreview(formData) {
       // Convertir coordenadas PDF a canvas
       const canvasX = coords.x * scale
       const canvasY = canvas.height - (coords.y * scale)
-      // Aplicar letter-spacing solo al campo "tipo" y "clase"
-      if (field === 'tipo' || field === 'clase') {
+      
+      // Caso especial: observaciones se divide en múltiples líneas
+      if (field === 'observaciones') {
+        const lines = splitTextAt95(String(formData[field]))
+        const lineHeight = 12 * scale // altura de línea en pixels
+        lines.forEach((line, idx) => {
+          const lineY = canvasY - (idx * lineHeight)
+          ctx.fillText(line, canvasX, lineY)
+        })
+      } else if (field === 'tipo' || field === 'clase') {
+        // Aplicar letter-spacing solo al campo "tipo" y "clase"
         drawTextWithLetterSpacing(ctx, String(formData[field]), canvasX, canvasY, 3)
       } else {
         ctx.fillText(String(formData[field]), canvasX, canvasY)
@@ -363,8 +401,16 @@ async function generateFinalPDF(formData) {
   // Escribir todos los campos en el PDF
   Object.entries(pdfCoordinates).forEach(([field, coords]) => {
     if (formData[field]) {
-      // Aplicar letter-spacing solo al campo "tipo" y "clase"
-      if (field === 'tipo' || field === 'clase') {
+      // Caso especial: observaciones se divide en múltiples líneas
+      if (field === 'observaciones') {
+        const lines = splitTextAt95(String(formData[field]))
+        const lineHeight = 12 // altura de línea en puntos
+        lines.forEach((line, idx) => {
+          const lineY = coords.y - (idx * lineHeight)
+          draw(line, coords.x, lineY, 10)
+        })
+      } else if (field === 'tipo' || field === 'clase') {
+        // Aplicar letter-spacing solo al campo "tipo" y "clase"
         drawWithLetterSpacing(formData[field], coords.x, coords.y, 10, 2)
       } else {
         draw(formData[field], coords.x, coords.y, 10)
