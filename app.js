@@ -39,6 +39,11 @@ selectMarkings.tipoEmpresa5 = {
   'X': 'tipoEmpresa5_publica',
   'privada': 'tipoEmpresa5_privada'
 }
+
+selectMarkings.caracterde = {
+  'representante': 'caracterde_representante',
+  'apoderado': 'caracterde_apoderado'
+}
 // Mapeo para tipo de documento del representante
 selectMarkings.tipo_documento_rep = {
   'cc': 'tipo_documento_rep_cc',
@@ -124,8 +129,8 @@ const pdfCoordinates = {
   tipo_documento_rep_ce: { x: 103, y: 275 },
   tipo_documento_rep_pasaporte: { x: 173, y: 275 },
   documento: { x: 203, y: 275 },
-  caracterde: { x: 383, y: 275 },
-  caracterde: { x: 444, y: 275 }
+  caracterde_representante: { x: 383, y: 275 },
+  caracterde_apoderado: { x: 444, y: 275 }
 }
 
 let baseCanvasImage = null
@@ -244,6 +249,14 @@ function updateCanvasPreview(formData) {
   if (tipoDocCoords) {
     const xCoord = tipoDocCoords.x * scale
     const yCoord = canvas.height - (tipoDocCoords.y * scale)
+    ctx.fillText('X', xCoord, yCoord)
+  }
+
+  // Dibujar X para caracterde (representante legal / apoderado)
+  const caractereCoords = getMarkingCoords('caracterde', formData.caracterde)
+  if (caractereCoords) {
+    const xCoord = caractereCoords.x * scale
+    const yCoord = canvas.height - (caractereCoords.y * scale)
     ctx.fillText('X', xCoord, yCoord)
   }
 
@@ -381,6 +394,18 @@ async function generateFinalPDF(formData) {
     })
   }
 
+  // Dibujar X para caracterde (representante legal / apoderado)
+  const caracterdeMark = getMarkingCoords('caracterde', formData.caracterde)
+  if (caracterdeMark) {
+    page.drawText('X', {
+      x: caracterdeMark.x,
+      y: caracterdeMark.y,
+      size: MARK_FONT_SIZE,
+      font,
+      color: rgb(0, 0, 0)
+    })
+  }
+
   // Agregar fecha
   draw(new Date().toLocaleDateString(), 400, 150)
 
@@ -477,6 +502,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Escuchar cambios en el select "clase"
   if (claseSelect) {
     claseSelect.addEventListener('change', () => {
+      const formData = Object.fromEntries(new FormData(form))
+      updateCanvasPreview(formData)
+    })
+  }
+
+  // Escuchar cambios en el select "caracterde"
+  const caracterdeSelect = document.getElementById('caracterde')
+  if (caracterdeSelect) {
+    caracterdeSelect.addEventListener('change', () => {
       const formData = Object.fromEntries(new FormData(form))
       updateCanvasPreview(formData)
     })
