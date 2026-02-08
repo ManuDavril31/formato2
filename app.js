@@ -69,6 +69,8 @@ const pdfCoordinates = {
 
 let baseCanvasImage = null
 const scale = 1.5
+// Tamaño de fuente en el PDF para las marcas 'X' (en puntos).
+const MARK_FONT_SIZE = 14
 
 // Función helper: obtener coordenada de X según el select
 function getMarkingCoords(selectName, value) {
@@ -153,22 +155,22 @@ function updateCanvasPreview(formData) {
   
   // Dibujar X según la opción seleccionada
   const coords = getMarkingCoords('orden', formData.orden)
+  const tipoEmpCoords = getMarkingCoords('tipoEmpresa1', formData.tipoEmpresa1)
+
+  // Calcular tamaño de fuente en px para canvas a partir del tamaño en puntos del PDF
+  const markFontPx = Math.round(MARK_FONT_SIZE * scale)
+  ctx.font = `bold ${markFontPx}px Helvetica, Arial, sans-serif`
+  ctx.fillStyle = '#000'
+
   if (coords) {
     const xCoord = coords.x * scale
     const yCoord = canvas.height - (coords.y * scale)
-    
-    ctx.font = 'bold 18px Arial'
-    ctx.fillStyle = '#000'
     ctx.fillText('X', xCoord, yCoord)
   }
 
-  // Dibujar X para tipoEmpresa1 (pública/privada)
-  const tipoEmpCoords = getMarkingCoords('tipoEmpresa1', formData.tipoEmpresa1)
   if (tipoEmpCoords) {
     const xCoord = tipoEmpCoords.x * scale
     const yCoord = canvas.height - (tipoEmpCoords.y * scale)
-    ctx.font = 'bold 18px Arial'
-    ctx.fillStyle = '#000'
     ctx.fillText('X', xCoord, yCoord)
   }
 
@@ -273,7 +275,7 @@ async function generateFinalPDF(formData) {
     page.drawText('X', {
       x: markingCoords.x,
       y: markingCoords.y,
-      size: 14,
+      size: MARK_FONT_SIZE,
       font,
       color: rgb(0, 0, 0)
     })
@@ -285,7 +287,7 @@ async function generateFinalPDF(formData) {
     page.drawText('X', {
       x: tipoEmpMarking.x,
       y: tipoEmpMarking.y,
-      size: 14,
+      size: MARK_FONT_SIZE,
       font,
       color: rgb(0, 0, 0)
     })
