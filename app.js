@@ -607,6 +607,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     })
     wrapServiceFields(i)
     attachRemoveButtonSvc(i)
+    attachServiceInputListeners(i)
     updateAddButtonStateSvc()
   }
 
@@ -654,6 +655,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     btn.innerHTML = '×'
     btn.addEventListener('click', () => hideService(i))
     wrapper.appendChild(btn)
+  }
+
+  function attachServiceInputListeners(i) {
+    const svcInput = document.getElementById(`servicio${i}`)
+    if (!svcInput) return
+    
+    // Evitar agregar múltiples listeners
+    if (svcInput.dataset.listenerAttached) return
+    svcInput.dataset.listenerAttached = 'true'
+    
+    svcInput.addEventListener('input', () => {
+      const formData = Object.fromEntries(new FormData(form))
+      updateCanvasPreview(formData)
+    })
   }
 
   function updateAddButtonStateSvc() {
