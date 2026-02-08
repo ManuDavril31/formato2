@@ -441,14 +441,105 @@ document.addEventListener('DOMContentLoaded', async () => {
       updateCanvasPreview(formData)
     })
   }
-})
 
-// Click en canvas: mostrar preview grande (desktop only), sin zoom o pan
-const mainCanvas = document.getElementById('pdf-preview')
-// Evitar menú contextual al hacer clic derecho sobre el canvas principal
-if (mainCanvas) mainCanvas.addEventListener('contextmenu', (ev) => ev.preventDefault())
-if (mainCanvas) {
-  mainCanvas.addEventListener('click', (e) => {
+  // --- Manejo dinámico de experiencias (máximo 5) ---
+  const MAX_EXP = 5
+  const addBtn = document.getElementById('add-experience-btn')
+  const expCountLabel = document.getElementById('exp-count')
+
+  function getExpElementFields(i) {
+    // Retorna todos los campos (divs con class="field") que contienen elementos de la experiencia i
+    const names = [
+      `experiencia${i}`,
+      `tipoEmpresa${i}`,
+      `telefono_exp${i}`,
+      `fecha_term_exp${i}`,
+      `valorContrato_exp${i}`
+    ]
+    return names.map(name => {
+      const el = document.getElementById(name)
+      return el ? el.closest('.field') : null
+    }).filter(f => f !== null)
+  }
+
+  function getExpIndexVisible(i) {
+    const fields = getExpElementFields(i)
+    if (fields.length === 0) return false
+    return fields[0].style.display !== 'none'
+  }
+
+  function countVisibleExps() {
+    let c = 0
+    for (let i = 1; i <= MAX_EXP; i++) if (getExpIndexVisible(i)) c++
+    return c
+  }
+
+  function showExperience(i) {
+    const fields = getExpElementFields(i)
+    fields.forEach(field => {
+      field.style.display = ''
+    })
+    if (i > 1) attachRemoveButton(i)
+    updateAddButtonState()
+  }
+
+  function hideExperience(i) {
+    const fields = getExpElementFields(i)
+    fields.forEach(field => {
+      field.style.display = 'none'
+    })
+    updateAddButtonState()
+  }
+
+  function attachRemoveButton(i) {
+    if (i === 1) return // no eliminar la primera
+    
+    const fields = getExpElementFields(i)
+    if (fields.length === 0) return
+    
+    const firstField = fields[0]
+    // Evitar agregar múltiples botones
+    if (firstField.querySelector('.remove-exp-btn')) return
+    
+    const btn = document.createElement('button')
+    btn.type = 'button'
+    btn.className = 'remove-exp-btn'
+    btn.style.marginLeft = '8px'
+    btn.textContent = 'Quitar'
+    btn.addEventListener('click', () => hideExperience(i))
+    firstField.appendChild(btn)
+  }
+
+  function updateAddButtonState() {
+    const visible = countVisibleExps()
+    expCountLabel.textContent = `(${visible}/${MAX_EXP})`
+    if (visible >= MAX_EXP) addBtn.disabled = true
+    else addBtn.disabled = false
+  }
+
+  // Inicializar: solo mostrar experiencia 1, ocultar 2-5
+  for (let i = 2; i <= MAX_EXP; i++) {
+    hideExperience(i)
+  }
+  updateAddButtonState()
+
+  if (addBtn) {
+    addBtn.addEventListener('click', () => {
+      for (let i = 1; i <= MAX_EXP; i++) {
+        if (!getExpIndexVisible(i)) {
+          showExperience(i)
+          break
+        }
+      }
+    })
+  }
+
+  // Click en canvas: mostrar preview grande (desktop only), sin zoom o pan
+  const mainCanvas = document.getElementById('pdf-preview')
+  // Evitar menú contextual al hacer clic derecho sobre el canvas principal
+  if (mainCanvas) mainCanvas.addEventListener('contextmenu', (ev) => ev.preventDefault())
+  if (mainCanvas) {
+    mainCanvas.addEventListener('click', (e) => {
     const isMobile = window.innerWidth <= 768
     if (isMobile) return
 
@@ -514,45 +605,50 @@ if (mainCanvas) {
     box.appendChild(temp)
     overlay.appendChild(box)
     document.body.appendChild(overlay)
-  })
-}
-
-// Al enviar formulario: generar PDF final
-document.getElementById('form').addEventListener('submit', async (e) => {
-  e.preventDefault()
-
-  const data = Object.fromEntries(new FormData(e.target))
-  
-  // Generar PDF final (una sola vez)
-  const finalPdfBytes = await generateFinalPDF(data)
-  const blob = new Blob([finalPdfBytes], { type: 'application/pdf' })
-
-  // Descargar
-  const link = document.createElement('a')
-  link.href = URL.createObjectURL(blob)
-  link.download = 'Hoja_de_Vida_Persona_Juridica.pdf'
-  link.click()
-})
-
-// Botón de Vista Previa: abrir PDF en nueva pestaña en desktop, modal en móvil
-document.getElementById('btn-preview').addEventListener('click', async (e) => {
-  e.preventDefault()
-
-  const isMobile = window.innerWidth <= 768;
-  
-  // En móvil, solo abrir el modal (manejado por el script en index.html)
-  if (isMobile) {
-    return;
+    })
   }
 
-  const form = document.getElementById('form')
-  const data = Object.fromEntries(new FormData(form))
-  
-  // Generar PDF en desktop
-  const pdfBytes = await generateFinalPDF(data)
-  const blob = new Blob([pdfBytes], { type: 'application/pdf' })
-  
-  // Abrir en nueva pestaña
-  const pdfUrl = URL.createObjectURL(blob)
-  window.open(pdfUrl, '_blank')
+  // Al enviar formulario: generar PDF final
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault()
+
+      const data = Object.fromEntries(new FormData(e.target))
+      
+      // Generar PDF final (una sola vez)
+      const finalPdfBytes = await generateFinalPDF(data)
+      const blob = new Blob([finalPdfBytes], { type: 'application/pdf' })
+
+      // Descargar
+      const link = document.createElement('a')
+      link.href = URL.createObjectURL(blob)
+      link.download = 'Hoja_de_Vida_Persona_Juridica.pdf'
+      link.click()
+    })
+  }
+
+  // Botón de Vista Previa: abrir PDF en nueva pestaña en desktop, modal en móvil
+  const previewBtn = document.getElementById('btn-preview')
+  if (previewBtn) {
+    previewBtn.addEventListener('click', async (e) => {
+      e.preventDefault()
+
+      const isMobile = window.innerWidth <= 768;
+      
+      // En móvil, solo abrir el modal (manejado por el script en index.html)
+      if (isMobile) {
+        return;
+      }
+
+      const formData = Object.fromEntries(new FormData(form))
+      
+      // Generar PDF en desktop
+      const pdfBytes = await generateFinalPDF(formData)
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' })
+      
+      // Abrir en nueva pestaña
+      const pdfUrl = URL.createObjectURL(blob)
+      window.open(pdfUrl, '_blank')
+    })
+  }
 })
