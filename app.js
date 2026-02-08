@@ -22,6 +22,23 @@ selectMarkings.tipoEmpresa1 = {
   'X': 'tipoEmpresa1_publica', // valor 'X' en el select representa Pública
   'privada': 'tipoEmpresa1_privada'
 }
+// Mapeos para tipoEmpresa2..5
+selectMarkings.tipoEmpresa2 = {
+  'X': 'tipoEmpresa2_publica',
+  'privada': 'tipoEmpresa2_privada'
+}
+selectMarkings.tipoEmpresa3 = {
+  'X': 'tipoEmpresa3_publica',
+  'privada': 'tipoEmpresa3_privada'
+}
+selectMarkings.tipoEmpresa4 = {
+  'X': 'tipoEmpresa4_publica',
+  'privada': 'tipoEmpresa4_privada'
+}
+selectMarkings.tipoEmpresa5 = {
+  'X': 'tipoEmpresa5_publica',
+  'privada': 'tipoEmpresa5_privada'
+}
 // Mapeo de coordenadas: nombre del campo -> posición en PDF
 const pdfCoordinates = {
   // I. IDENTIFICACIÓN
@@ -56,11 +73,40 @@ const pdfCoordinates = {
   // III. EXPERIENCIA
   experiencia1: { x: 35, y: 393 },
   // Posiciones para marcar 'X' según tipoEmpresa1
-  tipoEmpresa1_publica: { x: 293, y: 391 },
-  tipoEmpresa1_privada: { x: 323, y: 391 },
-  telefono_exp1: { x: 343, y: 392 },
-  fecha_term_exp1: { x: 420, y: 392 },
-  valorContrato_exp1: { x: 502, y: 392 },
+  tipoEmpresa1_publica: { x: 293, y: 393 },
+  tipoEmpresa1_privada: { x: 323, y: 393 },
+  telefono_exp1: { x: 343, y: 393 },
+  fecha_term_exp1: { x: 420, y: 393 },
+  valorContrato_exp1: { x: 502, y: 393 },
+
+  // Experiencias adicionales (se ponen un poco más abajo cada una)
+  experiencia2: { x: 35, y: 360 },
+  tipoEmpresa2_publica: { x: 293, y: 360 },
+  tipoEmpresa2_privada: { x: 323, y: 360 },
+  telefono_exp2: { x: 343, y: 360 },
+  fecha_term_exp2: { x: 420, y: 360 },
+  valorContrato_exp2: { x: 502, y: 360 },
+
+  experiencia3: { x: 35, y: 327 },
+  tipoEmpresa3_publica: { x: 293, y: 327 },
+  tipoEmpresa3_privada: { x: 323, y: 327 },
+  telefono_exp3: { x: 343, y: 327 },
+  fecha_term_exp3: { x: 420, y: 327 },
+  valorContrato_exp3: { x: 502, y: 327 },
+
+  experiencia4: { x: 35, y: 294 },
+  tipoEmpresa4_publica: { x: 293, y: 294 },
+  tipoEmpresa4_privada: { x: 323, y: 294 },
+  telefono_exp4: { x: 343, y: 294 },
+  fecha_term_exp4: { x: 420, y: 294 },
+  valorContrato_exp4: { x: 502, y: 294 },
+
+  experiencia5: { x: 35, y: 261 },
+  tipoEmpresa5_publica: { x: 293, y: 261 },
+  tipoEmpresa5_privada: { x: 323, y: 261 },
+  telefono_exp5: { x: 343, y: 261 },
+  fecha_term_exp5: { x: 420, y: 261 },
+  valorContrato_exp5: { x: 502, y: 261 },
 
   
   // IV. REPRESENTANTE LEGAL
@@ -158,7 +204,6 @@ function updateCanvasPreview(formData) {
   
   // Dibujar X según la opción seleccionada
   const coords = getMarkingCoords('orden', formData.orden)
-  const tipoEmpCoords = getMarkingCoords('tipoEmpresa1', formData.tipoEmpresa1)
 
   // Calcular tamaño de fuente en px para canvas a partir del tamaño en puntos del PDF
   const markFontPx = Math.round(MARK_FONT_SIZE * scale)
@@ -171,10 +216,15 @@ function updateCanvasPreview(formData) {
     ctx.fillText('X', xCoord, yCoord)
   }
 
-  if (tipoEmpCoords) {
-    const xCoord = tipoEmpCoords.x * scale
-    const yCoord = canvas.height - (tipoEmpCoords.y * scale)
-    ctx.fillText('X', xCoord, yCoord)
+  // Dibujar X para tipoEmpresa1..5
+  for (let i = 1; i <= 5; i++) {
+    const selectName = `tipoEmpresa${i}`
+    const tipoCoords = getMarkingCoords(selectName, formData[selectName])
+    if (tipoCoords) {
+      const xCoord = tipoCoords.x * scale
+      const yCoord = canvas.height - (tipoCoords.y * scale)
+      ctx.fillText('X', xCoord, yCoord)
+    }
   }
 
   // Dibujar marcas de agua grandes y diagonales a lo largo del canvas
@@ -284,16 +334,19 @@ async function generateFinalPDF(formData) {
     })
   }
 
-  // Dibujar X para tipoEmpresa1 (pública/privada)
-  const tipoEmpMarking = getMarkingCoords('tipoEmpresa1', formData.tipoEmpresa1)
-  if (tipoEmpMarking) {
-    page.drawText('X', {
-      x: tipoEmpMarking.x,
-      y: tipoEmpMarking.y,
-      size: MARK_FONT_SIZE,
-      font,
-      color: rgb(0, 0, 0)
-    })
+  // Dibujar X para tipoEmpresa1..5
+  for (let i = 1; i <= 5; i++) {
+    const selectName = `tipoEmpresa${i}`
+    const tipoMarking = getMarkingCoords(selectName, formData[selectName])
+    if (tipoMarking) {
+      page.drawText('X', {
+        x: tipoMarking.x,
+        y: tipoMarking.y,
+        size: MARK_FONT_SIZE,
+        font,
+        color: rgb(0, 0, 0)
+      })
+    }
   }
 
   // Agregar fecha
@@ -320,6 +373,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   const ordenSelect = document.getElementById('orden')
   const tipoSelect = document.getElementById('tipo')
   const tipoEmpresa1Select = document.getElementById('tipoEmpresa1')
+  const tipoEmpresa2Select = document.getElementById('tipoEmpresa2')
+  const tipoEmpresa3Select = document.getElementById('tipoEmpresa3')
+  const tipoEmpresa4Select = document.getElementById('tipoEmpresa4')
+  const tipoEmpresa5Select = document.getElementById('tipoEmpresa5')
   const claseSelect = document.getElementById('clase')
   const ordenCualInput = document.querySelector('input[name="ordenCual"]')
   
@@ -356,13 +413,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     const formData = Object.fromEntries(new FormData(form))
     updateCanvasPreview(formData)
   })
-  // Escuchar cambios en el select "tipoEmpresa1"
-  if (tipoEmpresa1Select) {
-    tipoEmpresa1Select.addEventListener('change', () => {
+  // Escuchar cambios en los selects "tipoEmpresa1..5"
+  [tipoEmpresa1Select, tipoEmpresa2Select, tipoEmpresa3Select, tipoEmpresa4Select, tipoEmpresa5Select].forEach(sel => {
+    if (!sel) return
+    sel.addEventListener('change', () => {
       const formData = Object.fromEntries(new FormData(form))
       updateCanvasPreview(formData)
     })
-  }
+  })
   // Escuchar cambios en el select "clase"
   if (claseSelect) {
     claseSelect.addEventListener('change', () => {
