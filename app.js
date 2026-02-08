@@ -310,14 +310,21 @@ document.getElementById('form').addEventListener('submit', async (e) => {
   link.click()
 })
 
-// Botón de Vista Previa: abrir PDF en nueva pestaña
+// Botón de Vista Previa: abrir PDF en nueva pestaña en desktop, modal en móvil
 document.getElementById('btn-preview').addEventListener('click', async (e) => {
   e.preventDefault()
+
+  const isMobile = window.innerWidth <= 768;
+  
+  // En móvil, solo abrir el modal (manejado por el script en index.html)
+  if (isMobile) {
+    return;
+  }
 
   const form = document.getElementById('form')
   const data = Object.fromEntries(new FormData(form))
   
-  // Generar PDF
+  // Generar PDF en desktop
   const pdfBytes = await generateFinalPDF(data)
   const blob = new Blob([pdfBytes], { type: 'application/pdf' })
   
