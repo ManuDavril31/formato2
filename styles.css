@@ -1,73 +1,83 @@
-/* Botones de acci\u00f3n siempre visibles abajo */
-.fixed-actions {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100vw;
-  background: #fff;
-  box-shadow: 0 -2px 8px #0002;
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  padding: 12px 0 12px 0;
-  z-index: 1000;
-}
-legend .collapse-btn {
-  background: #eee;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  font-size: 14px;
-  margin-left: 8px;
-  cursor: pointer;
-  padding: 0 6px;
-  color: #333;
-  transition: background 0.2s;
-}
-legend .collapse-btn:hover {
-  background: #ddd;
-}
+/* =====================================================
+   ESTILOS GLOBALES Y VARIABLES
+   ===================================================== */
 * {
   box-sizing: border-box;
 }
 
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1e40af;
+  --primary-light: #3b82f6;
+  --secondary: #7c3aed;
+  --danger: #ef4444;
+  --danger-light: #ff6b6b;
+  --success: #10b981;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.15);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+  --radius: 8px;
+  --radius-lg: 12px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 body {
-  font-family: Arial, Helvetica, sans-serif;
-  background: #f4f6f8;
-  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 30px 20px;
   overflow-x: hidden;
+  color: var(--gray-800);
+  line-height: 1.6;
 }
 
 h1 {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  color: white;
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  text-align: center;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
+/* =====================================================
+   LAYOUT PRINCIPAL
+   ===================================================== */
 .main-container {
   display: flex;
-  gap: 24px;
+  gap: 28px;
   align-items: flex-start;
   width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 form {
   background: white;
-  padding: 20px;
-  border-radius: 6px;
-  /* Restaurar proporciones: formulario 45% / preview 55% */
+  padding: 32px;
+  border-radius: var(--radius-lg);
   flex: 0 0 45%;
   max-width: 720px;
-  min-width: 320px;
-  box-sizing: border-box;
+  box-shadow: var(--shadow-xl);
 }
 
 .preview-container {
   display: flex;
   flex-direction: column;
-  /* Restaurar proporción del preview para que el canvas no cambie de tamaño inesperadamente */
   flex: 1 1 55%;
   min-width: 280px;
-  box-sizing: border-box;
 }
 
 .canvas-wrapper {
@@ -88,7 +98,9 @@ form {
   display: block;
 }
 
-/* Modal para vista previa en m\u00f3vil */
+/* =====================================================
+   MODAL PARA VISTA PREVIA EN MÓVIL
+   ===================================================== */
 .modal-overlay {
   display: none;
   position: fixed;
@@ -96,9 +108,9 @@ form {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   z-index: 1500;
-  animation: fadeIn 0.3s ease-in-out;
+  animation: fadeIn 0.3s ease-out;
 }
 
 .modal-overlay.active {
@@ -111,8 +123,8 @@ form {
   left: 0;
   right: 0;
   background: white;
-  border-radius: 16px 16px 0 0;
-  padding: 20px;
+  border-radius: 20px 20px 0 0;
+  padding: 24px;
   z-index: 1501;
   max-height: 90vh;
   overflow-y: auto;
@@ -124,46 +136,35 @@ form {
 }
 
 @keyframes slideUp {
-  from {
-    transform: translateY(100%);
-  }
-  to {
-    transform: translateY(0);
-  }
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 @keyframes slideDown {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(100%);
-  }
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(100%); opacity: 0; }
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .modal-header {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
   font-size: 20px;
-  font-weight: bold;
+  font-weight: 700;
   position: relative;
+  color: var(--gray-900);
 }
 
 .modal-close-btn {
-  background: none;
+  background: var(--gray-100);
   border: none;
-  border-radius: 4px;
+  border-radius: 50%;
   width: 44px;
   height: 44px;
   cursor: pointer;
@@ -172,184 +173,358 @@ form {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #555;
-  transition: all 0.2s ease;
+  color: var(--gray-600);
+  transition: var(--transition);
   line-height: 1;
   position: absolute;
   right: 0;
 }
 
 .modal-close-btn:hover {
-  color: #000;
-  background: #f0f0f0;
+  color: white;
+  background: var(--danger);
+  transform: rotate(90deg) scale(1.1);
 }
 
-.modal-close-btn:active {
-  transform: scale(0.9);
-}
-
+/* =====================================================
+   FORMULARIO Y CAMPOS
+   ===================================================== */
 fieldset {
-  border: 1px solid #ccc;
-  margin-bottom: 20px;
-  padding: 15px;
+  border: 1px solid var(--gray-200);
+  margin-bottom: 24px;
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  background: var(--gray-50);
+  transition: var(--transition);
+}
+
+fieldset:hover {
+  border-color: var(--primary-light);
+  background: linear-gradient(135deg, var(--gray-50) 0%, rgba(37, 99, 235, 0.03) 100%);
 }
 
 legend {
-  padding: 0 8px;
-  font-weight: bold;
+  padding: 0 12px;
+  font-weight: 700;
   font-size: 18px;
+  color: var(--gray-900);
+  margin-left: -12px;
 }
 
-/* Labels inside paired fields remain attached to their inputs */
 .field label {
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   font-weight: 600;
-  font-size: 15px;
+  font-size: 14px;
+  color: var(--gray-700);
+  letter-spacing: 0.3px;
 }
 
-input {
+input,
+select {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 12px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  font-size: 15px;
+  border: 1.5px solid var(--gray-300);
+  border-radius: var(--radius);
+  transition: var(--transition);
+  background: white;
+  font-family: inherit;
 }
 
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  background: white;
+}
+
+input::placeholder {
+  color: var(--gray-400);
+}
+
+input[type="file"] {
+  cursor: pointer;
+  padding: 10px 14px;
+}
+
+input[type="file"]::file-selector-button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-weight: 600;
+  transition: var(--transition);
+  margin-right: 12px;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* =====================================================
+   BOTONES
+   ===================================================== */
 button {
-  padding: 14px 22px;
-  font-size: 18px;
-  background: #0056b3;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  background: var(--primary);
   color: white;
   border: none;
   cursor: pointer;
-  border-radius: 6px;
-  transition: background 0.2s;
+  border-radius: var(--radius-lg);
+  transition: var(--transition);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
 }
 
 button:hover {
-  background: #003d82;
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
 }
 
-select {
+button:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+.fixed-actions button {
+  flex: 1;
+  max-width: 280px;
+  padding: 14px 28px;
+  font-size: 15px;
+  border-radius: var(--radius-lg);
+}
+
+.fixed-actions {
+  position: fixed;
+  left: 0;
+  bottom: 0;
   width: 100%;
-  padding: 10px;
-  margin-bottom: 12px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.12);
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  padding: 16px 20px;
+  z-index: 1000;
 }
 
-.select-indicator {
-  display: inline-block;
-  margin-left: 8px;
-  font-size: 18px;
-  color: #28a745;
-  font-weight: bold;
+/* =====================================================
+   WRAPPERS PARA ELEMENTOS DINÁMICOS
+   ===================================================== */
+.exp-wrapper,
+.svc-wrapper {
+  position: relative;
+  background: linear-gradient(135deg, var(--gray-50) 0%, white 100%);
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  padding-top: 48px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
 }
 
-/* Media Queries para Responsive */
-@media (max-width: 768px) {
-  body {
-    padding: 10px;
-  }
+.exp-wrapper:hover,
+.svc-wrapper:hover {
+  border-color: var(--primary-light);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
 
-  h1 {
-    font-size: 20px;
-    margin-bottom: 16px;
-  }
+/* =====================================================
+   BOTONES ELIMINAR
+   ===================================================== */
+.remove-exp-btn,
+.remove-svc-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: var(--gray-200);
+  color: var(--gray-500);
+  border: none;
+  border-radius: 50%;
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+}
 
-  /* On small screens keep stacked but canvas hidden by default (modal used) */
+.remove-exp-btn:hover,
+.remove-svc-btn:hover {
+  background: var(--danger-light);
+  color: white;
+  transform: scale(1.15) rotate(90deg);
+  box-shadow: var(--shadow-lg);
+}
+
+.remove-exp-btn:active,
+.remove-svc-btn:active {
+  transform: scale(0.95);
+}
+
+/* =====================================================
+   RESPONSIVE DESIGN
+   ===================================================== */
+@media (max-width: 1024px) {
   .main-container {
     flex-direction: column;
-    gap: 0;
+    gap: 20px;
   }
 
   form {
+    flex: 1;
     max-width: 100%;
-    min-width: 0;
+  }
+
+  .preview-container {
+    flex: 1;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
     padding: 16px;
+  }
+
+  h1 {
+    font-size: 28px;
+    margin-bottom: 24px;
+  }
+
+  form {
+    padding: 20px;
+  }
+
+  .main-container {
+    flex-direction: column;
+    gap: 0;
   }
 
   .canvas-wrapper {
     display: none;
   }
 
-  /* En mobile el canvas debe ocupar todo el ancho cuando se muestra en modal */
   #pdf-preview {
     width: 100%;
   }
 
   .fixed-actions {
-    bottom: 0;
-    width: 100%;
-    gap: 8px;
+    gap: 12px;
+    padding: 12px 16px;
   }
 
-  input, select {
-    padding: 10px;
+  .fixed-actions button {
+    max-width: none;
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
+  input,
+  select {
+    padding: 11px 12px;
     font-size: 16px;
+    margin-bottom: 12px;
   }
 
   button {
-    padding: 10px 16px;
-    font-size: 14px;
-    flex: 1;
+    padding: 11px 20px;
+    font-size: 15px;
   }
 
   fieldset {
-    padding: 12px;
-    margin-bottom: 16px;
+    padding: 16px;
+    margin-bottom: 18px;
   }
 
-  /* En mobile, una columna */
-  .fields {
-    display: block;
+  legend {
+    font-size: 16px;
+  }
+
+  .field label {
+    font-size: 13px;
+    margin-bottom: 6px;
   }
 }
 
 @media (max-width: 480px) {
   body {
-    padding: 8px;
-  }
-
-  h1 {
-    font-size: 18px;
-    margin-bottom: 12px;
-  }
-
-  form {
     padding: 12px;
   }
 
-  fieldset {
-    padding: 10px;
-    margin-bottom: 12px;
+  h1 {
+    font-size: 24px;
+    margin-bottom: 18px;
   }
 
-  input, select {
-    padding: 8px;
-    font-size: 14px;
-    margin-bottom: 8px;
+  form {
+    padding: 16px;
+  }
+
+  fieldset {
+    padding: 12px;
+    margin-bottom: 14px;
+  }
+
+  input,
+  select {
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 10px;
   }
 
   button {
-    padding: 8px 12px;
-    font-size: 12px;
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  .fixed-actions {
+    gap: 10px;
+    padding: 10px 12px;
+    flex-wrap: wrap;
+  }
+
+  .fixed-actions button {
+    flex: 1;
+    min-width: calc(50% - 5px);
   }
 }
 
-/* Efecto blur y overlay Zoom solo en desktop */
+/* =====================================================
+   EFECTO ZOOM EN CANVAS (DESKTOP)
+   ===================================================== */
 @media (min-width: 769px) {
   .canvas-zoom-wrapper {
     position: relative;
     display: inline-block;
+    width: 100%;
   }
+
   .canvas-zoom-wrapper:hover canvas {
-    filter: blur(4px) brightness(0.95);
-    transition: filter 180ms ease;
+    filter: blur(3px) brightness(0.98);
+    transition: filter 0.3s ease;
   }
+
   .canvas-overlay {
     position: absolute;
     inset: 0;
@@ -358,26 +533,29 @@ select {
     justify-content: center;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 180ms ease;
+    transition: opacity 0.3s ease;
   }
+
   .canvas-zoom-wrapper:hover .canvas-overlay {
     opacity: 1;
   }
+
   .canvas-overlay span {
-    background: rgba(0, 0, 0, 0.7);
-    color: #fff;
-    padding: 18px 36px;
-    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.75);
+    color: white;
+    padding: 16px 32px;
+    border-radius: var(--radius-lg);
     font-weight: 700;
-    font-size: 22px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.35);
-    letter-spacing: 2px;
+    font-size: 16px;
+    box-shadow: var(--shadow-xl);
+    letter-spacing: 1px;
+    backdrop-filter: blur(4px);
   }
-  /* Desktop: dos columnas por fila */
+
   .fields {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px 16px;
+    gap: 16px 20px;
     align-items: start;
   }
 
@@ -386,91 +564,25 @@ select {
   }
 }
 
-/* Contenedor visual para cada experiencia */
-.exp-wrapper {
-  position: relative;
-  background: #fafafa;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 16px;
-  padding-top: 40px;
-  margin-bottom: 16px;
+/* =====================================================
+   ANIMACIONES Y TRANSICIONES
+   ===================================================== */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
-/* Contenedor visual para cada servicio */
-.svc-wrapper {
-  position: relative;
-  background: #fafafa;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 16px;
-  padding-top: 40px;
-  margin-bottom: 16px;
+form {
+  animation: slideInLeft 0.5s ease-out;
 }
 
-/* Ícono X para eliminar experiencia */
-.remove-exp-btn {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  background: #f0f0f0;
-  color: #999;
-  border: 1px solid #ddd;
-  border-radius: 50%;
-  font-size: 24px;
-  font-weight: 300;
-  line-height: 1;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-}
-
-.remove-exp-btn:hover {
-  background: #ff6b6b;
-  color: white;
-  border-color: #ff6b6b;
-  box-shadow: 0 2px 6px rgba(255, 107, 107, 0.3);
-}
-
-.remove-exp-btn:active {
-  transform: scale(0.95);
-}
-
-/* Ícono X para eliminar servicio */
-.remove-svc-btn {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  background: #f0f0f0;
-  color: #999;
-  border: 1px solid #ddd;
-  border-radius: 50%;
-  font-size: 24px;
-  font-weight: 300;
-  line-height: 1;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-}
-
-.remove-svc-btn:hover {
-  background: #ff6b6b;
-  color: white;
-  border-color: #ff6b6b;
-  box-shadow: 0 2px 6px rgba(255, 107, 107, 0.3);
-}
-
-.remove-svc-btn:active {
-  transform: scale(0.95);
+fieldset {
+  animation: slideInLeft 0.5s ease-out;
 }
 
