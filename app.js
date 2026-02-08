@@ -39,6 +39,12 @@ selectMarkings.tipoEmpresa5 = {
   'X': 'tipoEmpresa5_publica',
   'privada': 'tipoEmpresa5_privada'
 }
+// Mapeo para tipo de documento del representante
+selectMarkings.tipo_documento_rep = {
+  'cc': 'tipo_documento_rep_cc',
+  'ce': 'tipo_documento_rep_ce',
+  'pasaporte': 'tipo_documento_rep_pasaporte'
+}
 // Mapeo de coordenadas: nombre del campo -> posición en PDF
 const pdfCoordinates = {
   // I. IDENTIFICACIÓN
@@ -113,12 +119,10 @@ const pdfCoordinates = {
   primerApellido: { x: 87, y: 303 },
   segundoApellido: { x: 306, y: 303 },
   nombres: { x: 410, y: 303 },
-  tipo_documento_rep: { x: 63, y: 275 }, // Coordenada para marcar el tipo de documento (X, CE, Pasaporte)
-  tipo_documento_rep: { x: 103, y: 275 }, // Coordenada para marcar el tipo de documento (X, CE, Pasaporte)
-  tipo_documento_rep: { x: 173, y: 275 }, // Coordenada para marcar el tipo de documento (X, CE, Pasaporte)
-  // tipo_documento_cc_rep: { x: 87, y: 275 },
-  // tipo_documento_ce_rep: { x: 157, y: 275 },
-  // tipo_documento_pasaporte_rep: { x: 227, y: 275 }, 
+  // Coordenadas para tipo de documento del representante (marcar con X)
+  tipo_documento_rep_cc: { x: 63, y: 275 },
+  tipo_documento_rep_ce: { x: 103, y: 275 },
+  tipo_documento_rep_pasaporte: { x: 173, y: 275 },
   documento: { x: 200, y: 275 },
 }
 
@@ -231,6 +235,14 @@ function updateCanvasPreview(formData) {
       const yCoord = canvas.height - (tipoCoords.y * scale)
       ctx.fillText('X', xCoord, yCoord)
     }
+  }
+
+  // Dibujar X para el tipo de documento del representante
+  const tipoDocCoords = getMarkingCoords('tipo_documento_rep', formData['tipo_documento_rep'])
+  if (tipoDocCoords) {
+    const xCoord = tipoDocCoords.x * scale
+    const yCoord = canvas.height - (tipoDocCoords.y * scale)
+    ctx.fillText('X', xCoord, yCoord)
   }
 
   // Dibujar marcas de agua grandes y diagonales a lo largo del canvas
@@ -355,6 +367,18 @@ async function generateFinalPDF(formData) {
     }
   }
 
+  // Dibujar X para tipo de documento del representante
+  const tipoDocMark = getMarkingCoords('tipo_documento_rep', formData.tipo_documento_rep)
+  if (tipoDocMark) {
+    page.drawText('X', {
+      x: tipoDocMark.x,
+      y: tipoDocMark.y,
+      size: MARK_FONT_SIZE,
+      font,
+      color: rgb(0, 0, 0)
+    })
+  }
+
   // Agregar fecha
   draw(new Date().toLocaleDateString(), 400, 150)
 
@@ -384,6 +408,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const tipoEmpresa4Select = document.getElementById('tipoEmpresa4')
   const tipoEmpresa5Select = document.getElementById('tipoEmpresa5')
   const claseSelect = document.getElementById('clase')
+  const tipoDocumentoRepSelect = document.getElementById('tipo_documento_rep')
   const ordenCualInput = document.querySelector('input[name="ordenCual"]')
   
   // Función para mostrar/ocultar campo ordenCual (protegida)
@@ -431,6 +456,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     })
   } else {
     console.warn('No se encontró #tipo; listener no registrado.')
+  }
+  // Escuchar cambios en el select "tipo_documento_rep"
+  if (tipoDocumentoRepSelect) {
+    tipoDocumentoRepSelect.addEventListener('change', () => {
+      const formData = Object.fromEntries(new FormData(form))
+      updateCanvasPreview(formData)
+    })
   }
   // Escuchar cambios en los selects "tipoEmpresa1..5"
   [tipoEmpresa1Select, tipoEmpresa2Select, tipoEmpresa3Select, tipoEmpresa4Select, tipoEmpresa5Select].forEach(sel => {
