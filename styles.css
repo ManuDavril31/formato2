@@ -54,9 +54,9 @@ form {
   background: white;
   padding: 20px;
   border-radius: 6px;
-  /* Forzar 40% del ancho del contenedor sin desplazar texto */
-  flex: 0 0 40%;
-  max-width: 640px; /* reasonable cap */
+  /* Restaurar proporciones: formulario 45% / preview 55% */
+  flex: 0 0 45%;
+  max-width: 720px;
   min-width: 320px;
   box-sizing: border-box;
 }
@@ -64,7 +64,8 @@ form {
 .preview-container {
   display: flex;
   flex-direction: column;
-  flex: 1 1 60%;
+  /* Restaurar proporción del preview para que el canvas no cambie de tamaño inesperadamente */
+  flex: 1 1 55%;
   min-width: 280px;
   box-sizing: border-box;
 }
@@ -74,11 +75,9 @@ form {
 }
 
 #pdf-preview {
-  /* Mostrar el canvas más pequeño en desktop para mejor equilibrio visual */
-  width: 85%;
+  max-width: 100%;
   height: auto;
   display: block;
-  margin: 0 auto;
 }
 
 #pdf-preview-mobile {
