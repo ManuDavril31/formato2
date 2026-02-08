@@ -50,6 +50,7 @@ const pdfCoordinates = {
 
   // III. EXPERIENCIA
   experiencia1: { x: 35, y: 393 },
+  // tipoEmpresa1: { x: 293, y: 393 },
 
   
   // IV. REPRESENTANTE LEGAL
