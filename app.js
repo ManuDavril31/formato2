@@ -44,6 +44,11 @@ selectMarkings.caracterde = {
   'representante': 'caracterde_representante',
   'apoderado': 'caracterde_apoderado'
 }
+// Mapeo para inhabilidad
+selectMarkings.inhabilidad = {
+  'si': 'inhabilidad_si',
+  'no': 'inhabilidad_no'
+}
 // Mapeo para tipo de documento del representante
 selectMarkings.tipo_documento_rep = {
   'cc': 'tipo_documento_rep_cc',
@@ -263,6 +268,14 @@ function updateCanvasPreview(formData) {
     ctx.fillText('X', xCoord, yCoord)
   }
 
+  // Dibujar X para inhabilidad (si / no)
+  const inhabilidadCoords = getMarkingCoords('inhabilidad', formData.inhabilidad)
+  if (inhabilidadCoords) {
+    const xCoord = inhabilidadCoords.x * scale
+    const yCoord = canvas.height - (inhabilidadCoords.y * scale)
+    ctx.fillText('X', xCoord, yCoord)
+  }
+
   // Dibujar marcas de agua grandes y diagonales a lo largo del canvas
   drawCanvasWatermarks(ctx, canvas.width, canvas.height)
 }
@@ -409,6 +422,18 @@ async function generateFinalPDF(formData) {
     })
   }
 
+  // Dibujar X para inhabilidad (si / no)
+  const inhabilidadMark = getMarkingCoords('inhabilidad', formData.inhabilidad)
+  if (inhabilidadMark) {
+    page.drawText('X', {
+      x: inhabilidadMark.x,
+      y: inhabilidadMark.y,
+      size: MARK_FONT_SIZE,
+      font,
+      color: rgb(0, 0, 0)
+    })
+  }
+
   // Agregar fecha
   draw(new Date().toLocaleDateString(), 400, 150)
 
@@ -514,6 +539,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   const caracterdeSelect = document.getElementById('caracterde')
   if (caracterdeSelect) {
     caracterdeSelect.addEventListener('change', () => {
+      const formData = Object.fromEntries(new FormData(form))
+      updateCanvasPreview(formData)
+    })
+  }
+
+  // Escuchar cambios en el select "inhabilidad"
+  const inhabilidadSelect = document.getElementById('inhabilidad')
+  if (inhabilidadSelect) {
+    inhabilidadSelect.addEventListener('change', () => {
       const formData = Object.fromEntries(new FormData(form))
       updateCanvasPreview(formData)
     })
