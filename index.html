@@ -186,18 +186,29 @@
     <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
     <script src="app.js"></script>
     <script>
-      document.querySelectorAll(".collapse-btn").forEach((btn) => {
+      // Colapsar todos los fieldsets excepto el primero y cambiar el icono
+      const fieldsets = document.querySelectorAll("form fieldset");
+      fieldsets.forEach((fieldset, idx) => {
+        const btn = fieldset.querySelector(".collapse-btn");
+        const content = Array.from(fieldset.children).filter(
+          (el) => el.tagName !== "LEGEND",
+        );
+        if (idx === 0) {
+          // El primero queda expandido
+          content.forEach((el) => (el.style.display = ""));
+          btn.textContent = "▲";
+        } else {
+          // Los demás colapsados
+          content.forEach((el) => (el.style.display = "none"));
+          btn.textContent = "▼";
+        }
         btn.addEventListener("click", function () {
-          const fieldset = btn.closest("fieldset");
-          const content = Array.from(fieldset.children).filter(
-            (el) => el.tagName !== "LEGEND",
-          );
-          if (btn.textContent === "−") {
+          if (btn.textContent === "▲") {
             content.forEach((el) => (el.style.display = "none"));
-            btn.textContent = "+";
+            btn.textContent = "▼";
           } else {
             content.forEach((el) => (el.style.display = ""));
-            btn.textContent = "−";
+            btn.textContent = "▲";
           }
         });
       });
