@@ -515,7 +515,7 @@
             <div class="field">
               <label for="tipo_documento_rep">Tipo de Documento</label>
               <select name="tipo_documento_rep" id="tipo_documento_rep">
-                <option value="">Seleccionar</option>
+                <option value="">Seleccionar...</option>
                 <option value="cc" selected>Cedula</option>
                 <option value="ce">Cedula de extranjería</option>
                 <option value="pasaporte">Pasaporte</option>
@@ -533,11 +533,30 @@
             <div class="field">
               <label for="caracterde">Actua en caracter de</label>
               <select name="caracterde" id="caracterde">
-                <option value="">Seleccionar</option>
+                <option value="">Seleccionar...</option>
                 <option value="representante" selected>
                   Representante legal
                 </option>
                 <option value="apoderado">Apoderado</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="capacidad_contratacion"
+                >Capacidad de contratación</label
+              >
+              <input
+                id="capacidad_contratacion"
+                name="capacidad_contratacion"
+                placeholder="Capacidad de contratación"
+                value="1065874214"
+              />
+            </div>
+            <div class="field">
+              <label for="inhabilidad">Manifestación de No inhabilidad</label>
+              <select name="inhabilidad" id="inhabilidad">
+                <option value="">Seleccionar...</option>
+                <option value="si" selected>Si</option>
+                <option value="no">No</option>
               </select>
             </div>
           </div>

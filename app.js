@@ -130,7 +130,9 @@ const pdfCoordinates = {
   tipo_documento_rep_pasaporte: { x: 173, y: 275 },
   documento: { x: 203, y: 275 },
   caracterde_representante: { x: 383, y: 275 },
-  caracterde_apoderado: { x: 444, y: 275 }
+  caracterde_apoderado: { x: 444, y: 275 },
+  capacidad_contratacion: { x: 468, y: 275 },
+  inhabilidad: { x: 468, y: 260 }
 }
 
 let baseCanvasImage = null
