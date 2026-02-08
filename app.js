@@ -139,7 +139,8 @@ const pdfCoordinates = {
   capacidad_contratacion: { x: 468, y: 275 },
   inhabilidad_si: { x: 382, y: 236 },
   inhabilidad_no: { x: 412, y: 236 },
-  observaciones: { x: 100, y: 210 }
+  observaciones: { x: 100, y: 210 },
+  file: { x: 100, y: 150 }
 }
 
 let baseCanvasImage = null
