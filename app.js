@@ -805,6 +805,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Obtener el padre del wrapper (debe ser .fields)
     const parent = wrapper.parentElement
     
+    // Remover el botón X antes de desenvolver para evitar que quede visible
+    const removeBtn = wrapper.querySelector('.remove-exp-btn')
+    if (removeBtn) removeBtn.remove()
+    
     // Mover los campos fuera del wrapper
     while (wrapper.firstChild) {
       parent.insertBefore(wrapper.firstChild, wrapper)
@@ -958,6 +962,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   function unwrapServiceFields(i) {
     const wrapper = document.querySelector(`.svc-wrapper:has(#servicio${i})`)
     if (!wrapper) return
+    
+    // Remover el botón X antes de desenvolver para evitar que quede visible
+    const removeBtn = wrapper.querySelector('.remove-svc-btn')
+    if (removeBtn) removeBtn.remove()
+    
     const parent = wrapper.parentElement
     while (wrapper.firstChild) {
       parent.insertBefore(wrapper.firstChild, wrapper)
