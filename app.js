@@ -293,6 +293,76 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 })
 
+// Click en canvas: mostrar preview grande (desktop only), sin zoom o pan
+const mainCanvas = document.getElementById('pdf-preview')
+if (mainCanvas) {
+  mainCanvas.addEventListener('click', (e) => {
+    const isMobile = window.innerWidth <= 768
+    if (isMobile) return
+
+    // si canvas no tiene contenido, ignorar
+    if (!mainCanvas.width || !mainCanvas.height) return
+
+    // crear overlay
+    const overlay = document.createElement('div')
+    overlay.id = 'canvas-preview-overlay'
+    overlay.style.position = 'fixed'
+    overlay.style.inset = '0'
+    overlay.style.background = 'rgba(0,0,0,0.75)'
+    overlay.style.display = 'flex'
+    overlay.style.alignItems = 'center'
+    overlay.style.justifyContent = 'center'
+    overlay.style.zIndex = '3000'
+
+    // contenedor para la imagen escalada
+    const box = document.createElement('div')
+    box.style.maxWidth = '90vw'
+    box.style.maxHeight = '90vh'
+    box.style.boxSizing = 'border-box'
+    box.style.padding = '8px'
+
+    // crear canvas temporal para copiar la imagen y escalar preservando ratio
+    const temp = document.createElement('canvas')
+    const ctx = temp.getContext('2d')
+    const srcW = mainCanvas.width
+    const srcH = mainCanvas.height
+
+    // calcular escala para que no supere 90vw/90vh
+    const maxW = Math.floor(window.innerWidth * 0.9)
+    const maxH = Math.floor(window.innerHeight * 0.9)
+    let scale = Math.min(maxW / srcW, maxH / srcH, 1)
+    const destW = Math.floor(srcW * scale)
+    const destH = Math.floor(srcH * scale)
+
+    temp.width = destW
+    temp.height = destH
+    ctx.drawImage(mainCanvas, 0, 0, srcW, srcH, 0, 0, destW, destH)
+    temp.style.width = destW + 'px'
+    temp.style.height = destH + 'px'
+    temp.style.display = 'block'
+    temp.style.boxShadow = '0 8px 30px rgba(0,0,0,0.6)'
+    temp.style.background = '#fff'
+
+    // cerrar al hacer click fuera del canvas o presionar ESC
+    overlay.addEventListener('click', (ev) => {
+      if (ev.target === overlay) {
+        document.body.removeChild(overlay)
+      }
+    })
+    const onKey = (ev) => {
+      if (ev.key === 'Escape') {
+        if (document.body.contains(overlay)) document.body.removeChild(overlay)
+        document.removeEventListener('keydown', onKey)
+      }
+    }
+    document.addEventListener('keydown', onKey)
+
+    box.appendChild(temp)
+    overlay.appendChild(box)
+    document.body.appendChild(overlay)
+  })
+}
+
 // Al enviar formulario: generar PDF final
 document.getElementById('form').addEventListener('submit', async (e) => {
   e.preventDefault()
