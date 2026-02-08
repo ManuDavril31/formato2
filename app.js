@@ -567,9 +567,6 @@ async function generateFinalPDF(formData) {
     }
   }
 
-  // Agregar fecha
-  draw(new Date().toLocaleDateString(), 400, 150)
-
   return await pdfDoc.save()
 }
 
