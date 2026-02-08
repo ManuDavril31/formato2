@@ -1125,7 +1125,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     previewBtn.addEventListener('click', async (e) => {
       e.preventDefault()
 
-      const isMobile = window.innerWidth <= 768;
+      const isMobile = window.innerWidth <= 1024;
       
       // En móvil, solo abrir el modal (manejado por el script en index.html)
       if (isMobile) {

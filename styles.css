@@ -386,23 +386,6 @@ button:active {
    RESPONSIVE DESIGN
    ===================================================== */
 @media (max-width: 1024px) {
-  .main-container {
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  form {
-    flex: 1;
-    max-width: 100%;
-  }
-
-  .preview-container {
-    flex: 1;
-    width: 100%;
-  }
-}
-
-@media (max-width: 768px) {
   body {
     padding: 16px;
   }
@@ -413,12 +396,19 @@ button:active {
   }
 
   form {
+    flex: 1;
+    max-width: 100%;
     padding: 20px;
   }
 
   .main-container {
     flex-direction: column;
     gap: 0;
+  }
+
+  .preview-container {
+    flex: 1;
+    width: 100%;
   }
 
   .canvas-wrapper {
