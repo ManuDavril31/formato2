@@ -1,82 +1,107 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Hoja de Vida – Persona Jurídica</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hoja de Vida – Persona Jurídica</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <h1>Hoja de Vida – Persona Jurídica</h1>
+    <div style="display: flex; gap: 32px; align-items: flex-start">
+      <form id="form">
+        <!-- I. IDENTIFICACIÓN -->
+        <fieldset>
+          <legend>I. Identificación</legend>
+          <input
+            name="razonSocial"
+            placeholder="Razón social"
+            value="fundacion para el desarrollo social"
+          />
+          <input name="sigla" placeholder="Sigla" value="FUDES" />
+          <input name="nit" placeholder="NIT" value="123581" />
+          <label for="orden">Determinar el orden</label>
+          <select name="orden" id="orden">
+            <option value="" selected>Seleccionar...</option>
+            <option value="nal">Nacional</option>
+            <option value="dptl">Departamental</option>
+            <option value="dstr">Distrital</option>
+            <option value="mpl">Municipal</option>
+            <option value="otro">Otro</option>
+          </select>
+          <!-- Si se selecciona "Otro", mostrar este campo para especificar cuál -->
+          <input
+            type="text"
+            name="ordenCual"
+            placeholder="Si es otro, ¿Cuál?"
+            value="MTRS"
+          />
+          <label for="tipo">Determinar el tipo</label>
+          <select name="tipo" id="tipo">
+            <option value="" selected>Seleccionar...</option>
+            <option value="01" selected>01. MDA</option>
+            <option value="02">02. SUA</option>
+            <option value="03">03. EP</option>
+            <option value="04">04. EUA/ESE</option>
+            <option value="05">05. EICE</option>
+            <option value="06">06. SEM</option>
+            <option value="08">08. OTRO</option>
+          </select>
+          <label for="tipo">Determinar el clase</label>
+          <select name="tipo" id="tipo">
+            <option value="" selected>Seleccionar...</option>
+            <option value="11" selected>11. SCIF</option>
+            <option value="12">12. SSAL</option>
+            <option value="13">13. SC</option>
+            <option value="14">14. ONG</option>
+            <option value="15">15. SE</option>
+            <option value="16">16. OTRA</option>
+          </select>
+        </fieldset>
+        <!-- II. SERVICIOS -->
+        <fieldset>
+          <legend>II. Servicios</legend>
+          <input name="servicio1" placeholder="Servicio 1" />
+          <input name="servicio2" placeholder="Servicio 2" />
+          <input name="servicio3" placeholder="Servicio 3" />
+          <input name="servicio4" placeholder="Servicio 4" />
+          <input name="servicio5" placeholder="Servicio 5" />
+          <input name="servicio6" placeholder="Servicio 6" />
+        </fieldset>
+        <!-- IV. REPRESENTANTE -->
+        <fieldset>
+          <legend>IV. Representante Legal</legend>
+          <input name="primerApellido" placeholder="Primer apellido" />
+          <input name="segundoApellido" placeholder="Segundo apellido" />
+          <input name="nombres" placeholder="Nombres" />
+          <input name="documento" placeholder="Documento" />
+        </fieldset>
+        <div style="display: flex; gap: 10px">
+          <button type="submit">📄 Generar PDF</button>
+          <button type="button" id="btn-preview">👁️ Vista Previa</button>
+        </div>
+      </form>
+      <div>
+        <!-- Canvas oculto: para renderizar PDF con PDF.js -->
+        <canvas id="pdf-canvas-hidden" style="display: none"></canvas>
 
-
-<h1>Hoja de Vida – Persona Jurídica</h1>
-<div style="display: flex; gap: 32px; align-items: flex-start;">
-  <form id="form">
-    <!-- I. IDENTIFICACIÓN -->
-    <fieldset>
-      <legend>I. Identificación</legend>
-      <input name="razonSocial" placeholder="Razón social" value="fundacion para el desarrollo social" >
-      <input name="sigla" placeholder="Sigla" value="FUDES">
-      <input name="nit" placeholder="NIT" value="123581">
-      <label for="orden">Determinar el orden</label>
-      <select name="orden" id="orden">
-          <option value="" selected>Seleccionar...</option>
-          <option value="nal" >Nacional</option>
-          <option value="dptl">Departamental</option>
-          <option value="dstr">Distrital</option>
-          <option value="mpl" >Municipal</option>
-          <option value="otro">Otro</option>
-        </select>
-        <!-- Si se selecciona "Otro", mostrar este campo para especificar cuál -->
-        <input type="text" name="ordenCual" placeholder="Si es otro, ¿Cuál?" value="MTRS">
-      <label for="tipo">Determinar el tipo</label>
-      <select name="tipo" id="tipo">
-          <option value="" selected>Seleccionar...</option>
-          <option value="01" selected >01. MDA</option>
-          <option value="02">02. SUA</option>
-          <option value="03">03. EP</option>
-          <option value="04" >04. EUA/ESE</option>
-          <option value="05" >05. EICE</option>
-          <option value="06" >06. SEM</option>
-          <option value="08">08. OTRO</option>
-        </select>
-
-    </fieldset>
-    <!-- II. SERVICIOS -->
-    <fieldset>
-      <legend>II. Servicios</legend>
-      <input name="servicio1" placeholder="Servicio 1">
-      <input name="servicio2" placeholder="Servicio 2">
-      <input name="servicio3" placeholder="Servicio 3">
-      <input name="servicio4" placeholder="Servicio 4">
-      <input name="servicio5" placeholder="Servicio 5">
-      <input name="servicio6" placeholder="Servicio 6">
-    </fieldset>
-    <!-- IV. REPRESENTANTE -->
-    <fieldset>
-      <legend>IV. Representante Legal</legend>
-      <input name="primerApellido" placeholder="Primer apellido">
-      <input name="segundoApellido" placeholder="Segundo apellido">
-      <input name="nombres" placeholder="Nombres">
-      <input name="documento" placeholder="Documento">
-    </fieldset>
-    <div style="display: flex; gap: 10px;">
-      <button type="submit">📄 Generar PDF</button>
-      <button type="button" id="btn-preview">👁️ Vista Previa</button>
+        <!-- Canvas visible: para mostrar preview con Canvas API -->
+        <canvas
+          id="pdf-preview"
+          style="
+            border: 1px solid #333;
+            background: #fff;
+            box-shadow: 0 2px 8px #0002;
+          "
+        ></canvas>
+        <div style="font-size: 13px; color: #333; margin-top: 8px">
+          Vista previa plantilla.pdf
+        </div>
+      </div>
     </div>
-  </form>
-  <div>
-    <!-- Canvas oculto: para renderizar PDF con PDF.js -->
-    <canvas id="pdf-canvas-hidden" style="display:none;"></canvas>
-    
-    <!-- Canvas visible: para mostrar preview con Canvas API -->
-    <canvas id="pdf-preview" style="border:1px solid #333; background:#fff; box-shadow:0 2px 8px #0002;"></canvas>
-    <div style="font-size:13px;color:#333;margin-top:8px;">Vista previa plantilla.pdf</div>
-  </div>
-</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
-<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
-<script src="app.js"></script>
-</body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
+    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+    <script src="app.js"></script>
+  </body>
 </html>
