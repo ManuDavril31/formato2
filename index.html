@@ -2,12 +2,13 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hoja de Vida – Persona Jurídica</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <h1>Hoja de Vida – Persona Jurídica</h1>
-    <div style="display: flex; gap: 32px; align-items: flex-start">
+    <div class="main-container">
       <form id="form">
         <!-- I. IDENTIFICACIÓN -->
         <fieldset>
@@ -162,11 +163,11 @@
           <button type="button" id="btn-preview">👁️ Vista Previa</button>
         </div>
       </form>
-      <div>
-        <!-- Canvas oculto: para renderizar PDF con PDF.js -->
-        <canvas id="pdf-canvas-hidden" style="display: none"></canvas>
+      <!-- Canvas oculto: para renderizar PDF con PDF.js -->
+      <canvas id="pdf-canvas-hidden" style="display: none"></canvas>
 
-        <!-- Canvas visible: para mostrar preview con Canvas API -->
+      <div class="preview-container canvas-wrapper">
+        <!-- Canvas visible: para mostrar preview en escritorio -->
         <canvas
           id="pdf-preview"
           style="
@@ -181,11 +182,81 @@
       </div>
     </div>
 
+    <!-- Modal para vista previa en móvil -->
+    <div id="modal-overlay" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span>Vista Previa</span>
+          <button type="button" class="modal-close-btn">×</button>
+        </div>
+        <canvas
+          id="pdf-preview-mobile"
+          style="
+            border: 1px solid #333;
+            background: #fff;
+            box-shadow: 0 2px 8px #0002;
+            width: 100%;
+            display: block;
+          "
+        ></canvas>
+        <div
+          style="
+            font-size: 13px;
+            color: #333;
+            margin-top: 8px;
+            text-align: center;
+          "
+        >
+          Vista previa plantilla.pdf
+        </div>
+      </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
     <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
     <script src="app.js"></script>
     <script>
+      // Lógica del modal para vista previa en móvil
+      const btnPreview = document.getElementById("btn-preview");
+      const modalOverlay = document.getElementById("modal-overlay");
+      const modalCloseBtn = document.querySelector(".modal-close-btn");
+      const isMobile = () => window.innerWidth <= 768;
+
+      // Abrir modal en móvil
+      btnPreview.addEventListener("click", (e) => {
+        if (isMobile()) {
+          e.preventDefault();
+          modalOverlay.classList.add("active");
+          // Copiar el contenido del canvas principal al modal
+          const mainCanvas = document.getElementById("pdf-preview");
+          const mobileCanvas = document.getElementById("pdf-preview-mobile");
+          const ctx = mobileCanvas.getContext("2d");
+          if (mainCanvas.width > 0 && mainCanvas.height > 0) {
+            mobileCanvas.width = mainCanvas.width;
+            mobileCanvas.height = mainCanvas.height;
+            ctx.drawImage(mainCanvas, 0, 0);
+          }
+        }
+      });
+
+      // Cerrar modal
+      const closeModal = () => {
+        modalOverlay.classList.remove("active");
+      };
+
+      modalCloseBtn.addEventListener("click", closeModal);
+      modalOverlay.addEventListener("click", (e) => {
+        if (e.target === modalOverlay) closeModal();
+      });
+
+      // Cerrar modal con Esc
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && modalOverlay.classList.contains("active")) {
+          closeModal();
+        }
+      });
+
       // Colapsar todos los fieldsets excepto el primero y cambiar el icono
       const fieldsets = document.querySelectorAll("form fieldset");
       fieldsets.forEach((fieldset, idx) => {

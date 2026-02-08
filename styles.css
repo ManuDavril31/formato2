@@ -1,4 +1,4 @@
-/* Botones de acción siempre visibles abajo */
+/* Botones de acci\u00f3n siempre visibles abajo */
 .fixed-actions {
   position: fixed;
   left: 0;
@@ -34,17 +34,125 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   background: #f4f6f8;
   padding: 20px;
+  overflow-x: hidden;
 }
 
 h1 {
   margin-bottom: 20px;
 }
 
+.main-container {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
 form {
   background: white;
   padding: 20px;
   border-radius: 6px;
-  max-width: 600px;
+  width: 100%;
+  max-width: 750px;
+  min-width: 280px;
+}
+
+.preview-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.canvas-wrapper {
+  display: block;
+}
+
+/* Modal para vista previa en m\u00f3vil */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1500;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-overlay.active {
+  display: block;
+}
+
+.modal-content {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-radius: 16px 16px 0 0;
+  padding: 20px;
+  z-index: 1501;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.4s ease-out;
+}
+
+.modal-content.closing {
+  animation: slideDown 0.3s ease-in forwards;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.modal-close-btn {
+  background: #ddd;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-size: 20px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close-btn:hover {
+  background: #ccc;
 }
 
 fieldset {
@@ -63,6 +171,8 @@ input {
   padding: 8px;
   margin-bottom: 10px;
   font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 button {
@@ -73,6 +183,7 @@ button {
   border: none;
   cursor: pointer;
   border-radius: 4px;
+  transition: background 0.2s;
 }
 
 button:hover {
@@ -84,6 +195,8 @@ select {
   padding: 8px;
   margin-bottom: 10px;
   font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .select-indicator {
@@ -92,5 +205,85 @@ select {
   font-size: 18px;
   color: #28a745;
   font-weight: bold;
+}
+
+/* Media Queries para Responsive */
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+
+  .main-container {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  form {
+    max-width: 100%;
+    min-width: 0;
+    padding: 16px;
+  }
+
+  .canvas-wrapper {
+    display: none;
+  }
+
+  .fixed-actions {
+    bottom: 0;
+    width: 100%;
+    gap: 8px;
+  }
+
+  input, select {
+    padding: 10px;
+    font-size: 16px;
+  }
+
+  button {
+    padding: 10px 16px;
+    font-size: 14px;
+    flex: 1;
+  }
+
+  fieldset {
+    padding: 12px;
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 8px;
+  }
+
+  h1 {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+
+  form {
+    padding: 12px;
+  }
+
+  fieldset {
+    padding: 10px;
+    margin-bottom: 12px;
+  }
+
+  input, select {
+    padding: 8px;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  button {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
 }
 
