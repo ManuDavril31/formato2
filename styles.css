@@ -386,3 +386,47 @@ select {
   }
 }
 
+/* Contenedor visual para cada experiencia */
+.exp-wrapper {
+  position: relative;
+  background: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  padding-top: 40px;
+  margin-bottom: 16px;
+}
+
+/* Ícono X para eliminar experiencia */
+.remove-exp-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: #f0f0f0;
+  color: #999;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.remove-exp-btn:hover {
+  background: #ff6b6b;
+  color: white;
+  border-color: #ff6b6b;
+  box-shadow: 0 2px 6px rgba(255, 107, 107, 0.3);
+}
+
+.remove-exp-btn:active {
+  transform: scale(0.95);
+}
+

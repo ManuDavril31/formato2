@@ -479,9 +479,49 @@ document.addEventListener('DOMContentLoaded', async () => {
     fields.forEach(field => {
       field.style.display = ''
     })
-    // Agregar botón de quitar a todas las experiencias (incluso la 1)
+    
+    // Envolver los 5 campos en un contenedor visual
+    wrapExperienceFields(i)
+    
+    // Agregar botón X en la esquina superior derecha
     attachRemoveButton(i)
     updateAddButtonState()
+  }
+
+  function wrapExperienceFields(i) {
+    const fields = getExpElementFields(i)
+    if (fields.length === 0) return
+    
+    // Si ya está envuelto, no hacer nada
+    if (fields[0].parentElement.classList.contains('exp-wrapper')) return
+    
+    // Crear contenedor
+    const wrapper = document.createElement('div')
+    wrapper.className = 'exp-wrapper'
+    
+    // Insertar wrapper antes del primer campo
+    fields[0].parentElement.insertBefore(wrapper, fields[0])
+    
+    // Mover los 5 campos adentro del wrapper
+    fields.forEach(field => {
+      wrapper.appendChild(field)
+    })
+  }
+
+  function unwrapExperienceFields(i) {
+    const wrapper = document.querySelector(`.exp-wrapper:has(#experiencia${i})`)
+    if (!wrapper) return
+    
+    // Obtener el padre del wrapper (debe ser .fields)
+    const parent = wrapper.parentElement
+    
+    // Mover los campos fuera del wrapper
+    while (wrapper.firstChild) {
+      parent.insertBefore(wrapper.firstChild, wrapper)
+    }
+    
+    // Remover el wrapper
+    parent.removeChild(wrapper)
   }
 
   function hideExperience(i) {
@@ -489,24 +529,29 @@ document.addEventListener('DOMContentLoaded', async () => {
     fields.forEach(field => {
       field.style.display = 'none'
     })
+    
+    // Desenvolver los campos
+    unwrapExperienceFields(i)
+    
     updateAddButtonState()
   }
 
   function attachRemoveButton(i) {
-    const fields = getExpElementFields(i)
-    if (fields.length === 0) return
+    const wrapper = document.querySelector(`.exp-wrapper:has(#experiencia${i})`)
+    if (!wrapper) return
     
-    const firstField = fields[0]
     // Evitar agregar múltiples botones
-    if (firstField.querySelector('.remove-exp-btn')) return
+    if (wrapper.querySelector('.remove-exp-btn')) return
     
+    // Crear botón X elegante
     const btn = document.createElement('button')
     btn.type = 'button'
     btn.className = 'remove-exp-btn'
-    btn.style.marginLeft = '8px'
-    btn.textContent = 'Quitar'
+    btn.title = 'Eliminar experiencia'
+    btn.innerHTML = '×' // ícono X
     btn.addEventListener('click', () => hideExperience(i))
-    firstField.appendChild(btn)
+    
+    wrapper.appendChild(btn)
   }
 
   function updateAddButtonState() {
