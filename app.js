@@ -47,6 +47,10 @@ const pdfCoordinates = {
   servicio4: { x: 320, y: 470 },
   servicio5: { x: 50, y: 458 },
   servicio6: { x: 320, y: 458 },
+
+  // III. EXPERIENCIA
+  experiencia1: { x: 35, y: 393 },
+
   
   // IV. REPRESENTANTE LEGAL
   primerApellido: { x: 80, y: 260 },
