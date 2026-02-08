@@ -140,13 +140,47 @@ const pdfCoordinates = {
   inhabilidad_si: { x: 382, y: 236 },
   inhabilidad_no: { x: 412, y: 236 },
   observaciones: { x: 100, y: 210 },
-  file: { x: 100, y: 150 }
+  // Coordenadas para firma (esquina inferior derecha)
+  firma: { x: 50, y:155, width: 80, height: 40 }
 }
 
 let baseCanvasImage = null
+let firmaImageData = null // Almacenar imagen de firma
 const scale = 1.5
 // Tamaño de fuente en el PDF para las marcas 'X' (en puntos).
 const MARK_FONT_SIZE = 14
+
+// ============================================================
+// FUNCIÓN PARA CARGAR IMAGEN DE FIRMA
+// ============================================================
+function loadFirmaImage(file) {
+  if (!file) {
+    firmaImageData = null
+    return
+  }
+  
+  // Validar que sea una imagen
+  if (!file.type.startsWith('image/')) {
+    alert('Por favor selecciona un archivo de imagen para la firma')
+    document.getElementById('firma').value = ''
+    firmaImageData = null
+    return
+  }
+  
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    const img = new Image()
+    img.onload = () => {
+      firmaImageData = img
+      // Actualizar canvas preview
+      const form = document.getElementById('form')
+      const formData = Object.fromEntries(new FormData(form))
+      updateCanvasPreview(formData)
+    }
+    img.src = e.target.result
+  }
+  reader.readAsDataURL(file)
+}
 
 // Función helper: obtener coordenada de X según el select
 function getMarkingCoords(selectName, value) {
@@ -245,6 +279,9 @@ function updateCanvasPreview(formData) {
   
   // Iterar cada campo y dibujarlo
   Object.entries(pdfCoordinates).forEach(([field, coords]) => {
+    // Saltar el campo 'firma' que se dibuja por separado
+    if (field === 'firma') return
+    
     if (formData[field]) {
       // Convertir coordenadas PDF a canvas
       const canvasX = coords.x * scale
@@ -314,6 +351,16 @@ function updateCanvasPreview(formData) {
     const xCoord = inhabilidadCoords.x * scale
     const yCoord = canvas.height - (inhabilidadCoords.y * scale)
     ctx.fillText('X', xCoord, yCoord)
+  }
+
+  // Dibujar imagen de firma si existe
+  if (firmaImageData) {
+    const firmaCoords = pdfCoordinates.firma
+    const canvasX = firmaCoords.x * scale
+    const canvasY = canvas.height - ((firmaCoords.y + firmaCoords.height) * scale)
+    const canvasWidth = firmaCoords.width * scale
+    const canvasHeight = firmaCoords.height * scale
+    ctx.drawImage(firmaImageData, canvasX, canvasY, canvasWidth, canvasHeight)
   }
 
   // Dibujar marcas de agua grandes y diagonales a lo largo del canvas
@@ -401,6 +448,9 @@ async function generateFinalPDF(formData) {
 
   // Escribir todos los campos en el PDF
   Object.entries(pdfCoordinates).forEach(([field, coords]) => {
+    // Saltar el campo 'firma' que se dibuja por separado
+    if (field === 'firma') return
+    
     if (formData[field]) {
       // Caso especial: observaciones se divide en múltiples líneas
       if (field === 'observaciones') {
@@ -480,6 +530,41 @@ async function generateFinalPDF(formData) {
       font,
       color: rgb(0, 0, 0)
     })
+  }
+
+  // Agregar firma si existe
+  if (firmaImageData) {
+    const firmaCoords = pdfCoordinates.firma
+    try {
+      // Crear canvas temporal y dibujar la imagen
+      const tempCanvas = document.createElement('canvas')
+      tempCanvas.width = firmaImageData.width
+      tempCanvas.height = firmaImageData.height
+      const tempCtx = tempCanvas.getContext('2d')
+      tempCtx.drawImage(firmaImageData, 0, 0)
+      
+      // Convertir canvas a data URL y luego a blob
+      const dataUrl = tempCanvas.toDataURL('image/png')
+      const base64Data = dataUrl.split(',')[1]
+      
+      // Convertir base64 a Uint8Array para pdf-lib
+      const binaryString = atob(base64Data)
+      const bytes = new Uint8Array(binaryString.length)
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i)
+      }
+      
+      // Embedir PNG en el PDF
+      const firmaImage = await pdfDoc.embedPng(bytes)
+      page.drawImage(firmaImage, {
+        x: firmaCoords.x,
+        y: firmaCoords.y,
+        width: firmaCoords.width,
+        height: firmaCoords.height
+      })
+    } catch (err) {
+      console.warn('Error al insertar firma en PDF:', err)
+    }
   }
 
   // Agregar fecha
@@ -598,6 +683,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     inhabilidadSelect.addEventListener('change', () => {
       const formData = Object.fromEntries(new FormData(form))
       updateCanvasPreview(formData)
+    })
+  }
+
+  // Escuchar carga de imagen de firma
+  const firmaInput = document.getElementById('firma')
+  if (firmaInput) {
+    firmaInput.addEventListener('change', (e) => {
+      loadFirmaImage(e.target.files[0])
     })
   }
 
