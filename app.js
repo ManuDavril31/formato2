@@ -110,10 +110,16 @@ const pdfCoordinates = {
 
   
   // IV. REPRESENTANTE LEGAL
-  primerApellido: { x: 80, y: 260 },
-  segundoApellido: { x: 240, y: 260 },
-  nombres: { x: 380, y: 260 },
-  documento: { x: 200, y: 230 },
+  primerApellido: { x: 87, y: 303 },
+  segundoApellido: { x: 306, y: 303 },
+  nombres: { x: 410, y: 303 },
+  tipo_documento_rep: { x: 63, y: 275 }, // Coordenada para marcar el tipo de documento (X, CE, Pasaporte)
+  tipo_documento_rep: { x: 103, y: 275 }, // Coordenada para marcar el tipo de documento (X, CE, Pasaporte)
+  tipo_documento_rep: { x: 173, y: 275 }, // Coordenada para marcar el tipo de documento (X, CE, Pasaporte)
+  // tipo_documento_cc_rep: { x: 87, y: 275 },
+  // tipo_documento_ce_rep: { x: 157, y: 275 },
+  // tipo_documento_pasaporte_rep: { x: 227, y: 275 }, 
+  documento: { x: 200, y: 275 },
 }
 
 let baseCanvasImage = null

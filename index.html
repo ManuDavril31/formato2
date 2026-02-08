@@ -491,6 +491,7 @@
                 id="primerApellido_rep"
                 name="primerApellido"
                 placeholder="Primer apellido"
+                value="Martinez"
               />
             </div>
             <div class="field">
@@ -499,11 +500,26 @@
                 id="segundoApellido_rep"
                 name="segundoApellido"
                 placeholder="Segundo apellido"
+                value="Gomez"
               />
             </div>
             <div class="field">
               <label for="nombres_rep">Nombres</label>
-              <input id="nombres_rep" name="nombres" placeholder="Nombres" />
+              <input
+                id="nombres_rep"
+                name="nombres"
+                placeholder="Nombres"
+                value="Juan Manuel"
+              />
+            </div>
+            <div class="field">
+              <label for="tipo_documento_rep">Tipo de Documento</label>
+              <select name="tipo_documento_rep" id="tipo_documento_rep">
+                <option value="">Seleccionar</option>
+                <option value="X" selected>Cedula</option>
+                <option value="ce">Cedula de extranjería</option>
+                <option value="pasaporte">Pasaporte</option>
+              </select>
             </div>
             <div class="field">
               <label for="documento_rep">Documento</label>
