@@ -17,6 +17,11 @@ const selectMarkings = {
   }
 }
 
+// Mapeo para tipoEmpresa1: pública -> marca en una posición, privada -> en otra
+selectMarkings.tipoEmpresa1 = {
+  'X': 'tipoEmpresa1_publica', // valor 'X' en el select representa Pública
+  'privada': 'tipoEmpresa1_privada'
+}
 // Mapeo de coordenadas: nombre del campo -> posición en PDF
 const pdfCoordinates = {
   // I. IDENTIFICACIÓN
@@ -41,16 +46,18 @@ const pdfCoordinates = {
   apartadoAereo: { x: 500, y: 535 },
     
   // II. SERVICIOS
-  servicio1: { x: 50, y: 485 },
-  servicio2: { x: 320, y: 485 },
-  servicio3: { x: 50, y: 470 },
-  servicio4: { x: 320, y: 470 },
+    servicio1: { x: 50, y: 485 },
+    servicio2: { x: 320, y: 485 },
+    servicio3: { x: 50, y: 470 },
+    servicio4: { x: 320, y: 470 },
   servicio5: { x: 50, y: 458 },
   servicio6: { x: 320, y: 458 },
 
   // III. EXPERIENCIA
   experiencia1: { x: 35, y: 393 },
-  // tipoEmpresa1: { x: 293, y: 393 },
+  // Posiciones para marcar 'X' según tipoEmpresa1
+  tipoEmpresa1_publica: { x: 293, y: 393 },
+  tipoEmpresa1_privada: { x: 323, y: 393 },
 
   
   // IV. REPRESENTANTE LEGAL
@@ -150,6 +157,16 @@ function updateCanvasPreview(formData) {
     const xCoord = coords.x * scale
     const yCoord = canvas.height - (coords.y * scale)
     
+    ctx.font = 'bold 18px Arial'
+    ctx.fillStyle = '#000'
+    ctx.fillText('X', xCoord, yCoord)
+  }
+
+  // Dibujar X para tipoEmpresa1 (pública/privada)
+  const tipoEmpCoords = getMarkingCoords('tipoEmpresa1', formData.tipoEmpresa1)
+  if (tipoEmpCoords) {
+    const xCoord = tipoEmpCoords.x * scale
+    const yCoord = canvas.height - (tipoEmpCoords.y * scale)
     ctx.font = 'bold 18px Arial'
     ctx.fillStyle = '#000'
     ctx.fillText('X', xCoord, yCoord)
@@ -262,6 +279,18 @@ async function generateFinalPDF(formData) {
     })
   }
 
+  // Dibujar X para tipoEmpresa1 (pública/privada)
+  const tipoEmpMarking = getMarkingCoords('tipoEmpresa1', formData.tipoEmpresa1)
+  if (tipoEmpMarking) {
+    page.drawText('X', {
+      x: tipoEmpMarking.x,
+      y: tipoEmpMarking.y,
+      size: 14,
+      font,
+      color: rgb(0, 0, 0)
+    })
+  }
+
   // Agregar fecha
   draw(new Date().toLocaleDateString(), 400, 150)
 
@@ -285,6 +314,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const inputs = form.querySelectorAll('input[name]')
   const ordenSelect = document.getElementById('orden')
   const tipoSelect = document.getElementById('tipo')
+  const tipoEmpresa1Select = document.getElementById('tipoEmpresa1')
   const claseSelect = document.getElementById('clase')
   const ordenCualInput = document.querySelector('input[name="ordenCual"]')
   
@@ -321,6 +351,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     const formData = Object.fromEntries(new FormData(form))
     updateCanvasPreview(formData)
   })
+  // Escuchar cambios en el select "tipoEmpresa1"
+  if (tipoEmpresa1Select) {
+    tipoEmpresa1Select.addEventListener('change', () => {
+      const formData = Object.fromEntries(new FormData(form))
+      updateCanvasPreview(formData)
+    })
+  }
   // Escuchar cambios en el select "clase"
   if (claseSelect) {
     claseSelect.addEventListener('change', () => {
