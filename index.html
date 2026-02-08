@@ -16,125 +16,187 @@
             I. Identificación
             <button type="button" class="collapse-btn">−</button>
           </legend>
-          <input
-            name="razonSocial"
-            placeholder="Razón social"
-            value="fundacion para el desarrollo social"
-          />
-          <input name="sigla" placeholder="Sigla" value="FUDES" />
-          <input name="nit" placeholder="NIT" value="123581" />
-          <label for="orden">Determinar el orden</label>
-          <select name="orden" id="orden">
-            <option value="" selected>Seleccionar...</option>
-            <option value="nal">Nacional</option>
-            <option value="dptl">Departamental</option>
-            <option value="dstr">Distrital</option>
-            <option value="mpl">Municipal</option>
-            <option value="otro">Otro</option>
-          </select>
-          <!-- Si se selecciona "Otro", mostrar este campo para especificar cuál -->
-          <input
-            type="text"
-            name="ordenCual"
-            placeholder="Si es otro, ¿Cuál?"
-          />
-          <label for="tipo">Determinar el tipo</label>
-          <select name="tipo" id="tipo">
-            <option value="" selected>Seleccionar...</option>
-            <option value="01">01. MDA</option>
-            <option value="02">02. SUA</option>
-            <option value="03">03. EP</option>
-            <option value="04">04. EUA/ESE</option>
-            <option value="05">05. EICE</option>
-            <option value="06">06. SEM</option>
-            <option value="08">08. OTRO</option>
-          </select>
-          <label for="clase">Determinar la clase</label>
-          <select name="clase" id="clase">
-            <option value="" selected>Seleccionar...</option>
-            <option value="11">11. SCIF</option>
-            <option value="12">12. SSAL</option>
-            <option value="13">13. SC</option>
-            <option value="14">14. ONG</option>
-            <option value="15">15. SE</option>
-            <option value="16">16. OTRA</option>
-          </select>
-          <label for="domicilioCorrespondencia"
-            >Domicilio para correspondencia</label
-          >
-          <input type="text" name="pais" placeholder="País" value="Colombia" />
-          <input
-            type="text"
-            name="departamento"
-            placeholder="Departamento"
-            value="Cordoba"
-          />
-          <input
-            type="text"
-            name="municipio"
-            placeholder="Municipio"
-            value="Montería"
-          />
-          <input
-            type="text"
-            name="direccion"
-            placeholder="Direccion"
-            value="Calle 25 nro 3 45"
-          />
-          <input
-            type="text"
-            name="telefonos"
-            placeholder="Teléfonos"
-            value="320 440 3165"
-          />
-          <input
-            type="text"
-            name="fax"
-            placeholder="Fax"
-            value="320 440 3165"
-          />
-          <input
-            type="text"
-            name="apartadoAereo"
-            placeholder="Apartado Aéreo"
-            value="320 440 3165"
-          />
+          <div class="fields">
+            <div class="field">
+              <label>Razón social</label>
+              <input
+                name="razonSocial"
+                placeholder="Razón social"
+                value="fundacion para el desarrollo social"
+              />
+            </div>
+            <div class="field">
+              <label>Sigla</label>
+              <input name="sigla" placeholder="Sigla" value="FUDES" />
+            </div>
+            <div class="field">
+              <label>NIT</label>
+              <input name="nit" placeholder="NIT" value="123581" />
+            </div>
+            <div class="field">
+              <label for="orden">Determinar el orden</label>
+              <select name="orden" id="orden">
+                <option value="" selected>Seleccionar...</option>
+                <option value="nal">Nacional</option>
+                <option value="dptl">Departamental</option>
+                <option value="dstr">Distrital</option>
+                <option value="mpl">Municipal</option>
+                <option value="otro">Otro</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Si es otro, ¿Cuál?</label>
+              <input
+                type="text"
+                name="ordenCual"
+                placeholder="Si es otro, ¿Cuál?"
+              />
+            </div>
+            <div class="field">
+              <label for="tipo">Determinar el tipo</label>
+              <select name="tipo" id="tipo">
+                <option value="" selected>Seleccionar...</option>
+                <option value="01">01. MDA</option>
+                <option value="02">02. SUA</option>
+                <option value="03">03. EP</option>
+                <option value="04">04. EUA/ESE</option>
+                <option value="05">05. EICE</option>
+                <option value="06">06. SEM</option>
+                <option value="08">08. OTRO</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="clase">Determinar la clase</label>
+              <select name="clase" id="clase">
+                <option value="" selected>Seleccionar...</option>
+                <option value="11">11. SCIF</option>
+                <option value="12">12. SSAL</option>
+                <option value="13">13. SC</option>
+                <option value="14">14. ONG</option>
+                <option value="15">15. SE</option>
+                <option value="16">16. OTRA</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Domicilio para correspondencia</label>
+              <input
+                type="text"
+                name="pais"
+                placeholder="País"
+                value="Colombia"
+              />
+            </div>
+            <div class="field">
+              <label>Departamento</label>
+              <input
+                type="text"
+                name="departamento"
+                placeholder="Departamento"
+                value="Cordoba"
+              />
+            </div>
+            <div class="field">
+              <label>Municipio</label>
+              <input
+                type="text"
+                name="municipio"
+                placeholder="Municipio"
+                value="Montería"
+              />
+            </div>
+            <div class="field">
+              <label>Dirección</label>
+              <input
+                type="text"
+                name="direccion"
+                placeholder="Direccion"
+                value="Calle 25 nro 3 45"
+              />
+            </div>
+            <div class="field">
+              <label>Teléfonos</label>
+              <input
+                type="text"
+                name="telefonos"
+                placeholder="Teléfonos"
+                value="320 440 3165"
+              />
+            </div>
+            <div class="field">
+              <label>Fax</label>
+              <input
+                type="text"
+                name="fax"
+                placeholder="Fax"
+                value="320 440 3165"
+              />
+            </div>
+            <div class="field">
+              <label>Apartado Aéreo</label>
+              <input
+                type="text"
+                name="apartadoAereo"
+                placeholder="Apartado Aéreo"
+                value="320 440 3165"
+              />
+            </div>
+          </div>
         </fieldset>
         <!-- II. SERVICIOS -->
         <fieldset>
           <legend>
             II. Servicios <button type="button" class="collapse-btn">−</button>
           </legend>
-          <input
-            name="servicio1"
-            placeholder="Servicio 1"
-            value="Prestación de servicios"
-          />
-          <input
-            name="servicio2"
-            placeholder="Servicio 2"
-            value="Prestación de servicios"
-          />
-          <input
-            name="servicio3"
-            placeholder="Servicio 3"
-            value="Prestación de servicios"
-          />
-          <input
-            name="servicio4"
-            placeholder="Servicio 4"
-            value="Prestación de servicios"
-          />
-          <input
-            name="servicio5"
-            placeholder="Servicio 5"
-            value="Prestación de servicios"
-          />
-          <input
-            name="servicio6"
-            placeholder="Servicio 6"
-            value="Prestación de servicios"
-          />
+          <div class="fields">
+            <div class="field">
+              <label>Servicio 1</label>
+              <input
+                name="servicio1"
+                placeholder="Servicio 1"
+                value="Prestación de servicios"
+              />
+            </div>
+            <div class="field">
+              <label>Servicio 2</label>
+              <input
+                name="servicio2"
+                placeholder="Servicio 2"
+                value="Prestación de servicios"
+              />
+            </div>
+            <div class="field">
+              <label>Servicio 3</label>
+              <input
+                name="servicio3"
+                placeholder="Servicio 3"
+                value="Prestación de servicios"
+              />
+            </div>
+            <div class="field">
+              <label>Servicio 4</label>
+              <input
+                name="servicio4"
+                placeholder="Servicio 4"
+                value="Prestación de servicios"
+              />
+            </div>
+            <div class="field">
+              <label>Servicio 5</label>
+              <input
+                name="servicio5"
+                placeholder="Servicio 5"
+                value="Prestación de servicios"
+              />
+            </div>
+            <div class="field">
+              <label>Servicio 6</label>
+              <input
+                name="servicio6"
+                placeholder="Servicio 6"
+                value="Prestación de servicios"
+              />
+            </div>
+          </div>
         </fieldset>
         <!-- III. EXPERIENCIA  O SITUACION ACTUAL -->
         <fieldset>
@@ -142,10 +204,24 @@
             III. Experiencia o Situación Actual
             <button type="button" class="collapse-btn">−</button>
           </legend>
-          <input name="primerApellido" placeholder="Primer apellido" />
-          <input name="segundoApellido" placeholder="Segundo apellido" />
-          <input name="nombres" placeholder="Nombres" />
-          <input name="documento" placeholder="Documento" />
+          <div class="fields">
+            <div class="field">
+              <label>Primer apellido</label>
+              <input name="primerApellido" placeholder="Primer apellido" />
+            </div>
+            <div class="field">
+              <label>Segundo apellido</label>
+              <input name="segundoApellido" placeholder="Segundo apellido" />
+            </div>
+            <div class="field">
+              <label>Nombres</label>
+              <input name="nombres" placeholder="Nombres" />
+            </div>
+            <div class="field">
+              <label>Documento</label>
+              <input name="documento" placeholder="Documento" />
+            </div>
+          </div>
         </fieldset>
         <!-- IV. REPRESENTANTE -->
         <fieldset>
@@ -153,10 +229,24 @@
             IV. Representante Legal
             <button type="button" class="collapse-btn">−</button>
           </legend>
-          <input name="primerApellido" placeholder="Primer apellido" />
-          <input name="segundoApellido" placeholder="Segundo apellido" />
-          <input name="nombres" placeholder="Nombres" />
-          <input name="documento" placeholder="Documento" />
+          <div class="fields">
+            <div class="field">
+              <label>Primer apellido</label>
+              <input name="primerApellido" placeholder="Primer apellido" />
+            </div>
+            <div class="field">
+              <label>Segundo apellido</label>
+              <input name="segundoApellido" placeholder="Segundo apellido" />
+            </div>
+            <div class="field">
+              <label>Nombres</label>
+              <input name="nombres" placeholder="Nombres" />
+            </div>
+            <div class="field">
+              <label>Documento</label>
+              <input name="documento" placeholder="Documento" />
+            </div>
+          </div>
         </fieldset>
         <div class="fixed-actions">
           <button type="submit">📄 Generar PDF</button>
