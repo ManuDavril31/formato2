@@ -141,7 +141,8 @@ const pdfCoordinates = {
   inhabilidad_no: { x: 412, y: 236 },
   observaciones: { x: 100, y: 210 },
   // Coordenadas para firma (esquina inferior derecha)
-  firma: { x: 50, y:155, width: 80, height: 40 }
+  firma: { x: 50, y:155, width: 80, height: 40 },
+  fecha_diligenciamiento: { x: 460, y: 172 }
 }
 
 let baseCanvasImage = null
