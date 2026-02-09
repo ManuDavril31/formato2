@@ -269,6 +269,67 @@
         display: block;
       }
 
+      /* Sección "Por qué elegir" responsiva */
+      .why-choose {
+        margin-top: 40px;
+        padding: 28px;
+        background: linear-gradient(
+          135deg,
+          rgba(11, 145, 166, 0.08),
+          rgba(93, 212, 216, 0.08)
+        );
+        border-radius: 16px;
+      }
+      .why-choose h2 {
+        text-align: center;
+        margin: 0 0 20px 0;
+        color: #06233a;
+      }
+      .why-choose-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+        margin-top: 16px;
+      }
+      .why-choose-item {
+        background: #fff;
+        padding: 16px;
+        border-radius: 10px;
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        border: 1px solid #e6eef2;
+      }
+      .why-choose-icon {
+        color: var(--accent);
+        font-size: 24px;
+        flex-shrink: 0;
+      }
+      .why-choose-content {
+        flex: 1;
+      }
+      .why-choose-title {
+        font-weight: 700;
+        color: #06233a;
+      }
+      .why-choose-desc {
+        color: var(--muted);
+        font-size: 14px;
+        margin-top: 4px;
+      }
+
+      @media (min-width: 700px) {
+        .why-choose-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (min-width: 1000px) {
+        .why-choose-grid {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+
       /* Larger screens: enhance layout */
       @media (min-width: 700px) {
         .container {
@@ -276,9 +337,6 @@
         }
         .hero h1 {
           font-size: 28px;
-        }
-        .search input {
-          width: 180px;
         }
       }
 
@@ -346,7 +404,7 @@
           display: flex;
           justify-content: space-between;
           gap: 20px;
-          align-items: center;
+          align-items: flex-start;
         }
       }
     </style>
@@ -391,11 +449,11 @@
     <main class="container">
       <section class="hero">
         <div>
-          <h1>Formatos legales estándar y listos para llenar en línea</h1>
+          <h1>Formatos legales únicos y listos para llenar en línea</h1>
           <p>
-            Rellena, descarga y usa formatos estandarizados para personas
-            naturales y jurídicas. Ahorra tiempo y evita errores legales
-            comunes.
+            Crea documentos legales profesionales en minutos. Formatos
+            verificados por abogados, fáciles de personalizar y listos para
+            descargar.
           </p>
           <div class="cta-row">
             <button class="btn btn-primary" id="cta-explorar">
@@ -405,10 +463,18 @@
           </div>
 
           <div class="card" style="margin-top: 22px">
-            <strong>Destacado:</strong>
-            <div style="margin-top: 8px; color: var(--muted)">
-              Plantillas verificadas por abogados, actualizadas y listas para
-              personalizar en línea.
+            <div style="display: flex; gap: 10px; align-items: flex-start">
+              <div style="color: var(--accent); font-size: 20px">✓</div>
+              <div>
+                <strong style="color: #06233a"
+                  >Verificados por profesionales</strong
+                >
+                <div
+                  style="margin-top: 4px; color: var(--muted); font-size: 13px"
+                >
+                  Plantillas actualizadas según normativas colombianas vigentes.
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -469,114 +535,406 @@
 
       <section id="formatos">
         <h2 style="margin: 0 0 12px 0; color: #06233a">Formatos disponibles</h2>
+        <p style="color: var(--muted); margin: 0 0 18px 0; font-size: 15px">
+          Elige el formato que mejor se adapta a tus necesidades y comienza
+          ahora
+        </p>
         <div class="formats">
           <article class="format-card">
-            <h3>Formato único de hoja de vida — Persona natural</h3>
+            <div
+              style="
+                background: linear-gradient(135deg, #0b91a6, #5dd4d8);
+                border-radius: 8px;
+                padding: 12px;
+                margin: -14px -14px 8px -14px;
+                color: #fff;
+              "
+            >
+              <div style="font-weight: 700; font-size: 14px">
+                Personas Naturales
+              </div>
+            </div>
+            <h3>Hoja de Vida Estándar</h3>
             <p>
-              Una hoja de vida estandarizada para personas naturales: datos,
-              experiencia y documentación relevante, lista para llenar en línea.
+              Documenta tu experiencia, habilidades y datos personales de forma
+              profesional. Ideal para candidatos a procesos de selección y
+              contratación.
             </p>
-            <div style="margin-top: auto; display: flex; gap: 8px">
+            <div
+              style="
+                margin-top: auto;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+              "
+            >
               <button class="btn btn-primary" onclick="location.href = '#'">
                 Llenar en línea
               </button>
               <button class="btn btn-ghost" onclick="location.href = '#'">
-                Ver formato
+                Vista previa
               </button>
             </div>
           </article>
 
           <article class="format-card">
-            <h3>Formato único — Persona jurídica</h3>
+            <div
+              style="
+                background: linear-gradient(135deg, #5dd4d8, #0b91a6);
+                border-radius: 8px;
+                padding: 12px;
+                margin: -14px -14px 8px -14px;
+                color: #fff;
+              "
+            >
+              <div style="font-weight: 700; font-size: 14px">
+                Personas Jurídicas
+              </div>
+            </div>
+            <h3>Formato Único Persona Jurídica</h3>
             <p>
-              Formato completo para entidades: identificación, representación
-              legal, servicios y experiencia para procesos contractuales.
+              Formulario integral para presentación de entidades: datos de
+              identificación, representación legal, servicios y experiencia
+              contractual.
             </p>
-            <div style="margin-top: auto; display: flex; gap: 8px">
+            <div
+              style="
+                margin-top: auto;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+              "
+            >
               <button class="btn btn-primary" onclick="location.href = '#'">
                 Llenar en línea
               </button>
               <button class="btn btn-ghost" onclick="location.href = '#'">
-                Ver formato
+                Vista previa
               </button>
             </div>
           </article>
         </div>
       </section>
 
+      <section class="why-choose">
+        <h2>¿Por qué elegir formatounico.com?</h2>
+        <div class="why-choose-grid">
+          <div class="why-choose-item">
+            <div class="why-choose-icon">⚡</div>
+            <div class="why-choose-content">
+              <div class="why-choose-title">Rápido y eficiente</div>
+              <div class="why-choose-desc">
+                Completa tus documentos en minutos, no en horas.
+              </div>
+            </div>
+          </div>
+          <div class="why-choose-item">
+            <div class="why-choose-icon">✓</div>
+            <div class="why-choose-content">
+              <div class="why-choose-title">Legalmente válido</div>
+              <div class="why-choose-desc">
+                Diseñados por abogados, en línea con normativas vigentes.
+              </div>
+            </div>
+          </div>
+          <div class="why-choose-item">
+            <div class="why-choose-icon">🎯</div>
+            <div class="why-choose-content">
+              <div class="why-choose-title">Fácil de usar</div>
+              <div class="why-choose-desc">
+                Interfaz intuitiva sin necesidad de experiencia legal previa.
+              </div>
+            </div>
+          </div>
+          <div class="why-choose-item">
+            <div class="why-choose-icon">📥</div>
+            <div class="why-choose-content">
+              <div class="why-choose-title">Descargable y personalizable</div>
+              <div class="why-choose-desc">
+                Obtén PDF listo para imprimir o editar según necesites.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section id="como-funciona" class="explain">
         <div>
-          <h2>Qué es formatounico.com</h2>
-          <p style="color: var(--muted)">
-            Formatounico.com ofrece plantillas legales estandarizadas y fáciles
-            de usar para personas naturales y jurídicas. Nuestras plantillas
-            están diseñadas por abogados y pensadas para que respondan a
-            necesidades reales.
+          <h2>Cómo funciona</h2>
+          <p style="color: var(--muted); margin-top: 8px">
+            En tres pasos simples tendrás tu documento legal listo.
           </p>
 
-          <h3 style="margin-top: 18px">¿Para quién?</h3>
-          <p style="color: var(--muted)">
-            Personas naturales que necesitan documentos profesionales y
-            organizaciones que requieren formatos consistentes y fáciles de
-            compartir.
-          </p>
-
-          <h3 style="margin-top: 18px">Beneficios</h3>
-          <div class="benefits">
-            <div class="benefit">Ahorro de tiempo</div>
-            <div class="benefit">Facilidad de uso</div>
-            <div class="benefit">Claridad y estandarización legal</div>
+          <div
+            style="
+              margin-top: 24px;
+              display: grid;
+              grid-template-columns: 1fr;
+              gap: 16px;
+            "
+          >
+            <div style="display: flex; gap: 14px">
+              <div
+                style="
+                  flex-shrink: 0;
+                  width: 40px;
+                  height: 40px;
+                  background: var(--accent);
+                  border-radius: 50%;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  color: #fff;
+                  font-weight: 700;
+                  font-size: 16px;
+                "
+              >
+                1
+              </div>
+              <div>
+                <div style="font-weight: 700; color: #06233a">
+                  Selecciona el formato
+                </div>
+                <div
+                  style="color: var(--muted); font-size: 14px; margin-top: 4px"
+                >
+                  Elige entre nuestros formatos disponibles según tu tipo de
+                  documento.
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 14px">
+              <div
+                style="
+                  flex-shrink: 0;
+                  width: 40px;
+                  height: 40px;
+                  background: var(--accent);
+                  border-radius: 50%;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  color: #fff;
+                  font-weight: 700;
+                  font-size: 16px;
+                "
+              >
+                2
+              </div>
+              <div>
+                <div style="font-weight: 700; color: #06233a">
+                  Completa la información
+                </div>
+                <div
+                  style="color: var(--muted); font-size: 14px; margin-top: 4px"
+                >
+                  Rellena los campos con tus datos. El formulario guía cada
+                  paso.
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 14px">
+              <div
+                style="
+                  flex-shrink: 0;
+                  width: 40px;
+                  height: 40px;
+                  background: var(--accent);
+                  border-radius: 50%;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  color: #fff;
+                  font-weight: 700;
+                  font-size: 16px;
+                "
+              >
+                3
+              </div>
+              <div>
+                <div style="font-weight: 700; color: #06233a">
+                  Descarga tu documento
+                </div>
+                <div
+                  style="color: var(--muted); font-size: 14px; margin-top: 4px"
+                >
+                  Obtén tu PDF listo para usar, imprimir o compartir.
+                </div>
+              </div>
+            </div>
           </div>
+
+          <h3 style="margin-top: 28px; color: #06233a">¿Quiénes somos?</h3>
+          <p style="color: var(--muted)">
+            formatounico.com nace con la misión de simplificar el acceso a
+            documentos legales confiables. Nuestras plantillas son diseñadas y
+            revisadas por profesionales del derecho para garantizar que cumplan
+            con los estándares legales vigentes en Colombia.
+          </p>
         </div>
 
         <aside class="card">
-          <h4 style="margin: 0 0 8px 0">Cómo funciona</h4>
-          <ol style="margin: 0; padding-left: 18px; color: var(--muted)">
-            <li>Elige el formato que necesitas.</li>
-            <li>Rellena el formulario en línea con tus datos.</li>
-            <li>Descarga el PDF o imprime tu documento.</li>
-          </ol>
-
-          <div style="margin-top: 16px; display: flex; gap: 8px">
+          <h4 style="margin: 0 0 8px 0">Comienza ahora</h4>
+          <p style="color: var(--muted); margin-bottom: 12px">
+            No necesitas experiencia legal. Solo completa el formulario y listo.
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 8px">
             <button class="btn btn-primary" id="start-fill">
-              Comenzar ahora
+              Ver formatos disponibles
             </button>
-            <button class="btn btn-ghost" onclick="location.href = '#formatos'">
-              Ver formatos
+            <button class="btn btn-ghost" onclick="location.href = '#'">
+              Más información
             </button>
           </div>
         </aside>
       </section>
 
       <footer>
-        <div class="footer-grid">
-          <div>
-            <strong style="color: #06233a">formatounico.com</strong>
-            <div style="margin-top: 8px; color: var(--muted)">
-              Formatos legales estandarizados • Rápidos • Confiables
+        <div
+          style="
+            border-top: 1px solid #e6eef2;
+            padding-top: 24px;
+            margin-top: 40px;
+          "
+        >
+          <div class="footer-grid">
+            <div>
+              <strong style="color: #06233a; font-size: 16px"
+                >formatounico.com</strong
+              >
+              <div
+                style="margin-top: 8px; color: var(--muted); font-size: 13px"
+              >
+                Formatos legales estandarizados<br />
+                Rápidos • Confiables • Profesionales
+              </div>
             </div>
-          </div>
-          <div
-            style="
-              display: flex;
-              gap: 18px;
-              align-items: center;
-              flex-wrap: wrap;
-            "
-          >
-            <a href="#" style="color: var(--muted); text-decoration: none"
-              >Términos</a
-            >
-            <a href="#" style="color: var(--muted); text-decoration: none"
-              >Privacidad</a
-            >
-            <a href="#" style="color: var(--muted); text-decoration: none"
-              >Contacto</a
-            >
-          </div>
-          <div style="text-align: right; color: var(--muted)">
-            <div>© 2026 formatounico.com</div>
-            <div style="margin-top: 6px">País: Colombia ▾</div>
+            <div>
+              <div
+                style="
+                  font-weight: 700;
+                  color: #06233a;
+                  font-size: 13px;
+                  margin-bottom: 8px;
+                "
+              >
+                Producto
+              </div>
+              <ul
+                style="
+                  list-style: none;
+                  padding: 0;
+                  margin: 0;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 6px;
+                "
+              >
+                <li>
+                  <a
+                    href="#formatos"
+                    style="
+                      color: var(--muted);
+                      text-decoration: none;
+                      font-size: 13px;
+                      display: inline-block;
+                    "
+                    >Formatos</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#como-funciona"
+                    style="
+                      color: var(--muted);
+                      text-decoration: none;
+                      font-size: 13px;
+                      display: inline-block;
+                    "
+                    >Cómo funciona</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    style="
+                      color: var(--muted);
+                      text-decoration: none;
+                      font-size: 13px;
+                      display: inline-block;
+                    "
+                    >Precios</a
+                  >
+                </li>
+              </ul>
+            </div>
+            <div>
+              <div
+                style="
+                  font-weight: 700;
+                  color: #06233a;
+                  font-size: 13px;
+                  margin-bottom: 8px;
+                "
+              >
+                Legal
+              </div>
+              <ul
+                style="
+                  list-style: none;
+                  padding: 0;
+                  margin: 0;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 6px;
+                "
+              >
+                <li>
+                  <a
+                    href="#"
+                    style="
+                      color: var(--muted);
+                      text-decoration: none;
+                      font-size: 13px;
+                      display: inline-block;
+                    "
+                    >Términos de uso</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    style="
+                      color: var(--muted);
+                      text-decoration: none;
+                      font-size: 13px;
+                      display: inline-block;
+                    "
+                    >Privacidad</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    style="
+                      color: var(--muted);
+                      text-decoration: none;
+                      font-size: 13px;
+                      display: inline-block;
+                    "
+                    >Contacto</a
+                  >
+                </li>
+              </ul>
+            </div>
+            <div style="text-align: right">
+              <div style="color: var(--muted); font-size: 13px">
+                <div>© 2026 formatounico.com</div>
+                <div style="margin-top: 8px">
+                  <strong style="color: #06233a">País:</strong> Colombia
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </footer>
