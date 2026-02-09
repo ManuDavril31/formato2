@@ -23,6 +23,9 @@
       *::after {
         box-sizing: border-box;
       }
+      a {
+        text-decoration: none;
+      }
       body {
         margin: 0;
         font-family:
@@ -336,7 +339,7 @@
       }
       .format-card .btn {
         padding: 9px 12px;
-        font-size: 12px;
+        font-size: 14px;
         font-weight: 600;
         transition: all 0.25s ease;
         border-radius: 7px;
@@ -710,12 +713,12 @@
                 y llenar en línea.
               </p>
               <div class="format-card-actions">
-                <button class="btn btn-primary" onclick="location.href = '#'">
+                <a class="btn btn-primary" href="#" target="_blank" rel="noopener noreferrer">
                   Llenar en línea
-                </button>
-                <button class="btn btn-ghost" onclick="location.href = '#'">
+                </a>
+                <a class="btn btn-ghost" href="#">
                   Ver formato
-                </button>
+                </a>
               </div>
             </div>
           </article>
@@ -735,20 +738,12 @@
                 identificación y servicios.
               </p>
               <div class="format-card-actions">
-                <button
-                  class="btn btn-primary"
-                  onclick="
-                    window.open(
-                      '/hoja-vida/persona-juridica/llenar-en-linea/',
-                      '_blank',
-                    )
-                  "
-                >
+                <a class="btn btn-primary" href="/hoja-vida/persona-juridica/llenar-en-linea/" target="_blank" rel="noopener noreferrer">
                   Llenar en línea
-                </button>
-                <button class="btn btn-ghost" onclick="location.href = '#'">
+                </a>
+                <a class="btn btn-ghost" href="#">
                   Ver formato
-                </button>
+                </a>
               </div>
             </div>
           </article>
@@ -1031,9 +1026,9 @@
             <button class="btn btn-primary" id="start-fill">
               Ver formatos disponibles
             </button>
-            <button class="btn btn-ghost" onclick="location.href = '#'">
+            <a class="btn btn-ghost" href="#">
               Más información
-            </button>
+            </a>
           </div>
         </aside>
       </section>
