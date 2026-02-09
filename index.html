@@ -160,42 +160,52 @@
 
       /* Hero (single column on mobile) */
       .hero {
-        padding: 28px 0;
+        padding: 40px 0;
         display: block;
       }
       .hero h1 {
-        margin: 0;
-        font-size: 24px;
+        margin: 0 0 16px 0;
+        font-size: 28px;
         color: #06233a;
-        line-height: 1.12;
+        line-height: 1.15;
+        font-weight: 800;
       }
       .hero p {
-        margin: 10px 0 16px;
+        margin: 0 0 24px 0;
         color: var(--muted);
-        line-height: 1.45;
+        line-height: 1.6;
+        font-size: 16px;
       }
       .cta-row {
         display: flex;
-        gap: 10px;
+        gap: 12px;
         flex-wrap: wrap;
+        margin-bottom: 28px;
       }
 
       .btn {
-        padding: 10px 14px;
+        padding: 12px 20px;
         border-radius: 10px;
         border: 0;
         cursor: pointer;
         font-weight: 700;
-        font-size: 14px;
+        font-size: 15px;
+        transition: all 0.25s ease;
       }
       .btn-primary {
         background: var(--accent);
         color: #fff;
       }
+      .btn-primary:active {
+        transform: scale(0.98);
+      }
       .btn-ghost {
         background: transparent;
-        border: 1px solid #cfecee;
+        border: 1.5px solid #cfecee;
         color: #0b91a6;
+      }
+      .btn-ghost:hover {
+        background: rgba(11, 145, 166, 0.05);
       }
 
       .hero-visual {
@@ -205,6 +215,16 @@
         padding: 14px;
         border: 1px solid #e6eef2;
       }
+
+      /* Tarjeta de verificación mejorada */
+      .hero .card {
+        background: #f0fbfd;
+        border: 1px solid #c7e9ed;
+        border-radius: 12px;
+        padding: 16px;
+        margin-top: 0;
+      }
+
       .card {
         background: var(--card);
         border-radius: 10px;
@@ -343,6 +363,52 @@
         display: block;
       }
 
+      /* Sección destacada de proceso */
+      .process-highlight {
+        margin-top: 36px;
+        padding: 28px;
+        background: #fff;
+        border-radius: 16px;
+        border: 1px solid #e6eef2;
+        text-align: center;
+      }
+      .process-highlight-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 24px;
+        align-items: center;
+      }
+      .process-highlight-content {
+        text-align: left;
+      }
+      .process-highlight-content h3 {
+        margin: 0 0 12px 0;
+        color: #06233a;
+        font-size: 20px;
+      }
+      .process-highlight-content p {
+        color: var(--muted);
+        margin: 0 0 16px 0;
+        line-height: 1.6;
+      }
+      .process-items {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        font-size: 14px;
+        color: var(--muted);
+      }
+      .process-item {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .process-item-icon {
+        color: var(--accent);
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+
       /* Sección "Por qué elegir" responsiva */
       .why-choose {
         margin-top: 40px;
@@ -409,17 +475,40 @@
         .container {
           padding: 20px;
         }
+        .hero {
+          padding: 56px 0;
+        }
         .hero h1 {
-          font-size: 28px;
+          font-size: 36px;
+          margin-bottom: 20px;
+        }
+        .hero p {
+          font-size: 17px;
+          margin-bottom: 28px;
+          max-width: 580px;
         }
         .format-card-image {
           min-height: 160px;
+        }
+        .process-highlight-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .process-highlight-content {
+          text-align: left;
         }
       }
 
       @media (min-width: 1000px) {
         .container {
           padding: 24px;
+        }
+        .hero {
+          display: grid;
+          grid-template-columns: 1fr;
+          padding: 64px 0;
+        }
+        .hero h1 {
+          font-size: 40px;
         }
         nav {
           position: static;
@@ -450,17 +539,6 @@
         }
         .nav-close {
           display: none;
-        }
-
-        .hero {
-          display: grid;
-          grid-template-columns: 1fr 420px;
-          gap: 32px;
-          align-items: center;
-          padding: 48px 0;
-        }
-        .hero h1 {
-          font-size: 34px;
         }
 
         .formats {
@@ -539,15 +617,20 @@
             <button class="btn btn-ghost" id="cta-como">Cómo funciona</button>
           </div>
 
-          <div class="card" style="margin-top: 22px">
-            <div style="display: flex; gap: 10px; align-items: flex-start">
-              <div style="color: var(--accent); font-size: 20px">✓</div>
+          <div class="card" style="margin-top: 0">
+            <div style="display: flex; gap: 12px; align-items: flex-start">
+              <div
+                style="color: var(--accent); font-size: 22px; flex-shrink: 0"
+              >
+                ✓
+              </div>
               <div>
-                <strong style="color: #06233a"
+                <strong
+                  style="color: #06233a; display: block; margin-bottom: 6px"
                   >Verificados por profesionales</strong
                 >
                 <div
-                  style="margin-top: 4px; color: var(--muted); font-size: 13px"
+                  style="color: var(--muted); font-size: 14px; line-height: 1.5"
                 >
                   Plantillas actualizadas según normativas colombianas vigentes.
                 </div>
@@ -555,59 +638,6 @@
             </div>
           </div>
         </div>
-
-        <aside class="hero-visual">
-          <div
-            style="
-              display: flex;
-              flex-direction: column;
-              gap: 12px;
-              align-items: center;
-            "
-          >
-            <svg
-              width="180"
-              height="120"
-              viewBox="0 0 220 140"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <rect
-                x="6"
-                y="10"
-                width="140"
-                height="120"
-                rx="8"
-                fill="#fff"
-                stroke="#e6eef2"
-              />
-              <rect x="32" y="26" width="92" height="8" rx="4" fill="#e6eef2" />
-              <rect
-                x="32"
-                y="42"
-                width="116"
-                height="8"
-                rx="4"
-                fill="#e6eef2"
-              />
-              <rect x="32" y="58" width="80" height="8" rx="4" fill="#e6eef2" />
-              <circle cx="175" cy="85" r="30" fill="#0b91a6" />
-              <path
-                d="M162 81 L170 88 L180 74"
-                stroke="#fff"
-                stroke-width="3"
-                fill="none"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-            <div
-              style="text-align: center; color: var(--muted); font-size: 14px"
-            >
-              Rellena en línea • Descarga PDF • Imprime cuando quieras
-            </div>
-          </div>
-        </aside>
       </section>
 
       <section id="formatos">
@@ -825,6 +855,116 @@
               </div>
             </div>
           </article>
+        </div>
+      </section>
+
+      <section class="process-highlight">
+        <div class="process-highlight-grid">
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              gap: 12px;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <svg
+              width="140"
+              height="120"
+              viewBox="0 0 160 140"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <!-- Documento -->
+              <rect
+                x="30"
+                y="20"
+                width="80"
+                height="100"
+                rx="6"
+                fill="#fff"
+                stroke="#e6eef2"
+                stroke-width="2"
+              />
+              <line
+                x1="45"
+                y1="35"
+                x2="100"
+                y2="35"
+                stroke="#e6eef2"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+              <line
+                x1="45"
+                y1="50"
+                x2="100"
+                y2="50"
+                stroke="#e6eef2"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+              <line
+                x1="45"
+                y1="65"
+                x2="95"
+                y2="65"
+                stroke="#e6eef2"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+              <line
+                x1="45"
+                y1="80"
+                x2="100"
+                y2="80"
+                stroke="#e6eef2"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+              <line
+                x1="45"
+                y1="95"
+                x2="85"
+                y2="95"
+                stroke="#e6eef2"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+              <!-- Checkmark círculo -->
+              <circle cx="115" cy="55" r="20" fill="#0b91a6" />
+              <path
+                d="M108 55 L113 62 L122 48"
+                stroke="#fff"
+                stroke-width="3"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+          <div class="process-highlight-content">
+            <h3>Proceso simple y rápido</h3>
+            <p>
+              Rellena tu documento en línea, descarga el PDF listo para usar y
+              imprímelo cuando lo necesites.
+            </p>
+            <div class="process-items">
+              <div class="process-item">
+                <span class="process-item-icon">✓</span>
+                <span>Rellena en línea</span>
+              </div>
+              <div class="process-item">
+                <span class="process-item-icon">✓</span>
+                <span>Descarga PDF</span>
+              </div>
+              <div class="process-item">
+                <span class="process-item-icon">✓</span>
+                <span>Imprime cuando quieras</span>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
