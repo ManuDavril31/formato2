@@ -12,9 +12,20 @@
     />
     <style>
       :root {
+        --bg: #f6f8fb;
+        --card: #fff;
         --accent: #0b91a6;
         --muted: #6b7280;
-        --bg: #f6f8fb;
+        --radius: 12px;
+        --maxW: 1100px;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      a {
+        text-decoration: none;
       }
       body {
         margin: 0;
@@ -23,94 +34,315 @@
           system-ui,
           Segoe UI,
           Roboto,
+          "Helvetica Neue",
           Arial;
+        color: #0f172a;
         background: var(--bg);
-        color: #06233a;
+        -webkit-font-smoothing: antialiased;
+      }
+      header {
+        background: #fff;
+        border-bottom: 1px solid #e6eef2;
       }
       .container {
-        max-width: 980px;
-        margin: 28px auto;
-        padding: 20px;
+        max-width: var(--maxW);
+        margin: 0 auto;
+        padding: 16px;
       }
-      .hero {
+      .topbar {
         display: flex;
-        gap: 20px;
         align-items: center;
+        justify-content: space-between;
+        gap: 12px;
       }
-      .hero img {
-        width: 160px;
-        height: 200px;
-        object-fit: cover;
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        color: var(--accent);
+        font-size: 18px;
+      }
+      .brand .logo {
+        width: 40px;
+        height: 40px;
         border-radius: 8px;
-        border: 1px solid #e6eef2;
-        background: #fff;
+        background: linear-gradient(135deg, #0b91a6, #5dd4d8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 800;
       }
-      .hero h1 {
-        margin: 0;
-        font-size: 22px;
-      }
-      .btn {
+      .mobile-only {
         display: inline-block;
-        padding: 12px 18px;
-        border-radius: 10px;
+      }
+      .desktop-only {
+        display: none;
+      }
+      .nav-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(3, 18, 26, 0.45);
+        opacity: 0;
+        visibility: hidden;
+        transition:
+          opacity 0.25s ease,
+          visibility 0.25s ease;
+        z-index: 40;
+      }
+      .nav-backdrop.open {
+        opacity: 1;
+        visibility: visible;
+      }
+      nav {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        background: linear-gradient(180deg, #fff, #fbfeff);
+        transform: translateY(-100%);
+        opacity: 0;
+        visibility: hidden;
+        padding: 18px 16px;
+        border-bottom: 1px solid #e6eef2;
+        box-shadow: 0 10px 30px rgba(3, 18, 26, 0.08);
+        z-index: 50;
+        transition:
+          transform 0.3s ease,
+          opacity 0.25s ease,
+          visibility 0.25s ease;
+      }
+      nav.open {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+      }
+      nav ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      nav a {
+        display: block;
+        padding: 10px 12px;
+        border-radius: 8px;
+        color: #06233a;
         text-decoration: none;
         font-weight: 700;
+        font-size: 15px;
+      }
+      nav a:hover {
+        background: #f0fbfd;
+      }
+      .nav-close {
+        background: transparent;
+        border: 0;
+        font-size: 20px;
+        padding: 6px;
+        cursor: pointer;
+        color: var(--muted);
+        float: right;
+        margin-bottom: 10px;
+        display: block;
+      }
+      .search {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .btn {
+        padding: 12px 20px;
+        border-radius: 10px;
+        border: 0;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 15px;
+        transition: all 0.25s ease;
+        display: inline-block;
       }
       .btn-primary {
         background: var(--accent);
         color: #fff;
       }
-      .section {
+      .btn-primary:hover {
+        background: #0a7a8f;
+      }
+      .btn-ghost {
+        background: transparent;
+        border: 1.5px solid #cfecee;
+        color: #0b91a6;
+      }
+      .btn-ghost:hover {
+        background: rgba(11, 145, 166, 0.05);
+      }
+      main {
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+      article {
         background: #fff;
         border: 1px solid #e6eef2;
-        padding: 18px;
+        padding: 20px;
         border-radius: 10px;
-        margin-top: 18px;
+        margin-bottom: 20px;
       }
       h2 {
-        margin: 0 0 8px 0;
+        margin: 0 0 12px 0;
         color: #06233a;
+        font-size: 18px;
+      }
+      h3 {
+        margin: 16px 0 8px 0;
+        color: #06233a;
+        font-size: 16px;
       }
       p {
+        margin: 0 0 12px 0;
         color: var(--muted);
         line-height: 1.6;
       }
       ul {
+        margin: 0 0 12px 0;
         color: var(--muted);
         line-height: 1.6;
       }
-      .cta-row {
-        margin-top: 14px;
+      footer {
+        margin-top: 36px;
+        padding: 20px 0;
+        color: #94a3b8;
+        font-size: 13px;
+      }
+      .footer-grid {
+        display: block;
+      }
+      @media (min-width: 700px) {
+        .container {
+          padding: 20px;
+        }
+      }
+      @media (min-width: 1000px) {
+        .container {
+          padding: 24px;
+        }
+        nav {
+          position: static;
+          background: transparent;
+          border: none;
+          box-shadow: none;
+          padding: 0;
+          transform: none;
+          opacity: 1;
+          visibility: visible;
+          display: flex;
+          gap: 14px;
+          align-items: center;
+          transition: none;
+        }
+        nav ul {
+          flex-direction: row;
+          gap: 14px;
+        }
+        .desktop-only {
+          display: flex;
+        }
+        .mobile-only {
+          display: none;
+        }
+        .topbar {
+          align-items: center;
+        }
+        .nav-close {
+          display: none;
+        }
+        .footer-grid {
+          display: flex;
+          justify-content: space-between;
+          gap: 20px;
+          align-items: flex-start;
+        }
       }
     </style>
   </head>
   <body>
+    <header>
+      <div class="container topbar">
+        <div class="brand">
+          <div class="logo">F</div>
+          <div>
+            formatounico.com
+            <div style="font-size: 12px; color: var(--muted); font-weight: 600">
+              Formatos legales listos para llenar
+            </div>
+          </div>
+        </div>
+        <nav id="main-nav" aria-hidden="true">
+          <button class="nav-close" aria-label="Cerrar menú" id="nav-close">
+            ×
+          </button>
+          <ul>
+            <li><a href="/">Inicio</a></li>
+            <li><a href="/#formatos">Formatos</a></li>
+            <li><a href="/#como-funciona">Cómo funciona</a></li>
+            <li><a href="/">FAQ</a></li>
+          </ul>
+        </nav>
+        <div id="nav-backdrop" class="nav-backdrop" aria-hidden="true"></div>
+        <div class="search">
+          <button
+            class="btn btn-ghost mobile-only"
+            id="menu-toggle"
+            aria-controls="main-nav"
+            aria-expanded="false"
+          >
+            ☰
+          </button>
+        </div>
+      </div>
+    </header>
+
     <main class="container">
-      <header class="hero">
+      <article
+        style="
+          display: flex;
+          gap: 20px;
+          align-items: flex-start;
+          margin-bottom: 20px;
+        "
+      >
         <img
           src="/assets/hojas-vida/persona-juridica.jpg"
           alt="Formato persona jurídica"
+          style="
+            width: 160px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #e6eef2;
+            flex-shrink: 0;
+          "
         />
         <div>
-          <h1>
+          <h2 style="margin-top: 0">
             Formato único de hoja de vida de función pública llenar en línea
-          </h1>
-          <div class="cta-row">
-            <a
-              class="btn btn-primary"
-              href="/hojas-vida/persona-juridica/llenar-en-linea/"
-              >Llenar el formato</a
-            >
-          </div>
-          <p style="margin-top: 8px; color: var(--muted)">
+          </h2>
+          <p>
             Descarga y llena en línea el formato único de hoja de vida de
             función pública para persona jurídica. Guía paso a paso, Word, PDF y
             Excel editable DAFP.
           </p>
+          <a
+            class="btn btn-primary"
+            href="/hojas-vida/persona-juridica/llenar-en-linea/"
+            >Llenar el formato</a
+          >
         </div>
-      </header>
+      </article>
 
-      <article class="section">
+      <article>
         <h2>
           ¿Qué es el formato único de hoja de vida de función pública para
           persona jurídica?
@@ -138,7 +370,7 @@
         </p>
       </article>
 
-      <article class="section">
+      <article>
         <h2>¿Para qué sirve el formato único hoja de vida persona jurídica?</h2>
         <p>
           El formato único de hoja de vida para persona jurídica sirve como una
@@ -160,7 +392,7 @@
         </p>
       </article>
 
-      <article class="section">
+      <article>
         <h2>Formato único de hoja de vida persona jurídica DAFP</h2>
         <p>
           El formato único de hoja de vida persona jurídica DAFP es el modelo
@@ -183,7 +415,7 @@
         </p>
       </article>
 
-      <article class="section">
+      <article>
         <h2>
           Descargar formato único de hoja de vida persona jurídica (Word, PDF y
           Excel)
@@ -214,7 +446,7 @@
             interno.
           </li>
         </ul>
-        <div class="cta-row">
+        <div style="margin-top: 16px">
           <a
             class="btn btn-primary"
             href="/hojas-vida/persona-juridica/llenar-en-linea/"
@@ -223,7 +455,7 @@
         </div>
       </article>
 
-      <article class="section">
+      <article>
         <h2>
           ¿Cómo llenar en línea el formato único de hoja de vida de función
           pública?
@@ -268,7 +500,7 @@
         <p>Imprime o firma digitalmente según lo solicite la entidad.</p>
       </article>
 
-      <article class="section">
+      <article>
         <h2>Formato único hoja de vida persona jurídica y SIGEP</h2>
         <p>
           El formato único hoja de vida persona jurídica SIGEP es obligatorio
@@ -288,7 +520,7 @@
         </ul>
       </article>
 
-      <article class="section">
+      <article>
         <h2>Diferencia entre persona natural y persona jurídica</h2>
         <p>
           Es importante no confundir formatos: Persona natural son individuos;
@@ -298,7 +530,7 @@
         </p>
       </article>
 
-      <article class="section">
+      <article>
         <h2>Errores frecuentes al diligenciar el formato único</h2>
         <ul>
           <li>Usar el formato incorrecto</li>
@@ -309,7 +541,7 @@
         </ul>
       </article>
 
-      <article class="section">
+      <article>
         <h2>Preguntas frecuentes</h2>
         <p>
           <strong
@@ -344,21 +576,218 @@
         </p>
       </article>
 
-      <footer style="margin-top: 18px; text-align: center">
-        <p style="color: var(--muted)">
-          Conclusión: El formato único de hoja de vida de función pública llenar
-          en línea es un documento esencial para cualquier entidad que quiera
-          contratar con el Estado colombiano. Usar el formato DAFP y
-          diligenciarlo correctamente garantiza cumplimiento y evita rechazos.
+      <article>
+        <p>
+          El formato único de hoja de vida de función pública llenar en línea es
+          un documento esencial para cualquier entidad que quiera contratar con
+          el Estado colombiano. Usar el formato DAFP y diligenciarlo
+          correctamente garantiza cumplimiento y evita rechazos.
         </p>
-        <div class="cta-row" style="margin-top: 12px">
+        <div style="margin-top: 16px">
           <a
             class="btn btn-primary"
             href="/hojas-vida/persona-juridica/llenar-en-linea/"
             >Llenar el formato</a
           >
         </div>
-      </footer>
+      </article>
     </main>
+
+    <footer>
+      <div class="container">
+        <div
+          style="
+            border-top: 1px solid #e6eef2;
+            padding-top: 24px;
+            margin-top: 40px;
+          "
+        >
+          <div class="footer-grid">
+            <div>
+              <strong style="color: #06233a; font-size: 16px"
+                >formatounico.com</strong
+              >
+              <div
+                style="margin-top: 8px; color: var(--muted); font-size: 13px"
+              >
+                Formatos legales estandarizados<br />
+                Rápidos • Confiables • Profesionales
+              </div>
+            </div>
+            <div>
+              <div
+                style="
+                  font-weight: 700;
+                  color: #06233a;
+                  font-size: 13px;
+                  margin-bottom: 8px;
+                "
+              >
+                Producto
+              </div>
+              <ul
+                style="
+                  list-style: none;
+                  padding: 0;
+                  margin: 0;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 6px;
+                "
+              >
+                <li>
+                  <a
+                    href="/"
+                    style="
+                      color: var(--muted);
+                      text-decoration: none;
+                      font-size: 13px;
+                      display: inline-block;
+                    "
+                    >Formatos</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="/#como-funciona"
+                    style="
+                      color: var(--muted);
+                      text-decoration: none;
+                      font-size: 13px;
+                      display: inline-block;
+                    "
+                    >Cómo funciona</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="/"
+                    style="
+                      color: var(--muted);
+                      text-decoration: none;
+                      font-size: 13px;
+                      display: inline-block;
+                    "
+                    >Precios</a
+                  >
+                </li>
+              </ul>
+            </div>
+            <div>
+              <div
+                style="
+                  font-weight: 700;
+                  color: #06233a;
+                  font-size: 13px;
+                  margin-bottom: 8px;
+                "
+              >
+                Legal
+              </div>
+              <ul
+                style="
+                  list-style: none;
+                  padding: 0;
+                  margin: 0;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 6px;
+                "
+              >
+                <li>
+                  <a
+                    href="/"
+                    style="
+                      color: var(--muted);
+                      text-decoration: none;
+                      font-size: 13px;
+                      display: inline-block;
+                    "
+                    >Términos de uso</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="/"
+                    style="
+                      color: var(--muted);
+                      text-decoration: none;
+                      font-size: 13px;
+                      display: inline-block;
+                    "
+                    >Privacidad</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="/"
+                    style="
+                      color: var(--muted);
+                      text-decoration: none;
+                      font-size: 13px;
+                      display: inline-block;
+                    "
+                    >Contacto</a
+                  >
+                </li>
+              </ul>
+            </div>
+            <div style="text-align: right">
+              <div style="color: var(--muted); font-size: 13px">
+                <div>© 2026 formatounico.com</div>
+                <div style="margin-top: 8px">
+                  <strong style="color: #06233a">País:</strong> Colombia
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      (function () {
+        const menuToggle = document.getElementById("menu-toggle");
+        const nav = document.getElementById("main-nav");
+        const backdrop = document.getElementById("nav-backdrop");
+        const navClose = document.getElementById("nav-close");
+
+        function openNav() {
+          nav.classList.add("open");
+          backdrop.classList.add("open");
+          menuToggle.setAttribute("aria-expanded", "true");
+          nav.setAttribute("aria-hidden", "false");
+          document.body.style.overflow = "hidden";
+        }
+        function closeNav() {
+          nav.classList.remove("open");
+          backdrop.classList.remove("open");
+          menuToggle.setAttribute("aria-expanded", "false");
+          nav.setAttribute("aria-hidden", "true");
+          document.body.style.overflow = "";
+        }
+
+        if (menuToggle) {
+          menuToggle.addEventListener("click", () => {
+            const opened = nav.classList.contains("open");
+            if (opened) closeNav();
+            else openNav();
+          });
+        }
+        if (backdrop) {
+          backdrop.addEventListener("click", closeNav);
+        }
+        if (navClose) {
+          navClose.addEventListener("click", closeNav);
+        }
+        const navLinks = nav.querySelectorAll("a");
+        navLinks.forEach((link) => {
+          link.addEventListener("click", closeNav);
+        });
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && nav.classList.contains("open")) closeNav();
+        });
+      })();
+    </script>
   </body>
 </html>
