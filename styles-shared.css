@@ -1,0 +1,265 @@
+/* Mobile-first base styles */
+:root {
+  --bg: #f6f8fb;
+  --card: #fff;
+  --accent: #0b91a6;
+  --muted: #6b7280;
+  --radius: 12px;
+  --maxW: 1100px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+}
+
+body {
+  margin: 0;
+  font-family:
+    Inter,
+    system-ui,
+    Segoe UI,
+    Roboto,
+    "Helvetica Neue",
+    Arial;
+  color: #0f172a;
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+header {
+  background: #fff;
+  border-bottom: 1px solid #e6eef2;
+}
+
+.container {
+  max-width: var(--maxW);
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* Topbar */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 18px;
+}
+
+.brand .logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #0b91a6, #5dd4d8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 800;
+}
+
+/* Mobile menu styles */
+.mobile-only {
+  display: inline-block;
+}
+
+.desktop-only {
+  display: none;
+}
+
+/* Nav panel (overlay móvil) */
+.nav-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 18, 26, 0.45);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.25s ease,
+    visibility 0.25s ease;
+  z-index: 40;
+}
+
+.nav-backdrop.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+nav {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  background: linear-gradient(180deg, #fff, #fbfeff);
+  transform: translateY(-100%);
+  opacity: 0;
+  visibility: hidden;
+  padding: 18px 16px;
+  border-bottom: 1px solid #e6eef2;
+  box-shadow: 0 10px 30px rgba(3, 18, 26, 0.08);
+  z-index: 50;
+  transition:
+    transform 0.3s ease,
+    opacity 0.25s ease,
+    visibility 0.25s ease;
+}
+
+nav.open {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+nav a {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #06233a;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+nav a:hover {
+  background: #f0fbfd;
+}
+
+.nav-close {
+  background: transparent;
+  border: 0;
+  font-size: 20px;
+  padding: 6px;
+  cursor: pointer;
+  color: var(--muted);
+  float: right;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Button styles */
+.btn {
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: 0;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 15px;
+  transition: all 0.25s ease;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: #0a7a8f;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1.5px solid #cfecee;
+  color: #0b91a6;
+}
+
+.btn-ghost:hover {
+  background: rgba(11, 145, 166, 0.05);
+}
+
+/* Footer */
+footer {
+  margin-top: 36px;
+  padding: 20px 0;
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.footer-grid {
+  display: block;
+}
+
+/* Responsive */
+@media (min-width: 700px) {
+  .container {
+    padding: 20px;
+  }
+}
+
+@media (min-width: 1000px) {
+  .container {
+    padding: 24px;
+  }
+
+  nav {
+    position: static;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    transition: none;
+  }
+
+  nav ul {
+    flex-direction: row;
+    gap: 14px;
+  }
+
+  .desktop-only {
+    display: flex;
+  }
+
+  .mobile-only {
+    display: none;
+  }
+
+  .topbar {
+    align-items: center;
+  }
+
+  .nav-close {
+    display: none;
+  }
+
+  .footer-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: flex-start;
+  }
+}
