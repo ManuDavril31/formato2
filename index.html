@@ -245,44 +245,56 @@
       .formats {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 14px;
+        gap: 16px;
         margin-top: 16px;
+        max-width: 100%;
       }
       .format-card {
         display: flex;
         flex-direction: column;
         gap: 0;
         padding: 0;
-        border-radius: 12px;
+        border-radius: 14px;
         border: 1px solid #e6eef2;
         background: #fff;
         overflow: hidden;
         box-shadow: 0 2px 8px rgba(3, 18, 26, 0.06);
         transition: all 0.3s ease;
+        min-height: 440px;
+        max-height: 480px;
+        width: 100%;
+        max-width: 320px;
+        margin: 0 auto;
       }
       .format-card:hover {
         box-shadow: 0 8px 24px rgba(3, 18, 26, 0.12);
         transform: translateY(-4px);
       }
       .format-card-image {
-        background: linear-gradient(
-          135deg,
-          rgba(11, 145, 166, 0.05),
-          rgba(93, 212, 216, 0.05)
-        );
-        padding: 24px 16px;
+        background-size: cover;
+        background-position: center;
+        background-color: #f0fbfd;
         display: flex;
         align-items: center;
         justify-content: center;
-        min-height: 140px;
+        min-height: 160px;
+        height: 160px;
         border-bottom: 1px solid #e6eef2;
+        flex-shrink: 0;
+      }
+      .format-card-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center top;
       }
       .format-card-content {
-        padding: 18px 16px;
+        padding: 20px 16px;
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 12px;
         flex: 1;
+        overflow: hidden;
       }
       .format-card-category {
         display: inline-block;
@@ -298,29 +310,39 @@
       }
       .format-card h3 {
         margin: 0;
-        font-size: 17px;
+        font-size: 18px;
         color: #06233a;
         font-weight: 700;
         line-height: 1.3;
+        word-break: break-word;
       }
       .format-card p {
         margin: 0;
         color: var(--muted);
         font-size: 14px;
-        line-height: 1.45;
+        line-height: 1.5;
         flex: 1;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
       }
       .format-card-actions {
         display: flex;
         flex-direction: column;
-        gap: 8px;
-        margin-top: 8px;
+        gap: 10px;
+        margin-top: auto;
+        padding-top: 8px;
       }
       .format-card .btn {
-        padding: 11px 14px;
+        padding: 12px 16px;
         font-size: 14px;
+        font-weight: 600;
         transition: all 0.25s ease;
         border-radius: 8px;
+        cursor: pointer;
+        width: 100%;
+        text-align: center;
       }
       .format-card .btn-primary {
         background: var(--accent);
@@ -500,8 +522,16 @@
           font-size: 17px;
           margin-bottom: 28px;
         }
+        .format-card {
+          max-width: 360px;
+        }
         .format-card-image {
           min-height: 160px;
+        }
+        .formats {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 20px;
+          justify-items: center;
         }
         .process-highlight-grid {
           grid-template-columns: 1fr 1fr;
@@ -559,8 +589,9 @@
         }
 
         .formats {
-          grid-template-columns: repeat(2, 1fr);
-          gap: 18px;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 20px;
+          justify-items: center;
           margin-top: 20px;
         }
         .explain {
@@ -669,8 +700,6 @@
               <img
                 src="assets/hoja-vida/Hoja de vida persona natural.png"
                 alt="Hoja de vida persona natural"
-                width="100"
-                height="100"
               />
             </div>
             <div class="format-card-content">
@@ -696,8 +725,6 @@
               <img
                 src="assets/persona-juridica.svg"
                 alt="Formato Único Persona Jurídica"
-                width="100"
-                height="100"
               />
             </div>
             <div class="format-card-content">
