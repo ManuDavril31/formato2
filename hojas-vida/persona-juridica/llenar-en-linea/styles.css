@@ -34,9 +34,9 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--bg);
   min-height: 100vh;
-  padding: 30px 20px;
+  padding: 20px 16px;
   overflow-x: hidden;
   color: var(--gray-800);
   line-height: 1.6;
@@ -44,12 +44,11 @@ body {
 
 h1 {
   margin-bottom: 30px;
-  color: white;
-  font-size: 36px;
+  color: #06233a;
+  font-size: 32px;
   font-weight: 800;
   letter-spacing: -1px;
   text-align: center;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* =====================================================
