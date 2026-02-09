@@ -162,6 +162,11 @@
       .hero {
         padding: 40px 0;
         display: block;
+        text-align: center;
+      }
+      .hero > div {
+        max-width: 600px;
+        margin: 0 auto;
       }
       .hero h1 {
         margin: 0 0 16px 0;
@@ -181,6 +186,7 @@
         gap: 12px;
         flex-wrap: wrap;
         margin-bottom: 28px;
+        justify-content: center;
       }
 
       .btn {
@@ -223,6 +229,9 @@
         border-radius: 12px;
         padding: 16px;
         margin-top: 0;
+        margin-left: auto;
+        margin-right: auto;
+        display: inline-flex;
       }
 
       .card {
@@ -477,6 +486,11 @@
         }
         .hero {
           padding: 56px 0;
+          text-align: center;
+        }
+        .hero > div {
+          max-width: 700px;
+          margin: 0 auto;
         }
         .hero h1 {
           font-size: 36px;
@@ -485,7 +499,6 @@
         .hero p {
           font-size: 17px;
           margin-bottom: 28px;
-          max-width: 580px;
         }
         .format-card-image {
           min-height: 160px;
@@ -503,9 +516,13 @@
           padding: 24px;
         }
         .hero {
-          display: grid;
-          grid-template-columns: 1fr;
+          display: block;
           padding: 64px 0;
+          text-align: center;
+        }
+        .hero > div {
+          max-width: 750px;
+          margin: 0 auto;
         }
         .hero h1 {
           font-size: 40px;
