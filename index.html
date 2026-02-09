@@ -243,11 +243,12 @@
 
       /* Formats list: single column on mobile */
       .formats {
-        display: grid;
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-wrap: wrap;
         gap: 16px;
         margin-top: 16px;
         max-width: 100%;
+        justify-content: center;
       }
       .format-card {
         display: flex;
@@ -263,8 +264,7 @@
         min-height: 440px;
         max-height: 480px;
         width: 100%;
-        max-width: 320px;
-        margin: 0 auto;
+        max-width: 280px;
       }
       .format-card:hover {
         box-shadow: 0 8px 24px rgba(3, 18, 26, 0.12);
@@ -523,7 +523,7 @@
           margin-bottom: 28px;
         }
         .format-card {
-          max-width: 360px;
+          max-width: 320px;
         }
         .format-card-image {
           min-height: 160px;
