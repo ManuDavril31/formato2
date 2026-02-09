@@ -1,0 +1,587 @@
+/* =====================================================
+   ESTILOS GLOBALES Y VARIABLES
+   ===================================================== */
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1e40af;
+  --primary-light: #3b82f6;
+  --secondary: #7c3aed;
+  --danger: #ef4444;
+  --danger-light: #ff6b6b;
+  --success: #10b981;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.15);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+  --radius: 8px;
+  --radius-lg: 12px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 30px 20px;
+  overflow-x: hidden;
+  color: var(--gray-800);
+  line-height: 1.6;
+}
+
+h1 {
+  margin-bottom: 30px;
+  color: white;
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  text-align: center;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* =====================================================
+   LAYOUT PRINCIPAL
+   ===================================================== */
+.main-container {
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+form {
+  background: white;
+  padding: 32px;
+  border-radius: var(--radius-lg);
+  flex: 0 0 45%;
+  max-width: 720px;
+  box-shadow: var(--shadow-xl);
+}
+
+.preview-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 55%;
+  min-width: 280px;
+}
+
+.canvas-wrapper {
+  display: block;
+}
+
+#pdf-preview {
+  width: 90%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+#pdf-preview-mobile {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* =====================================================
+   MODAL PARA VISTA PREVIA EN MÓVIL
+   ===================================================== */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1500;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-overlay.active {
+  display: block;
+}
+
+.modal-content {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-radius: 20px 20px 0 0;
+  padding: 24px;
+  z-index: 1501;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.4s ease-out;
+}
+
+.modal-content.closing {
+  animation: slideDown 0.3s ease-in forwards;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(100%); opacity: 0; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 700;
+  position: relative;
+  color: var(--gray-900);
+}
+
+.modal-close-btn {
+  background: var(--gray-100);
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  font-size: 28px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-600);
+  transition: var(--transition);
+  line-height: 1;
+  position: absolute;
+  right: 0;
+}
+
+.modal-close-btn:hover {
+  color: white;
+  background: var(--danger);
+  transform: rotate(90deg) scale(1.1);
+}
+
+/* =====================================================
+   FORMULARIO Y CAMPOS
+   ===================================================== */
+fieldset {
+  border: 1px solid var(--gray-200);
+  margin-bottom: 24px;
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  background: var(--gray-50);
+  transition: var(--transition);
+}
+
+fieldset:hover {
+  border-color: var(--primary-light);
+  background: linear-gradient(135deg, var(--gray-50) 0%, rgba(37, 99, 235, 0.03) 100%);
+}
+
+legend {
+  padding: 0 12px;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--gray-900);
+  margin-left: -12px;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--gray-700);
+  letter-spacing: 0.3px;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  font-size: 15px;
+  border: 1.5px solid var(--gray-300);
+  border-radius: var(--radius);
+  transition: var(--transition);
+  background: white;
+  font-family: inherit;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  background: white;
+}
+
+input::placeholder {
+  color: var(--gray-400);
+}
+
+input[type="file"] {
+  cursor: pointer;
+  padding: 10px 14px;
+}
+
+input[type="file"]::file-selector-button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-weight: 600;
+  transition: var(--transition);
+  margin-right: 12px;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* =====================================================
+   BOTONES
+   ===================================================== */
+button {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  background: var(--primary);
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-lg);
+  transition: var(--transition);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+.fixed-actions button {
+  flex: 1;
+  max-width: 280px;
+  padding: 14px 28px;
+  font-size: 15px;
+  border-radius: var(--radius-lg);
+}
+
+.fixed-actions {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.12);
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  padding: 16px 20px;
+  z-index: 1000;
+}
+
+/* =====================================================
+   WRAPPERS PARA ELEMENTOS DINÁMICOS
+   ===================================================== */
+.exp-wrapper,
+.svc-wrapper {
+  position: relative;
+  background: linear-gradient(135deg, var(--gray-50) 0%, white 100%);
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  padding-top: 48px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.exp-wrapper:hover,
+.svc-wrapper:hover {
+  border-color: var(--primary-light);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* =====================================================
+   BOTONES ELIMINAR
+   ===================================================== */
+.remove-exp-btn,
+.remove-svc-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: var(--gray-200);
+  color: var(--gray-500);
+  border: none;
+  border-radius: 50%;
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+
+.remove-exp-btn:hover,
+.remove-svc-btn:hover {
+  background: var(--danger-light);
+  color: white;
+  transform: scale(1.15) rotate(90deg);
+  box-shadow: var(--shadow-lg);
+}
+
+.remove-exp-btn:active,
+.remove-svc-btn:active {
+  transform: scale(0.95);
+}
+
+/* =====================================================
+   RESPONSIVE DESIGN
+   ===================================================== */
+@media (max-width: 1024px) {
+  body {
+    padding: 16px;
+  }
+
+  h1 {
+    font-size: 28px;
+    margin-bottom: 24px;
+  }
+
+  form {
+    flex: 1;
+    max-width: 100%;
+    padding: 20px;
+    margin: 0 auto;
+  }
+
+  .main-container {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .preview-container {
+    flex: 1;
+    width: 100%;
+  }
+
+  .canvas-wrapper {
+    display: none;
+  }
+
+  #pdf-preview {
+    width: 100%;
+  }
+
+  .fixed-actions {
+    gap: 12px;
+    padding: 12px 16px;
+  }
+
+  .fixed-actions button {
+    max-width: none;
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
+  input,
+  select {
+    padding: 11px 12px;
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  button {
+    padding: 11px 20px;
+    font-size: 15px;
+  }
+
+  fieldset {
+    padding: 16px;
+    margin-bottom: 18px;
+  }
+
+  legend {
+    font-size: 16px;
+  }
+
+  .field label {
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 12px;
+  }
+
+  h1 {
+    font-size: 24px;
+    margin-bottom: 18px;
+  }
+
+  form {
+    padding: 16px;
+  }
+
+  fieldset {
+    padding: 12px;
+    margin-bottom: 14px;
+  }
+
+  input,
+  select {
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+
+  button {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  .fixed-actions {
+    gap: 10px;
+    padding: 10px 12px;
+    flex-wrap: wrap;
+  }
+
+  .fixed-actions button {
+    flex: 1;
+    min-width: calc(50% - 5px);
+  }
+}
+
+/* =====================================================
+   EFECTO ZOOM EN CANVAS (DESKTOP)
+   ===================================================== */
+@media (min-width: 769px) {
+  .canvas-zoom-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .canvas-zoom-wrapper:hover canvas {
+    filter: blur(3px) brightness(0.98);
+    transition: filter 0.3s ease;
+  }
+
+  .canvas-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .canvas-zoom-wrapper:hover .canvas-overlay {
+    opacity: 1;
+  }
+
+  .canvas-overlay span {
+    background: rgba(0, 0, 0, 0.75);
+    color: white;
+    padding: 16px 32px;
+    border-radius: var(--radius-lg);
+    font-weight: 700;
+    font-size: 16px;
+    box-shadow: var(--shadow-xl);
+    letter-spacing: 1px;
+    backdrop-filter: blur(4px);
+  }
+
+  .fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 20px;
+    align-items: start;
+  }
+
+  .field {
+    display: block;
+  }
+  /* Mantener la vista de preview siempre visible en desktop */
+  .preview-container {
+    position: sticky;
+    top: 32px;
+    align-self: flex-start;
+    max-height: calc(100vh - 48px);
+    overflow: auto;
+  }
+}
+
+/* =====================================================
+   ANIMACIONES Y TRANSICIONES
+   ===================================================== */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+form {
+  animation: slideInLeft 0.5s ease-out;
+}
+
+fieldset {
+  animation: slideInLeft 0.5s ease-out;
+}
+
