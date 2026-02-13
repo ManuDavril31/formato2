@@ -163,15 +163,15 @@
   </head>
   <body>
     <div class="container">
-      <div class="success-icon">✅</div>
-      <h1>¡Pago Completado!</h1>
-      <p>Tu pago se ha procesado correctamente. Ahora puedes descargar tu Hoja de Vida.</p>
+      <div class="success-icon" id="success-icon">✅</div>
+      <h1 id="page-title">¡Pago Completado!</h1>
+      <p id="page-description">Tu pago se ha procesado correctamente. Ahora puedes descargar tu Hoja de Vida.</p>
 
-      <div class="info-box">
+      <div class="info-box" id="info-box">
         <strong>📝 Nota:</strong> Tu documento está listo para descargar en formato PDF con todos los datos que diligenciaste.
       </div>
 
-      <div class="download-section">
+      <div class="download-section" id="download-section">
         <p>Descarga tu documento aquí:</p>
         <button id="btn-download-pdf" class="btn">
           📄 Descargar Hoja de Vida (PDF)
@@ -193,6 +193,52 @@
 
     <script>
       const { PDFDocument, StandardFonts, rgb } = PDFLib;
+
+      // Función para obtener parámetros de la URL
+      function getUrlParams() {
+        const params = new URLSearchParams(window.location.search);
+        return Object.fromEntries(params);
+      }
+
+      // Función para validar código de transacción
+      function validateTransactionCode() {
+        const params = getUrlParams();
+        
+        // Buscar parámetros comunes de Wompi (reference, transaction_id, id, etc)
+        const validCodes = [
+          'reference',
+          'transaction_id',
+          'id',
+          'transactionId',
+          'reference_code',
+          'codigo'
+        ];
+        
+        for (let code of validCodes) {
+          if (params[code]) {
+            console.log(`✅ Código de transacción validado: ${code}=${params[code]}`);
+            return { valid: true, code: code, value: params[code] };
+          }
+        }
+        
+        console.log('❌ No se encontró código de transacción en la URL');
+        return { valid: false };
+      }
+
+      // Función para mostrar pantalla de error
+      function showErrorScreen() {
+        document.getElementById('success-icon').textContent = '❌';
+        document.getElementById('success-icon').style.color = '#dc3545';
+        document.getElementById('page-title').textContent = '⚠️ Error de Validación';
+        document.getElementById('page-description').textContent = 
+          'No se pudo validar tu pago. Por favor, intenta nuevamente o contacta al soporte.';
+        document.getElementById('info-box').style.display = 'none';
+        document.getElementById('download-section').style.display = 'none';
+        
+        const errorDiv = document.getElementById('error-message');
+        errorDiv.textContent = '❌ Acceso denegado: No se encontró un código de transacción válido en la URL. Es posible que haya un problema con tu pago o que accedas a esta página de forma incorrecta.';
+        errorDiv.style.display = 'block';
+      }
 
       // Función para generar PDF (adaptada de app.js)
       async function generateFinalPDF(formData) {
@@ -309,6 +355,16 @@
 
       // Cuando se carga la página
       document.addEventListener('DOMContentLoaded', async () => {
+        // VALIDAR CÓDIGO DE TRANSACCIÓN DESDE URL
+        const validation = validateTransactionCode();
+        if (!validation.valid) {
+          console.error('❌ Validación fallida: No hay código de transacción');
+          showErrorScreen();
+          return;
+        }
+        
+        console.log('✅ Página validada correctamente');
+
         const downloadBtn = document.getElementById('btn-download-pdf');
         const spinner = document.getElementById('spinner');
         const errorMessage = document.getElementById('error-message');
