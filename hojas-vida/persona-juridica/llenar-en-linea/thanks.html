@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>¡Pago Completado! – Descarga tu Hoja de Vida</title>
+    <link rel="stylesheet" href="/styles-shared.css" />
+    <style>
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .container {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        padding: 40px 30px;
+        text-align: center;
+        max-width: 500px;
+        animation: slideUp 0.5s ease-out;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .success-icon {
+        font-size: 60px;
+        margin-bottom: 20px;
+        animation: pulse 0.6s ease-out;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        50% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      h1 {
+        color: #06233a;
+        font-size: 28px;
+        margin: 0 0 10px 0;
+      }
+
+      p {
+        color: #666;
+        font-size: 16px;
+        line-height: 1.6;
+        margin: 0 0 30px 0;
+      }
+
+      .download-section {
+        margin: 30px 0;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+      }
+
+      .download-section p {
+        color: #555;
+        font-size: 14px;
+        margin-bottom: 15px;
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 12px 30px;
+        background: #667eea;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        cursor: pointer;
+        border: none;
+        font-size: 16px;
+        font-weight: 600;
+        transition: background 0.3s, transform 0.2s;
+      }
+
+      .btn:hover {
+        background: #5568d3;
+        transform: translateY(-2px);
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .btn-secondary {
+        background: #6c757d;
+        margin-top: 15px;
+      }
+
+      .btn-secondary:hover {
+        background: #5a6268;
+      }
+
+      .info-box {
+        background: #e7f3ff;
+        border-left: 4px solid #667eea;
+        padding: 15px;
+        text-align: left;
+        margin: 20px 0;
+        border-radius: 4px;
+        font-size: 14px;
+        color: #333;
+      }
+
+      .spinner {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #667eea;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      .error-message {
+        background: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+        padding: 15px;
+        border-radius: 4px;
+        margin: 20px 0;
+        display: none;
+      }
+
+      .success-message {
+        background: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+        padding: 15px;
+        border-radius: 4px;
+        margin: 20px 0;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="success-icon">✅</div>
+      <h1>¡Pago Completado!</h1>
+      <p>Tu pago se ha procesado correctamente. Ahora puedes descargar tu Hoja de Vida.</p>
+
+      <div class="info-box">
+        <strong>📝 Nota:</strong> Tu documento está listo para descargar en formato PDF con todos los datos que diligenciaste.
+      </div>
+
+      <div class="download-section">
+        <p>Descarga tu documento aquí:</p>
+        <button id="btn-download-pdf" class="btn">
+          📄 Descargar Hoja de Vida (PDF)
+        </button>
+        <div class="spinner" id="spinner" style="display: none;"></div>
+      </div>
+
+      <div class="error-message" id="error-message"></div>
+      <div class="success-message" id="success-message">✅ Documento descargado correctamente</div>
+
+      <p style="margin-top: 30px; font-size: 14px; color: #999;">
+        <a href="/" style="color: #667eea; text-decoration: none;">← Volver al inicio</a>
+      </p>
+    </div>
+
+    <!-- Cargar librerías necesarias para generar PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+
+    <script>
+      const { PDFDocument, StandardFonts, rgb } = PDFLib;
+
+      // Función para generar PDF (adaptada de app.js)
+      async function generateFinalPDF(formData) {
+        try {
+          // Obtener la plantilla PDF desde la carpeta actual
+          const pdfResponse = await fetch('plantilla.pdf');
+          if (!pdfResponse.ok) {
+            throw new Error('No se pudo cargar la plantilla PDF');
+          }
+          const pdfBytes = await pdfResponse.arrayBuffer();
+          const pdfDoc = await PDFDocument.load(pdfBytes);
+          const page = pdfDoc.getPages()[0];
+          const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+          const draw = (text, x, y, size = 10) => {
+            if (!text) return;
+            page.drawText(String(text), {
+              x,
+              y,
+              size,
+              font,
+              color: rgb(0, 0, 0),
+            });
+          };
+
+
+          // Mapeo de coordenadas: nombre del campo -> posición en PDF
+          const pdfCoordinates = {
+            razonSocial: { x: 135, y: 640 },
+            sigla: { x: 55, y: 626 },
+            nit: { x: 440, y: 626 },
+            orden_nal: { x: 46, y: 586 },
+            orden_dptl: { x: 76, y: 586 },
+            orden_dstr: { x: 106, y: 586 },
+            orden_mpl: { x: 136, y: 586 },
+            orden_otro: { x: 166, y: 586 },
+            ordenCual: { x: 223, y: 586 },
+            tipo: { x: 304, y: 586 },
+            clase: { x: 464, y: 586 },
+            pais: { x: 170, y: 561 },
+            departamento: { x: 353, y: 561 },
+            municipio: { x: 70, y: 548 },
+            direccion: { x: 283, y: 548 },
+            telefonos: { x: 72, y: 535 },
+            fax: { x: 255, y: 535 },
+            apartadoAereo: { x: 500, y: 535 },
+            servicio1: { x: 50, y: 485 },
+            servicio2: { x: 320, y: 485 },
+            servicio3: { x: 50, y: 470 },
+            servicio4: { x: 320, y: 470 },
+            servicio5: { x: 50, y: 458 },
+            servicio6: { x: 320, y: 458 },
+            experiencia1: { x: 35, y: 393 },
+            tipoEmpresa1_publica: { x: 293, y: 393 },
+            tipoEmpresa1_privada: { x: 323, y: 393 },
+            telefono_exp1: { x: 343, y: 393 },
+            fecha_term_exp1: { x: 420, y: 393 },
+            valorContrato_exp1: { x: 502, y: 393 },
+            experiencia2: { x: 35, y: 380 },
+            tipoEmpresa2_publica: { x: 293, y: 378 },
+            tipoEmpresa2_privada: { x: 323, y: 378 },
+            telefono_exp2: { x: 343, y: 380 },
+            fecha_term_exp2: { x: 420, y: 380 },
+            valorContrato_exp2: { x: 502, y: 380 },
+            experiencia3: { x: 35, y: 367 },
+            tipoEmpresa3_publica: { x: 293, y: 365 },
+            tipoEmpresa3_privada: { x: 323, y: 365 },
+            telefono_exp3: { x: 343, y: 367 },
+            fecha_term_exp3: { x: 420, y: 367 },
+            valorContrato_exp3: { x: 502, y: 367 },
+            experiencia4: { x: 35, y: 354 },
+            tipoEmpresa4_publica: { x: 293, y: 352 },
+            tipoEmpresa4_privada: { x: 323, y: 352 },
+            telefono_exp4: { x: 343, y: 354 },
+            fecha_term_exp4: { x: 420, y: 354 },
+            valorContrato_exp4: { x: 502, y: 354 },
+            experiencia5: { x: 35, y: 341 },
+            tipoEmpresa5_publica: { x: 293, y: 339 },
+            tipoEmpresa5_privada: { x: 323, y: 339 },
+            telefono_exp5: { x: 343, y: 341 },
+            fecha_term_exp5: { x: 420, y: 341 },
+            valorContrato_exp5: { x: 502, y: 341 },
+            primerApellido: { x: 87, y: 303 },
+            segundoApellido: { x: 306, y: 303 },
+            nombres: { x: 410, y: 303 },
+            tipo_documento_rep_cc: { x: 63, y: 275 },
+            tipo_documento_rep_ce: { x: 103, y: 275 },
+            tipo_documento_rep_pasaporte: { x: 173, y: 275 },
+            documento: { x: 203, y: 275 },
+            caracterde_representante: { x: 383, y: 275 },
+            caracterde_apoderado: { x: 444, y: 275 },
+            capacidad_contratacion: { x: 468, y: 275 },
+            inhabilidad_si: { x: 382, y: 236 },
+            inhabilidad_no: { x: 412, y: 236 },
+            observaciones: { x: 100, y: 210 },
+            fecha_diligenciamiento: { x: 460, y: 172 }
+          };
+
+          // Dibujar cada campo en el PDF
+          Object.entries(pdfCoordinates).forEach(([field, coords]) => {
+            if (formData[field]) {
+              draw(formData[field], coords.x, coords.y);
+            }
+          });
+
+          // Convertir a bytes
+          const finalPdfBytes = await pdfDoc.save();
+          return finalPdfBytes;
+        } catch (error) {
+          console.error('Error generando PDF:', error);
+          throw error;
+        }
+      }
+
+      // Cuando se carga la página
+      document.addEventListener('DOMContentLoaded', async () => {
+        const downloadBtn = document.getElementById('btn-download-pdf');
+        const spinner = document.getElementById('spinner');
+        const errorMessage = document.getElementById('error-message');
+
+        downloadBtn.addEventListener('click', async () => {
+          try {
+            // Obtener datos del localStorage
+            const formDataJson = localStorage.getItem('hojaVidaFormData');
+            if (!formDataJson) {
+              throw new Error(
+                'No se encontraron los datos del formulario. Por favor, intenta nuevamente.'
+              );
+            }
+
+            const formData = JSON.parse(formDataJson);
+
+            // Mostrar spinner
+            spinner.style.display = 'block';
+            downloadBtn.disabled = true;
+
+            // Generar PDF
+            const finalPdfBytes = await generateFinalPDF(formData);
+            const blob = new Blob([finalPdfBytes], { type: 'application/pdf' });
+
+            // Descargar
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'Hoja_de_Vida_Persona_Juridica.pdf';
+            link.click();
+
+            // Ocultar spinner y mostrar mensaje de éxito
+            spinner.style.display = 'none';
+            downloadBtn.disabled = false;
+            document.getElementById('success-message').style.display = 'block';
+
+            // Limpiar localStorage después de descargar
+            setTimeout(() => {
+              localStorage.removeItem('hojaVidaFormData');
+            }, 2000);
+          } catch (error) {
+            spinner.style.display = 'none';
+            downloadBtn.disabled = false;
+            errorMessage.textContent = '❌ ' + error.message;
+            errorMessage.style.display = 'block';
+            console.error(error);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

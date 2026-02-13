@@ -1144,13 +1144,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     })
   }
 
-  // Botón Pagar y Descargar - Redirigir a Wompi
+  // Botón Pagar y Descargar - Guardar datos y redirigir a Wompi
   const payDownloadBtn = document.getElementById('btn-pay-download')
   if (payDownloadBtn) {
     payDownloadBtn.addEventListener('click', (e) => {
       e.preventDefault()
-      // Redirigir al link de pago de Wompi
-      window.location.href = 'https://checkout.wompi.co/l/DgZDs2'
+      
+      try {
+        // Obtener datos del formulario
+        const formData = Object.fromEntries(new FormData(form))
+        
+        // Guardar en localStorage para recuperar después del pago
+        localStorage.setItem('hojaVidaFormData', JSON.stringify(formData))
+        
+        // Redirigir al link de pago de Wompi
+        // NOTA: Asegúrate de que en tu cuenta de Wompi esté configurada 
+        // la URL de redirección a: /hojas-vida/persona-juridica/llenar-en-linea/thanks.html
+        window.location.href = 'https://checkout.wompi.co/l/DgZDs2'
+      } catch (error) {
+        console.error('Error al guardar datos:', error)
+        alert('Ocurrió un error. Por favor intenta nuevamente.')
+      }
     })
   }
 })
