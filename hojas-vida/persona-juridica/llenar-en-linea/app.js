@@ -1143,4 +1143,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       window.open(pdfUrl, '_blank')
     })
   }
+
+  // Botón Pagar y Descargar - Redirigir a Wompi
+  const payDownloadBtn = document.getElementById('btn-pay-download')
+  if (payDownloadBtn) {
+    payDownloadBtn.addEventListener('click', (e) => {
+      e.preventDefault()
+      // Redirigir al link de pago de Wompi
+      window.location.href = 'https://checkout.wompi.co/l/DgZDs2'
+    })
+  }
 })
