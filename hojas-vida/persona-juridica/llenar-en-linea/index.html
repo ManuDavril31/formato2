@@ -1,992 +1,724 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hoja de Vida – Persona Jurídica llenar en línea</title>
-    <link rel="stylesheet" href="/styles-shared.css" />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <header>
-      <div class="container topbar">
-        <div class="brand">
-          <div class="logo">F</div>
-          <div>
-            formatounico.com
-            <div style="font-size: 12px; color: var(--muted); font-weight: 600">
-              Formatos legales listos para llenar
-            </div>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hoja de Vida – Persona Jurídica llenar en línea</title>
+  <link rel="stylesheet" href="/styles-shared.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <header>
+    <div class="container topbar">
+      <div class="brand">
+        <div class="logo">F</div>
+        <div>
+          formatounico.com
+          <div style="font-size: 12px; color: var(--muted); font-weight: 600">
+            Formatos legales listos para llenar en línea
           </div>
-        </div>
-        <nav id="main-nav" aria-hidden="true">
-          <button class="nav-close" aria-label="Cerrar menú" id="nav-close">
-            ×
-          </button>
-          <ul>
-            <li><a href="/">Inicio</a></li>
-            <li><a href="/#formatos">Formatos</a></li>
-            <li><a href="/#como-funciona">Cómo funciona</a></li>
-            <li><a href="/">FAQ</a></li>
-          </ul>
-        </nav>
-        <div id="nav-backdrop" class="nav-backdrop" aria-hidden="true"></div>
-        <div class="search">
-          <button
-            class="btn btn-ghost mobile-only"
-            id="menu-toggle"
-            aria-controls="main-nav"
-            aria-expanded="false"
-          >
-            ☰
-          </button>
         </div>
       </div>
-    </header>
+      <nav id="main-nav" aria-hidden="true">
+        <button class="nav-close" aria-label="Cerrar menú" id="nav-close">
+          ×
+        </button>
+        <ul>
+          <li><a href="/">Inicio</a></li>
+          <li><a href="/#formatos">Formatos</a></li>
+          <li><a href="/#como-funciona">Cómo funciona</a></li>
+          <li><a href="/">FAQ</a></li>
+        </ul>
+      </nav>
+      <div id="nav-backdrop" class="nav-backdrop" aria-hidden="true"></div>
+      <div class="search">
+        <button class="btn btn-ghost mobile-only" id="menu-toggle" aria-controls="main-nav" aria-expanded="false">
+          ☰
+        </button>
+      </div>
+    </div>
+  </header>
 
-    <h1>Hoja de Vida – Persona Jurídica llenar en línea</h1>
-    <div class="main-container">
-      <form id="form">
-        <!-- I. IDENTIFICACIÓN -->
-        <fieldset>
-          <legend>
-            I. Identificación
-            <button type="button" class="collapse-btn">−</button>
-          </legend>
-          <div class="fields">
-            <div class="field">
-              <label for="razonSocial">Razón social</label>
-              <input
-                id="razonSocial"
-                name="razonSocial"
-                placeholder="Razón social"
-                value="fundacion para el desarrollo social"
-              />
-            </div>
-            <div class="field">
-              <label for="sigla">Sigla</label>
-              <input
-                id="sigla"
-                name="sigla"
-                placeholder="Sigla"
-                value="FUDES"
-              />
-            </div>
-            <div class="field">
-              <label for="nit">NIT</label>
-              <input id="nit" name="nit" placeholder="NIT" value="123581" />
-            </div>
-            <div class="field">
-              <label for="orden">Determinar el orden</label>
-              <select id="orden" name="orden">
-                <option value="" selected>Seleccionar...</option>
-                <option value="nal">Nacional</option>
-                <option value="dptl">Departamental</option>
-                <option value="dstr">Distrital</option>
-                <option value="mpl">Municipal</option>
-                <option value="otro">Otro</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="ordenCual">Si es otro, ¿Cuál?</label>
-              <input
-                id="ordenCual"
-                type="text"
-                name="ordenCual"
-                placeholder="Si es otro, ¿Cuál?"
-              />
-            </div>
-            <div class="field">
-              <label for="tipo">Determinar el tipo</label>
-              <select name="tipo" id="tipo">
-                <option value="" selected>Seleccionar...</option>
-                <option value="01">01. MDA</option>
-                <option value="02">02. SUA</option>
-                <option value="03">03. EP</option>
-                <option value="04">04. EUA/ESE</option>
-                <option value="05">05. EICE</option>
-                <option value="06">06. SEM</option>
-                <option value="08">08. OTRO</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="clase">Determinar la clase</label>
-              <select name="clase" id="clase">
-                <option value="" selected>Seleccionar...</option>
-                <option value="11">11. SCIF</option>
-                <option value="12">12. SSAL</option>
-                <option value="13">13. SC</option>
-                <option value="14">14. ONG</option>
-                <option value="15">15. SE</option>
-                <option value="16">16. OTRA</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="pais">Domicilio para correspondencia</label>
-              <input
-                id="pais"
-                type="text"
-                name="pais"
-                placeholder="País"
-                value="Colombia"
-              />
-            </div>
-            <div class="field">
-              <label for="departamento">Departamento</label>
-              <input
-                id="departamento"
-                type="text"
-                name="departamento"
-                placeholder="Departamento"
-                value="Cordoba"
-              />
-            </div>
-            <div class="field">
-              <label for="municipio">Municipio</label>
-              <input
-                id="municipio"
-                type="text"
-                name="municipio"
-                placeholder="Municipio"
-                value="Montería"
-              />
-            </div>
-            <div class="field">
-              <label for="direccion">Dirección</label>
-              <input
-                id="direccion"
-                type="text"
-                name="direccion"
-                placeholder="Direccion"
-                value="Calle 25 nro 3 45"
-              />
-            </div>
-            <div class="field">
-              <label for="telefonos">Teléfonos</label>
-              <input
-                id="telefonos"
-                type="text"
-                name="telefonos"
-                placeholder="Teléfonos"
-                value="320 440 3165"
-              />
-            </div>
-            <div class="field">
-              <label for="fax">Fax</label>
-              <input
-                id="fax"
-                type="text"
-                name="fax"
-                placeholder="Fax"
-                value="320 440 3165"
-              />
-            </div>
-            <div class="field">
-              <label for="apartadoAereo">Apartado aéreo</label>
-              <input
-                id="apartadoAereo"
-                type="text"
-                name="apartadoAereo"
-                placeholder="Apartado Aéreo"
-                value="320 440 3165"
-              />
-            </div>
+  <h1>Hoja de Vida – Persona Jurídica llenar en línea</h1>
+  <div class="main-container">
+    <form id="form">
+      <!-- I. IDENTIFICACIÓN -->
+      <fieldset>
+        <legend>
+          I. Identificación
+          <button type="button" class="collapse-btn">−</button>
+        </legend>
+        <div class="fields">
+          <div class="field">
+            <label for="razonSocial">Razón social</label>
+            <input id="razonSocial" name="razonSocial" placeholder="Razón social"
+              value="fundacion para el desarrollo social" />
           </div>
-        </fieldset>
-        <!-- II. SERVICIOS -->
-        <fieldset>
-          <legend>
-            II. Servicios <button type="button" class="collapse-btn">−</button>
-          </legend>
-          <div class="fields">
-            <div class="field" style="display: none">
-              <label for="servicio1">Servicio 1</label>
-              <input
-                id="servicio1"
-                name="servicio1"
-                placeholder="Servicio 1"
-                value="Prestación de servicios"
-              />
-            </div>
-            <div class="field" style="display: none">
-              <label for="servicio2">Servicio 2</label>
-              <input
-                id="servicio2"
-                name="servicio2"
-                placeholder="Servicio 2"
-                value="Prestación de servicios"
-              />
-            </div>
-            <div class="field" style="display: none">
-              <label for="servicio3">Servicio 3</label>
-              <input
-                id="servicio3"
-                name="servicio3"
-                placeholder="Servicio 3"
-                value="Prestación de servicios"
-              />
-            </div>
-            <div class="field" style="display: none">
-              <label for="servicio4">Servicio 4</label>
-              <input
-                id="servicio4"
-                name="servicio4"
-                placeholder="Servicio 4"
-                value="Prestación de servicios"
-              />
-            </div>
-            <div class="field" style="display: none">
-              <label for="servicio5">Servicio 5</label>
-              <input
-                id="servicio5"
-                name="servicio5"
-                placeholder="Servicio 5"
-                value="Prestación de servicios"
-              />
-            </div>
-            <div class="field" style="display: none">
-              <label for="servicio6">Servicio 6</label>
-              <input
-                id="servicio6"
-                name="servicio6"
-                placeholder="Servicio 6"
-                value="Prestación de servicios"
-              />
-            </div>
-            <div class="field">
-              <button type="button" id="add-service-btn">
-                + Agregar servicio
-              </button>
-              <small id="svc-count">(0/6)</small>
-            </div>
+          <div class="field">
+            <label for="sigla">Sigla</label>
+            <input id="sigla" name="sigla" placeholder="Sigla" value="FUDES" />
           </div>
-        </fieldset>
-        <!-- III. EXPERIENCIA  O SITUACION ACTUAL -->
-        <fieldset>
-          <legend>
-            III. Experiencia o Situación Actual
-            <button type="button" class="collapse-btn">−</button>
-          </legend>
-          <div class="fields">
-            <div class="field" style="display: none">
-              <label for="experiencia1">Entidad contratante</label>
-              <input
-                id="experiencia1"
-                name="experiencia1"
-                placeholder="Entidad contratante"
-                value="Alcaldia de Montería"
-              />
-            </div>
-            <div class="field" style="display: none">
-              <label for="tipoEmpresa1">Tipo de empresa</label>
-              <select name="tipoEmpresa1" id="tipoEmpresa1">
-                <option value="">Seleccionar...</option>
-                <option value="X" selected>Pública</option>
-                <option value="privada">Privada</option>
-              </select>
-            </div>
-            <div class="field" style="display: none">
-              <label for="telefono_exp1">Teléfono</label>
-              <input
-                id="telefono_exp1"
-                name="telefono_exp1"
-                placeholder="Teléfono"
-                value="3204403165"
-              />
-            </div>
-            <div class="field" style="display: none">
-              <label for="fecha_term_exp1">Fecha de terminacion</label>
-              <input
-                type="date"
-                id="fecha_term_exp1"
-                name="fecha_term_exp1"
-                placeholder="Fecha de terminacion"
-                value="2026-02-08"
-              />
-            </div>
-            <div class="field" style="display: none">
-              <label for="valorContrato_exp1">Valor contrato</label>
-              <input
-                type="text"
-                id="valorContrato_exp1"
-                name="valorContrato_exp1"
-                placeholder="Valor contrato"
-                value="$ 1.000.000"
-              />
-            </div>
-
-            <!-- Experiencia 2 -->
-            <div class="field" style="display: none">
-              <label for="experiencia2">Entidad contratante 2</label>
-              <input
-                id="experiencia2"
-                name="experiencia2"
-                placeholder="Entidad contratante"
-                value="Gobernación de Córdoba"
-              />
-            </div>
-            <div class="field" style="display: none">
-              <label for="tipoEmpresa2">Tipo de empresa 2</label>
-              <select name="tipoEmpresa2" id="tipoEmpresa2">
-                <option value="">Seleccionar...</option>
-                <option value="X" selected>Pública</option>
-                <option value="privada">Privada</option>
-              </select>
-            </div>
-            <div class="field" style="display: none">
-              <label for="telefono_exp2">Teléfono 2</label>
-              <input
-                id="telefono_exp2"
-                name="telefono_exp2"
-                placeholder="Teléfono"
-                value="301 555 0123"
-              />
-            </div>
-            <div class="field" style="display: none">
-              <label for="fecha_term_exp2">Fecha de terminacion 2</label>
-              <input
-                type="date"
-                id="fecha_term_exp2"
-                name="fecha_term_exp2"
-                placeholder="Fecha de terminacion"
-                value="2025-10-15"
-              />
-            </div>
-            <div class="field" style="display: none">
-              <label for="valorContrato_exp2">Valor contrato 2</label>
-              <input
-                type="text"
-                id="valorContrato_exp2"
-                name="valorContrato_exp2"
-                placeholder="Valor contrato"
-                value="$ 800.000"
-              />
-            </div>
-
-            <!-- Experiencia 3 -->
-            <div class="field" style="display: none">
-              <label for="experiencia3">Entidad contratante 3</label>
-              <input
-                id="experiencia3"
-                name="experiencia3"
-                placeholder="Entidad contratante"
-                value="Alcaldía de Montería - Secretaría de Salud"
-              />
-            </div>
-            <div class="field" style="display: none">
-              <label for="tipoEmpresa3">Tipo de empresa 3</label>
-              <select name="tipoEmpresa3" id="tipoEmpresa3">
-                <option value="">Seleccionar...</option>
-                <option value="X" selected>Pública</option>
-                <option value="privada">Privada</option>
-              </select>
-            </div>
-            <div class="field" style="display: none">
-              <label for="telefono_exp3">Teléfono 3</label>
-              <input
-                id="telefono_exp3"
-                name="telefono_exp3"
-                placeholder="Teléfono"
-                value="302 444 7890"
-              />
-            </div>
-            <div class="field" style="display: none">
-              <label for="fecha_term_exp3">Fecha de terminacion 3</label>
-              <input
-                type="date"
-                id="fecha_term_exp3"
-                name="fecha_term_exp3"
-                placeholder="Fecha de terminacion"
-                value="2024-06-30"
-              />
-            </div>
-            <div class="field" style="display: none">
-              <label for="valorContrato_exp3">Valor contrato 3</label>
-              <input
-                type="text"
-                id="valorContrato_exp3"
-                name="valorContrato_exp3"
-                placeholder="Valor contrato"
-                value="$ 450.000"
-              />
-            </div>
-
-            <!-- Experiencia 4 -->
-            <div class="field" style="display: none">
-              <label for="experiencia4">Entidad contratante 4</label>
-              <input
-                id="experiencia4"
-                name="experiencia4"
-                placeholder="Entidad contratante"
-                value="Empresa de Servicios Médicos S.A."
-              />
-            </div>
-            <div class="field" style="display: none">
-              <label for="tipoEmpresa4">Tipo de empresa 4</label>
-              <select name="tipoEmpresa4" id="tipoEmpresa4">
-                <option value="">Seleccionar...</option>
-                <option value="X">Pública</option>
-                <option value="privada" selected>Privada</option>
-              </select>
-            </div>
-            <div class="field" style="display: none">
-              <label for="telefono_exp4">Teléfono 4</label>
-              <input
-                id="telefono_exp4"
-                name="telefono_exp4"
-                placeholder="Teléfono"
-                value="305 777 3344"
-              />
-            </div>
-            <div class="field" style="display: none">
-              <label for="fecha_term_exp4">Fecha de terminacion 4</label>
-              <input
-                type="date"
-                id="fecha_term_exp4"
-                name="fecha_term_exp4"
-                placeholder="Fecha de terminacion"
-                value="2023-11-20"
-              />
-            </div>
-            <div class="field" style="display: none">
-              <label for="valorContrato_exp4">Valor contrato 4</label>
-              <input
-                type="text"
-                id="valorContrato_exp4"
-                name="valorContrato_exp4"
-                placeholder="Valor contrato"
-                value="$ 1.200.000"
-              />
-            </div>
-
-            <!-- Experiencia 5 -->
-            <div class="field" style="display: none">
-              <label for="experiencia5">Entidad contratante 5</label>
-              <input
-                id="experiencia5"
-                name="experiencia5"
-                placeholder="Entidad contratante"
-                value="Cooperativa Médica Regional"
-              />
-            </div>
-            <div class="field" style="display: none">
-              <label for="tipoEmpresa5">Tipo de empresa 5</label>
-              <select name="tipoEmpresa5" id="tipoEmpresa5">
-                <option value="">Seleccionar...</option>
-                <option value="X" selected>Pública</option>
-                <option value="privada">Privada</option>
-              </select>
-            </div>
-            <div class="field" style="display: none">
-              <label for="telefono_exp5">Teléfono 5</label>
-              <input
-                id="telefono_exp5"
-                name="telefono_exp5"
-                placeholder="Teléfono"
-                value="304 888 2211"
-              />
-            </div>
-            <div class="field" style="display: none">
-              <label for="fecha_term_exp5">Fecha de terminacion 5</label>
-              <input
-                type="date"
-                id="fecha_term_exp5"
-                name="fecha_term_exp5"
-                placeholder="Fecha de terminacion"
-                value="2022-08-05"
-              />
-            </div>
-            <div class="field" style="display: none">
-              <label for="valorContrato_exp5">Valor contrato 5</label>
-              <input
-                type="text"
-                id="valorContrato_exp5"
-                name="valorContrato_exp5"
-                placeholder="Valor contrato"
-                value="$ 350.000"
-              />
-            </div>
-
-            <div class="field">
-              <button type="button" id="add-experience-btn">
-                + Agregar experiencia
-              </button>
-              <small id="exp-count">(0/5)</small>
-            </div>
+          <div class="field">
+            <label for="nit">NIT</label>
+            <input id="nit" name="nit" placeholder="NIT" value="123581" />
           </div>
-        </fieldset>
-        <!-- IV. REPRESENTANTE -->
-        <fieldset>
-          <legend>
-            IV. Representante Legal
-            <button type="button" class="collapse-btn">−</button>
-          </legend>
-          <div class="fields">
-            <div class="field">
-              <label for="primerApellido_rep">Primer apellido</label>
-              <input
-                id="primerApellido_rep"
-                name="primerApellido"
-                placeholder="Primer apellido"
-                value="Martinez"
-              />
-            </div>
-            <div class="field">
-              <label for="segundoApellido_rep">Segundo apellido</label>
-              <input
-                id="segundoApellido_rep"
-                name="segundoApellido"
-                placeholder="Segundo apellido"
-                value="Gomez"
-              />
-            </div>
-            <div class="field">
-              <label for="nombres_rep">Nombres</label>
-              <input
-                id="nombres_rep"
-                name="nombres"
-                placeholder="Nombres"
-                value="Juan Manuel"
-              />
-            </div>
-            <div class="field">
-              <label for="tipo_documento_rep">Tipo de Documento</label>
-              <select name="tipo_documento_rep" id="tipo_documento_rep">
-                <option value="">Seleccionar...</option>
-                <option value="cc" selected>Cedula</option>
-                <option value="ce">Cedula de extranjería</option>
-                <option value="pasaporte">Pasaporte</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="documento_rep">Documento</label>
-              <input
-                id="documento_rep"
-                name="documento"
-                placeholder="Documento"
-                value="1065874214"
-              />
-            </div>
-            <div class="field">
-              <label for="caracterde">Actua en caracter de</label>
-              <select name="caracterde" id="caracterde">
-                <option value="">Seleccionar...</option>
-                <option value="representante" selected>
-                  Representante legal
-                </option>
-                <option value="apoderado">Apoderado</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="capacidad_contratacion"
-                >Capacidad de contratación</label
-              >
-              <input
-                id="capacidad_contratacion"
-                name="capacidad_contratacion"
-                placeholder="Capacidad de contratación"
-                value="1065874214"
-              />
-            </div>
-            <div class="field">
-              <label for="inhabilidad">Manifestación de No inhabilidad</label>
-              <select name="inhabilidad" id="inhabilidad">
-                <option value="">Seleccionar...</option>
-                <option value="si">Si</option>
-                <option value="no" selected>No</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="observaciones">Observaciones</label>
-              <input
-                id="observaciones"
-                name="observaciones"
-                placeholder="Observaciones"
-                value="los datos aquí consignados son verdaderos y completos, y autorizo a la entidad contratante para que los verifique en las fuentes correspondientes"
-                maxlength="185"
-              />
-            </div>
-            <div class="field">
-              <label for="firma">Firma: imagen .png (transparente)</label>
-              <input
-                type="file"
-                id="firma"
-                name="firma"
-                placeholder="Firma"
-                accept="image/png"
-              />
-            </div>
-            <div class="field">
-              <label for="fecha_diligenciamiento">Fecha diligenciamiento</label>
-              <input
-                type="date"
-                id="fecha_diligenciamiento"
-                name="fecha_diligenciamiento"
-                placeholder="Fecha diligenciamiento"
-              />
-            </div>
+          <div class="field">
+            <label for="orden">Determinar el orden</label>
+            <select id="orden" name="orden">
+              <option value="" selected>Seleccionar...</option>
+              <option value="nal">Nacional</option>
+              <option value="dptl">Departamental</option>
+              <option value="dstr">Distrital</option>
+              <option value="mpl">Municipal</option>
+              <option value="otro">Otro</option>
+            </select>
           </div>
-        </fieldset>
-        <div class="fixed-actions">
-          <button type="submit">📄 Generar PDF</button>
-          <button type="button" id="btn-preview">👁️ Vista Previa</button>
-          <button type="button" id="btn-pay-download">💳 Pagar y Descargar</button>
+          <div class="field">
+            <label for="ordenCual">Si es otro, ¿Cuál?</label>
+            <input id="ordenCual" type="text" name="ordenCual" placeholder="Si es otro, ¿Cuál?" />
+          </div>
+          <div class="field">
+            <label for="tipo">Determinar el tipo</label>
+            <select name="tipo" id="tipo">
+              <option value="" selected>Seleccionar...</option>
+              <option value="01">01. MDA</option>
+              <option value="02">02. SUA</option>
+              <option value="03">03. EP</option>
+              <option value="04">04. EUA/ESE</option>
+              <option value="05">05. EICE</option>
+              <option value="06">06. SEM</option>
+              <option value="08">08. OTRO</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="clase">Determinar la clase</label>
+            <select name="clase" id="clase">
+              <option value="" selected>Seleccionar...</option>
+              <option value="11">11. SCIF</option>
+              <option value="12">12. SSAL</option>
+              <option value="13">13. SC</option>
+              <option value="14">14. ONG</option>
+              <option value="15">15. SE</option>
+              <option value="16">16. OTRA</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="pais">Domicilio para correspondencia</label>
+            <input id="pais" type="text" name="pais" placeholder="País" value="Colombia" />
+          </div>
+          <div class="field">
+            <label for="departamento">Departamento</label>
+            <input id="departamento" type="text" name="departamento" placeholder="Departamento" value="Cordoba" />
+          </div>
+          <div class="field">
+            <label for="municipio">Municipio</label>
+            <input id="municipio" type="text" name="municipio" placeholder="Municipio" value="Montería" />
+          </div>
+          <div class="field">
+            <label for="direccion">Dirección</label>
+            <input id="direccion" type="text" name="direccion" placeholder="Direccion" value="Calle 25 nro 3 45" />
+          </div>
+          <div class="field">
+            <label for="telefonos">Teléfonos</label>
+            <input id="telefonos" type="text" name="telefonos" placeholder="Teléfonos" value="320 440 3165" />
+          </div>
+          <div class="field">
+            <label for="fax">Fax</label>
+            <input id="fax" type="text" name="fax" placeholder="Fax" value="320 440 3165" />
+          </div>
+          <div class="field">
+            <label for="apartadoAereo">Apartado aéreo</label>
+            <input id="apartadoAereo" type="text" name="apartadoAereo" placeholder="Apartado Aéreo"
+              value="320 440 3165" />
+          </div>
         </div>
-      </form>
-      <!-- Canvas oculto: para renderizar PDF con PDF.js -->
-      <canvas id="pdf-canvas-hidden" style="display: none"></canvas>
+      </fieldset>
+      <!-- II. SERVICIOS -->
+      <fieldset>
+        <legend>
+          II. Servicios <button type="button" class="collapse-btn">−</button>
+        </legend>
+        <div class="fields">
+          <div class="field" style="display: none">
+            <label for="servicio1">Servicio 1</label>
+            <input id="servicio1" name="servicio1" placeholder="Servicio 1" value="Prestación de servicios" />
+          </div>
+          <div class="field" style="display: none">
+            <label for="servicio2">Servicio 2</label>
+            <input id="servicio2" name="servicio2" placeholder="Servicio 2" value="Prestación de servicios" />
+          </div>
+          <div class="field" style="display: none">
+            <label for="servicio3">Servicio 3</label>
+            <input id="servicio3" name="servicio3" placeholder="Servicio 3" value="Prestación de servicios" />
+          </div>
+          <div class="field" style="display: none">
+            <label for="servicio4">Servicio 4</label>
+            <input id="servicio4" name="servicio4" placeholder="Servicio 4" value="Prestación de servicios" />
+          </div>
+          <div class="field" style="display: none">
+            <label for="servicio5">Servicio 5</label>
+            <input id="servicio5" name="servicio5" placeholder="Servicio 5" value="Prestación de servicios" />
+          </div>
+          <div class="field" style="display: none">
+            <label for="servicio6">Servicio 6</label>
+            <input id="servicio6" name="servicio6" placeholder="Servicio 6" value="Prestación de servicios" />
+          </div>
+          <div class="field">
+            <button type="button" id="add-service-btn">
+              + Agregar servicio
+            </button>
+            <small id="svc-count">(0/6)</small>
+          </div>
+        </div>
+      </fieldset>
+      <!-- III. EXPERIENCIA  O SITUACION ACTUAL -->
+      <fieldset>
+        <legend>
+          III. Experiencia o Situación Actual
+          <button type="button" class="collapse-btn">−</button>
+        </legend>
+        <div class="fields">
+          <div class="field" style="display: none">
+            <label for="experiencia1">Entidad contratante</label>
+            <input id="experiencia1" name="experiencia1" placeholder="Entidad contratante"
+              value="Alcaldia de Montería" />
+          </div>
+          <div class="field" style="display: none">
+            <label for="tipoEmpresa1">Tipo de empresa</label>
+            <select name="tipoEmpresa1" id="tipoEmpresa1">
+              <option value="">Seleccionar...</option>
+              <option value="X" selected>Pública</option>
+              <option value="privada">Privada</option>
+            </select>
+          </div>
+          <div class="field" style="display: none">
+            <label for="telefono_exp1">Teléfono</label>
+            <input id="telefono_exp1" name="telefono_exp1" placeholder="Teléfono" value="3204403165" />
+          </div>
+          <div class="field" style="display: none">
+            <label for="fecha_term_exp1">Fecha de terminacion</label>
+            <input type="date" id="fecha_term_exp1" name="fecha_term_exp1" placeholder="Fecha de terminacion"
+              value="2026-02-08" />
+          </div>
+          <div class="field" style="display: none">
+            <label for="valorContrato_exp1">Valor contrato</label>
+            <input type="text" id="valorContrato_exp1" name="valorContrato_exp1" placeholder="Valor contrato"
+              value="$ 1.000.000" />
+          </div>
 
-      <div class="preview-container canvas-wrapper">
-        <!-- Canvas visible: para mostrar preview en escritorio -->
-        <div class="canvas-zoom-wrapper">
-          <canvas
-            id="pdf-preview"
-            style="
+          <!-- Experiencia 2 -->
+          <div class="field" style="display: none">
+            <label for="experiencia2">Entidad contratante 2</label>
+            <input id="experiencia2" name="experiencia2" placeholder="Entidad contratante"
+              value="Gobernación de Córdoba" />
+          </div>
+          <div class="field" style="display: none">
+            <label for="tipoEmpresa2">Tipo de empresa 2</label>
+            <select name="tipoEmpresa2" id="tipoEmpresa2">
+              <option value="">Seleccionar...</option>
+              <option value="X" selected>Pública</option>
+              <option value="privada">Privada</option>
+            </select>
+          </div>
+          <div class="field" style="display: none">
+            <label for="telefono_exp2">Teléfono 2</label>
+            <input id="telefono_exp2" name="telefono_exp2" placeholder="Teléfono" value="301 555 0123" />
+          </div>
+          <div class="field" style="display: none">
+            <label for="fecha_term_exp2">Fecha de terminacion 2</label>
+            <input type="date" id="fecha_term_exp2" name="fecha_term_exp2" placeholder="Fecha de terminacion"
+              value="2025-10-15" />
+          </div>
+          <div class="field" style="display: none">
+            <label for="valorContrato_exp2">Valor contrato 2</label>
+            <input type="text" id="valorContrato_exp2" name="valorContrato_exp2" placeholder="Valor contrato"
+              value="$ 800.000" />
+          </div>
+
+          <!-- Experiencia 3 -->
+          <div class="field" style="display: none">
+            <label for="experiencia3">Entidad contratante 3</label>
+            <input id="experiencia3" name="experiencia3" placeholder="Entidad contratante"
+              value="Alcaldía de Montería - Secretaría de Salud" />
+          </div>
+          <div class="field" style="display: none">
+            <label for="tipoEmpresa3">Tipo de empresa 3</label>
+            <select name="tipoEmpresa3" id="tipoEmpresa3">
+              <option value="">Seleccionar...</option>
+              <option value="X" selected>Pública</option>
+              <option value="privada">Privada</option>
+            </select>
+          </div>
+          <div class="field" style="display: none">
+            <label for="telefono_exp3">Teléfono 3</label>
+            <input id="telefono_exp3" name="telefono_exp3" placeholder="Teléfono" value="302 444 7890" />
+          </div>
+          <div class="field" style="display: none">
+            <label for="fecha_term_exp3">Fecha de terminacion 3</label>
+            <input type="date" id="fecha_term_exp3" name="fecha_term_exp3" placeholder="Fecha de terminacion"
+              value="2024-06-30" />
+          </div>
+          <div class="field" style="display: none">
+            <label for="valorContrato_exp3">Valor contrato 3</label>
+            <input type="text" id="valorContrato_exp3" name="valorContrato_exp3" placeholder="Valor contrato"
+              value="$ 450.000" />
+          </div>
+
+          <!-- Experiencia 4 -->
+          <div class="field" style="display: none">
+            <label for="experiencia4">Entidad contratante 4</label>
+            <input id="experiencia4" name="experiencia4" placeholder="Entidad contratante"
+              value="Empresa de Servicios Médicos S.A." />
+          </div>
+          <div class="field" style="display: none">
+            <label for="tipoEmpresa4">Tipo de empresa 4</label>
+            <select name="tipoEmpresa4" id="tipoEmpresa4">
+              <option value="">Seleccionar...</option>
+              <option value="X">Pública</option>
+              <option value="privada" selected>Privada</option>
+            </select>
+          </div>
+          <div class="field" style="display: none">
+            <label for="telefono_exp4">Teléfono 4</label>
+            <input id="telefono_exp4" name="telefono_exp4" placeholder="Teléfono" value="305 777 3344" />
+          </div>
+          <div class="field" style="display: none">
+            <label for="fecha_term_exp4">Fecha de terminacion 4</label>
+            <input type="date" id="fecha_term_exp4" name="fecha_term_exp4" placeholder="Fecha de terminacion"
+              value="2023-11-20" />
+          </div>
+          <div class="field" style="display: none">
+            <label for="valorContrato_exp4">Valor contrato 4</label>
+            <input type="text" id="valorContrato_exp4" name="valorContrato_exp4" placeholder="Valor contrato"
+              value="$ 1.200.000" />
+          </div>
+
+          <!-- Experiencia 5 -->
+          <div class="field" style="display: none">
+            <label for="experiencia5">Entidad contratante 5</label>
+            <input id="experiencia5" name="experiencia5" placeholder="Entidad contratante"
+              value="Cooperativa Médica Regional" />
+          </div>
+          <div class="field" style="display: none">
+            <label for="tipoEmpresa5">Tipo de empresa 5</label>
+            <select name="tipoEmpresa5" id="tipoEmpresa5">
+              <option value="">Seleccionar...</option>
+              <option value="X" selected>Pública</option>
+              <option value="privada">Privada</option>
+            </select>
+          </div>
+          <div class="field" style="display: none">
+            <label for="telefono_exp5">Teléfono 5</label>
+            <input id="telefono_exp5" name="telefono_exp5" placeholder="Teléfono" value="304 888 2211" />
+          </div>
+          <div class="field" style="display: none">
+            <label for="fecha_term_exp5">Fecha de terminacion 5</label>
+            <input type="date" id="fecha_term_exp5" name="fecha_term_exp5" placeholder="Fecha de terminacion"
+              value="2022-08-05" />
+          </div>
+          <div class="field" style="display: none">
+            <label for="valorContrato_exp5">Valor contrato 5</label>
+            <input type="text" id="valorContrato_exp5" name="valorContrato_exp5" placeholder="Valor contrato"
+              value="$ 350.000" />
+          </div>
+
+          <div class="field">
+            <button type="button" id="add-experience-btn">
+              + Agregar experiencia
+            </button>
+            <small id="exp-count">(0/5)</small>
+          </div>
+        </div>
+      </fieldset>
+      <!-- IV. REPRESENTANTE -->
+      <fieldset>
+        <legend>
+          IV. Representante Legal
+          <button type="button" class="collapse-btn">−</button>
+        </legend>
+        <div class="fields">
+          <div class="field">
+            <label for="primerApellido_rep">Primer apellido</label>
+            <input id="primerApellido_rep" name="primerApellido" placeholder="Primer apellido" value="Martinez" />
+          </div>
+          <div class="field">
+            <label for="segundoApellido_rep">Segundo apellido</label>
+            <input id="segundoApellido_rep" name="segundoApellido" placeholder="Segundo apellido" value="Gomez" />
+          </div>
+          <div class="field">
+            <label for="nombres_rep">Nombres</label>
+            <input id="nombres_rep" name="nombres" placeholder="Nombres" value="Juan Manuel" />
+          </div>
+          <div class="field">
+            <label for="tipo_documento_rep">Tipo de Documento</label>
+            <select name="tipo_documento_rep" id="tipo_documento_rep">
+              <option value="">Seleccionar...</option>
+              <option value="cc" selected>Cedula</option>
+              <option value="ce">Cedula de extranjería</option>
+              <option value="pasaporte">Pasaporte</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="documento_rep">Documento</label>
+            <input id="documento_rep" name="documento" placeholder="Documento" value="1065874214" />
+          </div>
+          <div class="field">
+            <label for="caracterde">Actua en caracter de</label>
+            <select name="caracterde" id="caracterde">
+              <option value="">Seleccionar...</option>
+              <option value="representante" selected>
+                Representante legal
+              </option>
+              <option value="apoderado">Apoderado</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="capacidad_contratacion">Capacidad de contratación</label>
+            <input id="capacidad_contratacion" name="capacidad_contratacion" placeholder="Capacidad de contratación"
+              value="1065874214" />
+          </div>
+          <div class="field">
+            <label for="inhabilidad">Manifestación de No inhabilidad</label>
+            <select name="inhabilidad" id="inhabilidad">
+              <option value="">Seleccionar...</option>
+              <option value="si">Si</option>
+              <option value="no" selected>No</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="observaciones">Observaciones</label>
+            <input id="observaciones" name="observaciones" placeholder="Observaciones"
+              value="los datos aquí consignados son verdaderos y completos, y autorizo a la entidad contratante para que los verifique en las fuentes correspondientes"
+              maxlength="185" />
+          </div>
+          <div class="field">
+            <label for="firma">Firma: imagen .png (transparente)</label>
+            <input type="file" id="firma" name="firma" placeholder="Firma" accept="image/png" />
+          </div>
+          <div class="field">
+            <label for="fecha_diligenciamiento">Fecha diligenciamiento</label>
+            <input type="date" id="fecha_diligenciamiento" name="fecha_diligenciamiento"
+              placeholder="Fecha diligenciamiento" />
+          </div>
+        </div>
+      </fieldset>
+      <div class="fixed-actions">
+        <button type="submit">📄 Generar PDF</button>
+        <button type="button" id="btn-preview">👁️ Vista Previa</button>
+        <button type="button" id="btn-pay-download">💳 Pagar y Descargar</button>
+      </div>
+    </form>
+    <!-- Canvas oculto: para renderizar PDF con PDF.js -->
+    <canvas id="pdf-canvas-hidden" style="display: none"></canvas>
+
+    <div class="preview-container canvas-wrapper">
+      <!-- Canvas visible: para mostrar preview en escritorio -->
+      <div class="canvas-zoom-wrapper">
+        <canvas id="pdf-preview" style="
               border: 1px solid #333;
               background: #fff;
               box-shadow: 0 2px 8px #0002;
               display: block;
-            "
-          ></canvas>
-          <div class="canvas-overlay"><span>Zoom</span></div>
-        </div>
-        <div style="font-size: 13px; color: #333; margin-top: 8px">
-          Vista previa plantilla.pdf
-        </div>
+            "></canvas>
+        <div class="canvas-overlay"><span>Zoom</span></div>
+      </div>
+      <div style="font-size: 13px; color: #333; margin-top: 8px">
+        Vista previa plantilla.pdf
       </div>
     </div>
+  </div>
 
-    <!-- Modal para vista previa en móvil -->
-    <div id="modal-overlay" class="modal-overlay">
-      <div class="modal-content">
-        <div class="modal-header">
-          <span>Vista Previa</span>
-          <button type="button" class="modal-close-btn">×</button>
-        </div>
-        <canvas
-          id="pdf-preview-mobile"
-          style="
+  <!-- Modal para vista previa en móvil -->
+  <div id="modal-overlay" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>Vista Previa</span>
+        <button type="button" class="modal-close-btn">×</button>
+      </div>
+      <canvas id="pdf-preview-mobile" style="
             border: 1px solid #333;
             background: #fff;
             box-shadow: 0 2px 8px #0002;
             width: 100%;
             display: block;
-          "
-        ></canvas>
-        <div
-          style="
+          "></canvas>
+      <div style="
             font-size: 13px;
             color: #333;
             margin-top: 8px;
             text-align: center;
-          "
-        >
-          Vista previa plantilla.pdf
-        </div>
+          ">
+        Vista previa plantilla.pdf
       </div>
     </div>
+  </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
-    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
-    <script src="app.js"></script>
-    <script>
-      // Lógica del modal para vista previa en móvil
-      const btnPreview = document.getElementById("btn-preview");
-      const modalOverlay = document.getElementById("modal-overlay");
-      const modalCloseBtn = document.querySelector(".modal-close-btn");
-      const isMobile = () => window.innerWidth <= 1024;
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // Lógica del modal para vista previa en móvil
+    const btnPreview = document.getElementById("btn-preview");
+    const modalOverlay = document.getElementById("modal-overlay");
+    const modalCloseBtn = document.querySelector(".modal-close-btn");
+    const isMobile = () => window.innerWidth <= 1024;
 
-      // Abrir modal en móvil
-      btnPreview.addEventListener("click", (e) => {
-        if (isMobile()) {
-          e.preventDefault();
-          modalOverlay.classList.add("active");
-          // Copiar el contenido del canvas principal al modal
-          const mainCanvas = document.getElementById("pdf-preview");
-          const mobileCanvas = document.getElementById("pdf-preview-mobile");
-          const ctx = mobileCanvas.getContext("2d");
-          if (mainCanvas.width > 0 && mainCanvas.height > 0) {
-            mobileCanvas.width = mainCanvas.width;
-            mobileCanvas.height = mainCanvas.height;
-            ctx.drawImage(mainCanvas, 0, 0);
-          }
+    // Abrir modal en móvil
+    btnPreview.addEventListener("click", (e) => {
+      if (isMobile()) {
+        e.preventDefault();
+        modalOverlay.classList.add("active");
+        // Copiar el contenido del canvas principal al modal
+        const mainCanvas = document.getElementById("pdf-preview");
+        const mobileCanvas = document.getElementById("pdf-preview-mobile");
+        const ctx = mobileCanvas.getContext("2d");
+        if (mainCanvas.width > 0 && mainCanvas.height > 0) {
+          mobileCanvas.width = mainCanvas.width;
+          mobileCanvas.height = mainCanvas.height;
+          ctx.drawImage(mainCanvas, 0, 0);
         }
-      });
+      }
+    });
 
-      // Cerrar modal
-      const closeModal = () => {
-        const modalContent = document.querySelector(".modal-content");
-        modalContent.classList.add("closing");
-        setTimeout(() => {
-          modalOverlay.classList.remove("active");
-          modalContent.classList.remove("closing");
-        }, 300);
-      };
+    // Cerrar modal
+    const closeModal = () => {
+      const modalContent = document.querySelector(".modal-content");
+      modalContent.classList.add("closing");
+      setTimeout(() => {
+        modalOverlay.classList.remove("active");
+        modalContent.classList.remove("closing");
+      }, 300);
+    };
 
-      modalCloseBtn.addEventListener("click", closeModal);
-      modalOverlay.addEventListener("click", (e) => {
-        if (e.target === modalOverlay) closeModal();
-      });
+    modalCloseBtn.addEventListener("click", closeModal);
+    modalOverlay.addEventListener("click", (e) => {
+      if (e.target === modalOverlay) closeModal();
+    });
 
-      // Cerrar modal con Esc
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && modalOverlay.classList.contains("active")) {
-          closeModal();
-        }
-      });
+    // Cerrar modal con Esc
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && modalOverlay.classList.contains("active")) {
+        closeModal();
+      }
+    });
 
-      // Colapsar todos los fieldsets excepto el primero y cambiar el icono
-      const fieldsets = document.querySelectorAll("form fieldset");
-      fieldsets.forEach((fieldset, idx) => {
-        const btn = fieldset.querySelector(".collapse-btn");
-        const content = Array.from(fieldset.children).filter(
-          (el) => el.tagName !== "LEGEND",
-        );
-        if (idx === 0) {
-          // El primero queda expandido
-          content.forEach((el) => (el.style.display = ""));
-          btn.textContent = "▲";
-        } else {
-          // Los demás colapsados
+    // Colapsar todos los fieldsets excepto el primero y cambiar el icono
+    const fieldsets = document.querySelectorAll("form fieldset");
+    fieldsets.forEach((fieldset, idx) => {
+      const btn = fieldset.querySelector(".collapse-btn");
+      const content = Array.from(fieldset.children).filter(
+        (el) => el.tagName !== "LEGEND",
+      );
+      if (idx === 0) {
+        // El primero queda expandido
+        content.forEach((el) => (el.style.display = ""));
+        btn.textContent = "▲";
+      } else {
+        // Los demás colapsados
+        content.forEach((el) => (el.style.display = "none"));
+        btn.textContent = "▼";
+      }
+      btn.addEventListener("click", function () {
+        if (btn.textContent === "▲") {
           content.forEach((el) => (el.style.display = "none"));
           btn.textContent = "▼";
+        } else {
+          content.forEach((el) => (el.style.display = ""));
+          btn.textContent = "▲";
         }
-        btn.addEventListener("click", function () {
-          if (btn.textContent === "▲") {
-            content.forEach((el) => (el.style.display = "none"));
-            btn.textContent = "▼";
-          } else {
-            content.forEach((el) => (el.style.display = ""));
-            btn.textContent = "▲";
-          }
-        });
       });
+    });
 
-      // Mostrar/ocultar campo 'ordenCual' según selección en #orden
-      (function () {
-        const ordenSelect = document.getElementById("orden");
-        const ordenCualField = document.querySelector("#ordenCual")
-          ? document.getElementById("ordenCual").closest(".field")
-          : null;
-        const ordenCualInput = document.getElementById("ordenCual");
+    // Mostrar/ocultar campo 'ordenCual' según selección en #orden
+    (function () {
+      const ordenSelect = document.getElementById("orden");
+      const ordenCualField = document.querySelector("#ordenCual")
+        ? document.getElementById("ordenCual").closest(".field")
+        : null;
+      const ordenCualInput = document.getElementById("ordenCual");
 
-        function updateOrdenCual() {
-          if (!ordenCualField || !ordenSelect) return;
-          if (ordenSelect.value === "otro") {
-            ordenCualField.style.display = "";
-            try {
-              ordenCualInput.focus();
-            } catch (e) {}
-          } else {
-            ordenCualField.style.display = "none";
-            if (ordenCualInput) ordenCualInput.value = "";
-          }
+      function updateOrdenCual() {
+        if (!ordenCualField || !ordenSelect) return;
+        if (ordenSelect.value === "otro") {
+          ordenCualField.style.display = "";
+          try {
+            ordenCualInput.focus();
+          } catch (e) { }
+        } else {
+          ordenCualField.style.display = "none";
+          if (ordenCualInput) ordenCualInput.value = "";
         }
+      }
 
-        if (ordenSelect) {
-          ordenSelect.addEventListener("change", updateOrdenCual);
-        }
-        // Inicializar estado en carga
-        updateOrdenCual();
-      })();
-    </script>
+      if (ordenSelect) {
+        ordenSelect.addEventListener("change", updateOrdenCual);
+      }
+      // Inicializar estado en carga
+      updateOrdenCual();
+    })();
+  </script>
 
-    <footer>
-      <div class="container">
-        <div
-          style="
+  <footer>
+    <div class="container">
+      <div style="
             border-top: 1px solid #e6eef2;
             padding-top: 24px;
             margin-top: 40px;
-          "
-        >
-          <div class="footer-grid">
-            <div>
-              <strong style="color: #06233a; font-size: 16px"
-                >formatounico.com</strong
-              >
-              <div
-                style="margin-top: 8px; color: var(--muted); font-size: 13px"
-              >
-                Formatos legales estandarizados<br />
-                Rápidos • Confiables • Profesionales
-              </div>
+          ">
+        <div class="footer-grid">
+          <div>
+            <strong style="color: #06233a; font-size: 16px">formatounico.com</strong>
+            <div style="margin-top: 8px; color: var(--muted); font-size: 13px">
+              Formatos legales estandarizados<br />
+              Rápidos • Confiables • Profesionales
             </div>
-            <div>
-              <div
-                style="
+          </div>
+          <div>
+            <div style="
                   font-weight: 700;
                   color: #06233a;
                   font-size: 13px;
                   margin-bottom: 8px;
-                "
-              >
-                Producto
-              </div>
-              <ul
-                style="
+                ">
+              Producto
+            </div>
+            <ul style="
                   list-style: none;
                   padding: 0;
                   margin: 0;
                   display: flex;
                   flex-direction: column;
                   gap: 6px;
-                "
-              >
-                <li>
-                  <a
-                    href="/"
-                    style="
+                ">
+              <li>
+                <a href="/" style="
                       color: var(--muted);
                       text-decoration: none;
                       font-size: 13px;
                       display: inline-block;
-                    "
-                    >Formatos</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="/#como-funciona"
-                    style="
+                    ">Formatos</a>
+              </li>
+              <li>
+                <a href="/#como-funciona" style="
                       color: var(--muted);
                       text-decoration: none;
                       font-size: 13px;
                       display: inline-block;
-                    "
-                    >Cómo funciona</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="/"
-                    style="
+                    ">Cómo funciona</a>
+              </li>
+              <li>
+                <a href="/" style="
                       color: var(--muted);
                       text-decoration: none;
                       font-size: 13px;
                       display: inline-block;
-                    "
-                    >Precios</a
-                  >
-                </li>
-              </ul>
-            </div>
-            <div>
-              <div
-                style="
+                    ">Precios</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div style="
                   font-weight: 700;
                   color: #06233a;
                   font-size: 13px;
                   margin-bottom: 8px;
-                "
-              >
-                Legal
-              </div>
-              <ul
-                style="
+                ">
+              Legal
+            </div>
+            <ul style="
                   list-style: none;
                   padding: 0;
                   margin: 0;
                   display: flex;
                   flex-direction: column;
                   gap: 6px;
-                "
-              >
-                <li>
-                  <a
-                    href="/"
-                    style="
+                ">
+              <li>
+                <a href="/" style="
                       color: var(--muted);
                       text-decoration: none;
                       font-size: 13px;
                       display: inline-block;
-                    "
-                    >Términos de uso</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="/"
-                    style="
+                    ">Términos de uso</a>
+              </li>
+              <li>
+                <a href="/" style="
                       color: var(--muted);
                       text-decoration: none;
                       font-size: 13px;
                       display: inline-block;
-                    "
-                    >Privacidad</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="/"
-                    style="
+                    ">Privacidad</a>
+              </li>
+              <li>
+                <a href="/" style="
                       color: var(--muted);
                       text-decoration: none;
                       font-size: 13px;
                       display: inline-block;
-                    "
-                    >Contacto</a
-                  >
-                </li>
-              </ul>
-            </div>
-            <div style="text-align: right">
-              <div style="color: var(--muted); font-size: 13px">
-                <div>© 2026 formatounico.com</div>
-                <div style="margin-top: 8px">
-                  <strong style="color: #06233a">País:</strong> Colombia
-                </div>
+                    ">Contacto</a>
+              </li>
+            </ul>
+          </div>
+          <div style="text-align: right">
+            <div style="color: var(--muted); font-size: 13px">
+              <div>© 2026 formatounico.com</div>
+              <div style="margin-top: 8px">
+                <strong style="color: #06233a">País:</strong> Colombia
               </div>
             </div>
           </div>
         </div>
       </div>
-    </footer>
+    </div>
+  </footer>
 
-    <script>
-      (function () {
-        const menuToggle = document.getElementById("menu-toggle");
-        const nav = document.getElementById("main-nav");
-        const backdrop = document.getElementById("nav-backdrop");
-        const navClose = document.getElementById("nav-close");
+  <script>
+    (function () {
+      const menuToggle = document.getElementById("menu-toggle");
+      const nav = document.getElementById("main-nav");
+      const backdrop = document.getElementById("nav-backdrop");
+      const navClose = document.getElementById("nav-close");
 
-        function openNav() {
-          nav.classList.add("open");
-          backdrop.classList.add("open");
-          menuToggle.setAttribute("aria-expanded", "true");
-          nav.setAttribute("aria-hidden", "false");
-          document.body.style.overflow = "hidden";
-        }
-        function closeNav() {
-          nav.classList.remove("open");
-          backdrop.classList.remove("open");
-          menuToggle.setAttribute("aria-expanded", "false");
-          nav.setAttribute("aria-hidden", "true");
-          document.body.style.overflow = "";
-        }
+      function openNav() {
+        nav.classList.add("open");
+        backdrop.classList.add("open");
+        menuToggle.setAttribute("aria-expanded", "true");
+        nav.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+      }
+      function closeNav() {
+        nav.classList.remove("open");
+        backdrop.classList.remove("open");
+        menuToggle.setAttribute("aria-expanded", "false");
+        nav.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+      }
 
-        if (menuToggle) {
-          menuToggle.addEventListener("click", () => {
-            const opened = nav.classList.contains("open");
-            if (opened) closeNav();
-            else openNav();
-          });
-        }
-        if (backdrop) {
-          backdrop.addEventListener("click", closeNav);
-        }
-        if (navClose) {
-          navClose.addEventListener("click", closeNav);
-        }
-        const navLinks = nav.querySelectorAll("a");
-        navLinks.forEach((link) => {
-          link.addEventListener("click", closeNav);
+      if (menuToggle) {
+        menuToggle.addEventListener("click", () => {
+          const opened = nav.classList.contains("open");
+          if (opened) closeNav();
+          else openNav();
         });
-        document.addEventListener("keydown", (e) => {
-          if (e.key === "Escape" && nav.classList.contains("open")) closeNav();
-        });
-      })();
-    </script>
-  </body>
+      }
+      if (backdrop) {
+        backdrop.addEventListener("click", closeNav);
+      }
+      if (navClose) {
+        navClose.addEventListener("click", closeNav);
+      }
+      const navLinks = nav.querySelectorAll("a");
+      navLinks.forEach((link) => {
+        link.addEventListener("click", closeNav);
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && nav.classList.contains("open")) closeNav();
+      });
+    })();
+  </script>
+</body>
+
 </html>

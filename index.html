@@ -1,746 +1,706 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>formatounico.com — Formatos legales listos para llenar</title>
-    <meta
-      name="description"
-      content="Formatos legales estandarizados para persona natural y persona jurídica. Llénalos en línea rápidamente."
-    />
-    <link rel="stylesheet" href="/styles-shared.css" />
-    <style>
-      /* Page-specific styles */
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>formatounico.com — Formatos legales listos para llenar</title>
+  <meta name="description"
+    content="Formatos legales estandarizados para persona natural y persona jurídica. Llénalos en línea rápidamente." />
+  <link rel="stylesheet" href="/styles-shared.css" />
+  <style>
+    /* Page-specific styles */
+    .hero {
+      padding: 40px 0;
+      display: block;
+      text-align: center;
+    }
+
+    .hero>div {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      margin: 0 0 16px 0;
+      font-size: 28px;
+      color: #06233a;
+      line-height: 1.15;
+      font-weight: 800;
+    }
+
+    .hero p {
+      margin: 0 0 24px 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    .cta-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+      justify-content: center;
+    }
+
+    .hero-visual {
+      margin-top: 18px;
+      background: linear-gradient(180deg, #ffffff, #f7fcfd);
+      border-radius: 12px;
+      padding: 14px;
+      border: 1px solid #e6eef2;
+    }
+
+    /* Tarjeta de verificación mejorada */
+    .hero .card {
+      background: #f0fbfd;
+      border: 1px solid #c7e9ed;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 0;
+      margin-left: auto;
+      margin-right: auto;
+      display: inline-flex;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 10px;
+      padding: 14px;
+      border: 1px solid #e6eef2;
+    }
+
+    /* Formats list: single column on mobile */
+    .formats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 16px;
+      max-width: 100%;
+      justify-content: center;
+    }
+
+    .format-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      padding: 0;
+      border-radius: 14px;
+      border: 1px solid #e6eef2;
+      background: #fff;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(3, 18, 26, 0.06);
+      transition: all 0.3s ease;
+      min-height: 440px;
+      max-height: 480px;
+      width: 100%;
+      max-width: 280px;
+    }
+
+    .format-card:hover {
+      box-shadow: 0 8px 24px rgba(3, 18, 26, 0.12);
+      transform: translateY(-4px);
+    }
+
+    .format-card-image {
+      background-size: cover;
+      background-position: center;
+      background-color: #f0fbfd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 260px;
+      height: 260px;
+      border-bottom: 1px solid #e6eef2;
+      flex-shrink: 0;
+    }
+
+    .format-card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+    }
+
+    .format-card-content {
+      padding: 14px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .format-card-category {
+      display: inline-block;
+      background: rgba(11, 145, 166, 0.1);
+      color: var(--accent);
+      padding: 3px 6px;
+      border-radius: 5px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      width: fit-content;
+    }
+
+    .format-card h3 {
+      margin: 0;
+      font-size: 15px;
+      color: #06233a;
+      font-weight: 700;
+      line-height: 1.25;
+      word-break: break-word;
+    }
+
+    .format-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .format-card-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: auto;
+      padding-top: 4px;
+    }
+
+    .format-card .btn {
+      padding: 9px 12px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.25s ease;
+      border-radius: 7px;
+      cursor: pointer;
+      width: 100%;
+      text-align: center;
+    }
+
+    .format-card .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: 0;
+    }
+
+    .format-card .btn-primary:hover {
+      background: #0a7a8f;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(11, 145, 166, 0.3);
+    }
+
+    .format-card .btn-ghost {
+      background: transparent;
+      border: 1px solid #cfecee;
+      color: var(--accent);
+    }
+
+    .format-card .btn-ghost:hover {
+      background: rgba(11, 145, 166, 0.05);
+      border-color: var(--accent);
+    }
+
+    .explain {
+      margin-top: 28px;
+      display: block;
+    }
+
+    .benefits {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .benefit {
+      background: #fff;
+      border-radius: 10px;
+      padding: 10px;
+      border: 1px solid #eef6f7;
+      color: #08323a;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    /* Sección destacada de proceso */
+    .process-highlight {
+      margin-top: 36px;
+      padding: 28px;
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid #e6eef2;
+      text-align: center;
+    }
+
+    .process-highlight-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .process-highlight-content {
+      text-align: left;
+    }
+
+    .process-highlight-content h3 {
+      margin: 0 0 12px 0;
+      color: #06233a;
+      font-size: 20px;
+    }
+
+    .process-highlight-content p {
+      color: var(--muted);
+      margin: 0 0 16px 0;
+      line-height: 1.6;
+    }
+
+    .process-items {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .process-item {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .process-item-icon {
+      color: var(--accent);
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    /* Sección "Por qué elegir" responsiva */
+    .why-choose {
+      margin-top: 40px;
+      padding: 28px;
+      background: linear-gradient(135deg,
+          rgba(11, 145, 166, 0.08),
+          rgba(93, 212, 216, 0.08));
+      border-radius: 16px;
+    }
+
+    .why-choose h2 {
+      text-align: center;
+      margin: 0 0 20px 0;
+      color: #06233a;
+    }
+
+    .why-choose-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .why-choose-item {
+      background: #fff;
+      padding: 16px;
+      border-radius: 10px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      border: 1px solid #e6eef2;
+    }
+
+    .why-choose-icon {
+      color: var(--accent);
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .why-choose-content {
+      flex: 1;
+    }
+
+    .why-choose-title {
+      font-weight: 700;
+      color: #06233a;
+    }
+
+    .why-choose-desc {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    @media (min-width: 700px) {
+      .why-choose-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1000px) {
+      .why-choose-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    /* Larger screens: enhance layout */
+    @media (min-width: 700px) {
+      .container {
+        padding: 20px;
+      }
+
       .hero {
-        padding: 40px 0;
-        display: block;
+        padding: 56px 0;
         text-align: center;
       }
-      .hero > div {
-        max-width: 600px;
+
+      .hero>div {
+        max-width: 700px;
         margin: 0 auto;
       }
+
       .hero h1 {
-        margin: 0 0 16px 0;
-        font-size: 28px;
-        color: #06233a;
-        line-height: 1.15;
-        font-weight: 800;
+        font-size: 36px;
+        margin-bottom: 20px;
       }
+
       .hero p {
-        margin: 0 0 24px 0;
-        color: var(--muted);
-        line-height: 1.6;
-        font-size: 16px;
-      }
-      .cta-row {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
+        font-size: 17px;
         margin-bottom: 28px;
-        justify-content: center;
       }
 
-      .hero-visual {
-        margin-top: 18px;
-        background: linear-gradient(180deg, #ffffff, #f7fcfd);
-        border-radius: 12px;
-        padding: 14px;
-        border: 1px solid #e6eef2;
-      }
-
-      /* Tarjeta de verificación mejorada */
-      .hero .card {
-        background: #f0fbfd;
-        border: 1px solid #c7e9ed;
-        border-radius: 12px;
-        padding: 16px;
-        margin-top: 0;
-        margin-left: auto;
-        margin-right: auto;
-        display: inline-flex;
-      }
-
-      .card {
-        background: var(--card);
-        border-radius: 10px;
-        padding: 14px;
-        border: 1px solid #e6eef2;
-      }
-
-      /* Formats list: single column on mobile */
-      .formats {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 16px;
-        margin-top: 16px;
-        max-width: 100%;
-        justify-content: center;
-      }
       .format-card {
-        display: flex;
-        flex-direction: column;
-        gap: 0;
-        padding: 0;
-        border-radius: 14px;
-        border: 1px solid #e6eef2;
-        background: #fff;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(3, 18, 26, 0.06);
-        transition: all 0.3s ease;
-        min-height: 440px;
-        max-height: 480px;
-        width: 100%;
-        max-width: 280px;
+        max-width: 320px;
       }
-      .format-card:hover {
-        box-shadow: 0 8px 24px rgba(3, 18, 26, 0.12);
-        transform: translateY(-4px);
-      }
+
       .format-card-image {
-        background-size: cover;
-        background-position: center;
-        background-color: #f0fbfd;
-        display: flex;
-        align-items: center;
-        justify-content: center;
         min-height: 260px;
-        height: 260px;
-        border-bottom: 1px solid #e6eef2;
-        flex-shrink: 0;
-      }
-      .format-card-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center top;
-      }
-      .format-card-content {
-        padding: 14px 12px;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        flex: 1;
-        overflow: hidden;
-      }
-      .format-card-category {
-        display: inline-block;
-        background: rgba(11, 145, 166, 0.1);
-        color: var(--accent);
-        padding: 3px 6px;
-        border-radius: 5px;
-        font-size: 10px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.4px;
-        width: fit-content;
-      }
-      .format-card h3 {
-        margin: 0;
-        font-size: 15px;
-        color: #06233a;
-        font-weight: 700;
-        line-height: 1.25;
-        word-break: break-word;
-      }
-      .format-card p {
-        margin: 0;
-        color: var(--muted);
-        font-size: 12px;
-        line-height: 1.35;
-        flex: 1;
-        display: -webkit-box;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-      }
-      .format-card-actions {
-        display: flex;
-        flex-direction: column;
-        gap: 7px;
-        margin-top: auto;
-        padding-top: 4px;
-      }
-      .format-card .btn {
-        padding: 9px 12px;
-        font-size: 14px;
-        font-weight: 600;
-        transition: all 0.25s ease;
-        border-radius: 7px;
-        cursor: pointer;
-        width: 100%;
-        text-align: center;
-      }
-      .format-card .btn-primary {
-        background: var(--accent);
-        color: #fff;
-        border: 0;
-      }
-      .format-card .btn-primary:hover {
-        background: #0a7a8f;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(11, 145, 166, 0.3);
-      }
-      .format-card .btn-ghost {
-        background: transparent;
-        border: 1px solid #cfecee;
-        color: var(--accent);
-      }
-      .format-card .btn-ghost:hover {
-        background: rgba(11, 145, 166, 0.05);
-        border-color: var(--accent);
       }
 
-      .explain {
-        margin-top: 28px;
-        display: block;
-      }
-      .benefits {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 10px;
-        margin-top: 12px;
-      }
-      .benefit {
-        background: #fff;
-        border-radius: 10px;
-        padding: 10px;
-        border: 1px solid #eef6f7;
-        color: #08323a;
-        font-weight: 600;
-        font-size: 14px;
+      .formats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        justify-items: center;
       }
 
-      /* Sección destacada de proceso */
-      .process-highlight {
-        margin-top: 36px;
-        padding: 28px;
-        background: #fff;
-        border-radius: 16px;
-        border: 1px solid #e6eef2;
-        text-align: center;
-      }
       .process-highlight-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 24px;
-        align-items: center;
+        grid-template-columns: 1fr 1fr;
       }
+
       .process-highlight-content {
         text-align: left;
       }
-      .process-highlight-content h3 {
-        margin: 0 0 12px 0;
-        color: #06233a;
-        font-size: 20px;
+    }
+
+    @media (min-width: 1000px) {
+      .container {
+        padding: 24px;
       }
-      .process-highlight-content p {
-        color: var(--muted);
-        margin: 0 0 16px 0;
-        line-height: 1.6;
+
+      .hero {
+        display: block;
+        padding: 64px 0;
+        text-align: center;
       }
-      .process-items {
+
+      .hero>div {
+        max-width: 750px;
+        margin: 0 auto;
+      }
+
+      .hero h1 {
+        font-size: 40px;
+      }
+
+      nav {
+        position: static;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        transform: none;
+        opacity: 1;
+        visibility: visible;
         display: flex;
-        flex-direction: column;
-        gap: 8px;
-        font-size: 14px;
-        color: var(--muted);
+        gap: 14px;
+        align-items: center;
+        transition: none;
       }
-      .process-item {
+
+      nav ul {
+        flex-direction: row;
+        gap: 14px;
+      }
+
+      .desktop-only {
         display: flex;
-        gap: 8px;
+      }
+
+      .mobile-only {
+        display: none;
+      }
+
+      .topbar {
         align-items: center;
       }
-      .process-item-icon {
-        color: var(--accent);
-        font-size: 18px;
-        flex-shrink: 0;
+
+      .nav-close {
+        display: none;
       }
 
-      /* Sección "Por qué elegir" responsiva */
-      .why-choose {
-        margin-top: 40px;
-        padding: 28px;
-        background: linear-gradient(
-          135deg,
-          rgba(11, 145, 166, 0.08),
-          rgba(93, 212, 216, 0.08)
-        );
-        border-radius: 16px;
+      .formats {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        justify-items: center;
+        margin-top: 20px;
       }
-      .why-choose h2 {
-        text-align: center;
-        margin: 0 0 20px 0;
-        color: #06233a;
-      }
-      .why-choose-grid {
+
+      .explain {
         display: grid;
-        grid-template-columns: 1fr;
-        gap: 14px;
-        margin-top: 16px;
+        grid-template-columns: 1fr 320px;
+        gap: 24px;
+        margin-top: 36px;
       }
-      .why-choose-item {
-        background: #fff;
-        padding: 16px;
-        border-radius: 10px;
+
+      .benefits {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .footer-grid {
         display: flex;
-        gap: 12px;
+        justify-content: space-between;
+        gap: 20px;
         align-items: flex-start;
-        border: 1px solid #e6eef2;
       }
-      .why-choose-icon {
-        color: var(--accent);
-        font-size: 24px;
-        flex-shrink: 0;
-      }
-      .why-choose-content {
-        flex: 1;
-      }
-      .why-choose-title {
-        font-weight: 700;
-        color: #06233a;
-      }
-      .why-choose-desc {
-        color: var(--muted);
-        font-size: 14px;
-        margin-top: 4px;
-      }
+    }
+  </style>
+</head>
 
-      @media (min-width: 700px) {
-        .why-choose-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-      }
-
-      @media (min-width: 1000px) {
-        .why-choose-grid {
-          grid-template-columns: repeat(4, 1fr);
-        }
-      }
-
-      /* Larger screens: enhance layout */
-      @media (min-width: 700px) {
-        .container {
-          padding: 20px;
-        }
-        .hero {
-          padding: 56px 0;
-          text-align: center;
-        }
-        .hero > div {
-          max-width: 700px;
-          margin: 0 auto;
-        }
-        .hero h1 {
-          font-size: 36px;
-          margin-bottom: 20px;
-        }
-        .hero p {
-          font-size: 17px;
-          margin-bottom: 28px;
-        }
-        .format-card {
-          max-width: 320px;
-        }
-        .format-card-image {
-          min-height: 260px;
-        }
-        .formats {
-          grid-template-columns: repeat(2, 1fr);
-          gap: 20px;
-          justify-items: center;
-        }
-        .process-highlight-grid {
-          grid-template-columns: 1fr 1fr;
-        }
-        .process-highlight-content {
-          text-align: left;
-        }
-      }
-
-      @media (min-width: 1000px) {
-        .container {
-          padding: 24px;
-        }
-        .hero {
-          display: block;
-          padding: 64px 0;
-          text-align: center;
-        }
-        .hero > div {
-          max-width: 750px;
-          margin: 0 auto;
-        }
-        .hero h1 {
-          font-size: 40px;
-        }
-        nav {
-          position: static;
-          background: transparent;
-          border: none;
-          box-shadow: none;
-          padding: 0;
-          transform: none;
-          opacity: 1;
-          visibility: visible;
-          display: flex;
-          gap: 14px;
-          align-items: center;
-          transition: none;
-        }
-        nav ul {
-          flex-direction: row;
-          gap: 14px;
-        }
-        .desktop-only {
-          display: flex;
-        }
-        .mobile-only {
-          display: none;
-        }
-        .topbar {
-          align-items: center;
-        }
-        .nav-close {
-          display: none;
-        }
-
-        .formats {
-          grid-template-columns: repeat(4, 1fr);
-          gap: 20px;
-          justify-items: center;
-          margin-top: 20px;
-        }
-        .explain {
-          display: grid;
-          grid-template-columns: 1fr 320px;
-          gap: 24px;
-          margin-top: 36px;
-        }
-        .benefits {
-          grid-template-columns: repeat(3, 1fr);
-        }
-        .footer-grid {
-          display: flex;
-          justify-content: space-between;
-          gap: 20px;
-          align-items: flex-start;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <header>
-      <div class="container topbar">
-        <div class="brand">
-          <div class="logo">F</div>
-          <div>
-            formatounico.com
-            <div style="font-size: 12px; color: var(--muted); font-weight: 600">
-              Formatos oficiales listos para llenar en línea y descargar
-            </div>
+<body>
+  <header>
+    <div class="container topbar">
+      <div class="brand">
+        <div class="logo">F</div>
+        <div>
+          formatounico.com
+          <div style="font-size: 12px; color: var(--muted); font-weight: 600">
+            Formatos legales listos para llenar en línea
           </div>
-        </div>
-        <nav id="main-nav" aria-hidden="true">
-          <button class="nav-close" aria-label="Cerrar menú" id="nav-close">
-            ×
-          </button>
-          <ul>
-            <li><a href="#">Inicio</a></li>
-            <li><a href="#formatos">Formatos</a></li>
-            <li><a href="#como-funciona">Cómo funciona</a></li>
-            <li><a href="#">FAQ</a></li>
-          </ul>
-        </nav>
-        <div id="nav-backdrop" class="nav-backdrop" aria-hidden="true"></div>
-        <div class="search">
-          <button
-            class="btn btn-ghost mobile-only"
-            id="menu-toggle"
-            aria-controls="main-nav"
-            aria-expanded="false"
-          >
-            ☰
-          </button>
         </div>
       </div>
-    </header>
+      <nav id="main-nav" aria-hidden="true">
+        <button class="nav-close" aria-label="Cerrar menú" id="nav-close">
+          ×
+        </button>
+        <ul>
+          <li><a href="/">Inicio</a></li>
+          <li><a href="/#formatos">Formatos</a></li>
+          <li><a href="/#como-funciona">Cómo funciona</a></li>
+          <li><a href="/">FAQ</a></li>
+        </ul>
+      </nav>
+      <div id="nav-backdrop" class="nav-backdrop" aria-hidden="true"></div>
+      <div class="search">
+        <button class="btn btn-ghost mobile-only" id="menu-toggle" aria-controls="main-nav" aria-expanded="false">
+          ☰
+        </button>
+      </div>
+    </div>
+  </header>
 
-    <main class="container">
-      <section class="hero">
-        <div>
-          <h1>Formatos únicos y listos para llenar en línea</h1>
-          <p>
-            Llena documentos oficiales de forma fácil y rápida en
-            formatounico.com. Accede a formatos oficiales verificados y
-            populares, totalmente personalizables y listos para descargar en
-            minutos.
-          </p>
-          <div class="cta-row">
-            <button class="btn btn-primary" id="cta-explorar">
-              Explorar formatos
-            </button>
-            <button class="btn btn-ghost" id="cta-como">Cómo funciona</button>
-          </div>
-
-          <div class="card" style="margin-top: 0">
-            <div style="display: flex; gap: 12px; align-items: flex-start">
-              <div
-                style="color: var(--accent); font-size: 22px; flex-shrink: 0"
-              >
-                ✓
-              </div>
-              <div>
-                <strong
-                  style="color: #06233a; display: block; margin-bottom: 6px"
-                  >Verificados por profesionales</strong
-                >
-                <div
-                  style="color: var(--muted); font-size: 14px; line-height: 1.5"
-                >
-                  Plantillas actualizadas según normativas colombianas vigentes.
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="formatos">
-        <h2 style="margin: 0 0 12px 0; color: #06233a">Formatos disponibles</h2>
-        <p style="color: var(--muted); margin: 0 0 18px 0; font-size: 15px">
-          Elige el formato que mejor se adapta a tus necesidades y comienza
-          ahora
+  <main class="container">
+    <section class="hero">
+      <div>
+        <h1>Formatos únicos y listos para llenar en línea</h1>
+        <p>
+          Llena documentos oficiales de forma fácil y rápida en
+          formatounico.com. Accede a formatos oficiales verificados y
+          populares, totalmente personalizables y listos para descargar en
+          minutos.
         </p>
-        <div class="formats">
-          <article class="format-card">
-            <div class="format-card-image">
-              <img
-                src="assets/hojas-vida/persona-natural.png"
-                alt="Hoja de vida persona natural"
-              />
-            </div>
-            <div class="format-card-content">
-              <div class="format-card-category">Persona Natural</div>
-              <h3>Hoja de vida persona natural</h3>
-              <p>
-                Crea una hoja de vida profesional estandarizada, lista para usar
-                y llenar en línea.
-              </p>
-              <div class="format-card-actions">
-                <a
-                  class="btn btn-primary"
-                  href="#"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Llenar en línea
-                </a>
-                <a class="btn btn-ghost" href="#"> Ver formato </a>
-              </div>
-            </div>
-          </article>
-
-          <article class="format-card">
-            <div class="format-card-image">
-              <img
-                src="assets/hojas-vida/persona-juridica.jpg"
-                alt="Formato Único Persona Jurídica"
-              />
-            </div>
-            <div class="format-card-content">
-              <div class="format-card-category">Persona Jurídica</div>
-              <h3>Formato Único Persona Jurídica</h3>
-              <p>
-                Formulario integral para presentación de entidades,
-                identificación y servicios.
-              </p>
-              <div class="format-card-actions">
-                <a
-                  class="btn btn-primary"
-                  href="/hojas-vida/persona-juridica/llenar-en-linea/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Llenar en línea
-                </a>
-                <a class="btn btn-ghost" href="#"> Ver formato </a>
-              </div>
-            </div>
-          </article>
+        <div class="cta-row">
+          <button class="btn btn-primary" id="cta-explorar">
+            Explorar formatos
+          </button>
+          <button class="btn btn-ghost" id="cta-como">Cómo funciona</button>
         </div>
-      </section>
 
-      <section class="process-highlight">
-        <div class="process-highlight-grid">
-          <div
-            style="
+        <div class="card" style="margin-top: 0">
+          <div style="display: flex; gap: 12px; align-items: flex-start">
+            <div style="color: var(--accent); font-size: 22px; flex-shrink: 0">
+              ✓
+            </div>
+            <div>
+              <strong style="color: #06233a; display: block; margin-bottom: 6px">Verificados por profesionales</strong>
+              <div style="color: var(--muted); font-size: 14px; line-height: 1.5">
+                Plantillas actualizadas según normativas colombianas vigentes.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="formatos">
+      <h2 style="margin: 0 0 12px 0; color: #06233a">Formatos disponibles</h2>
+      <p style="color: var(--muted); margin: 0 0 18px 0; font-size: 15px">
+        Elige el formato que mejor se adapta a tus necesidades y comienza
+        ahora
+      </p>
+      <div class="formats">
+        <article class="format-card">
+          <div class="format-card-image">
+            <img src="assets/hojas-vida/persona-natural.png" alt="Hoja de vida persona natural" />
+          </div>
+          <div class="format-card-content">
+            <div class="format-card-category">Persona Natural</div>
+            <h3>Hoja de vida persona natural</h3>
+            <p>
+              Crea una hoja de vida profesional estandarizada, lista para usar
+              y llenar en línea.
+            </p>
+            <div class="format-card-actions">
+              <a class="btn btn-primary" href="#" target="_blank" rel="noopener noreferrer">
+                Llenar en línea
+              </a>
+              <a class="btn btn-ghost" href="#"> Ver formato </a>
+            </div>
+          </div>
+        </article>
+
+        <article class="format-card">
+          <div class="format-card-image">
+            <img src="assets/hojas-vida/persona-juridica.jpg" alt="Formato Único Persona Jurídica" />
+          </div>
+          <div class="format-card-content">
+            <div class="format-card-category">Persona Jurídica</div>
+            <h3>Formato Único Persona Jurídica</h3>
+            <p>
+              Formulario integral para presentación de entidades,
+              identificación y servicios.
+            </p>
+            <div class="format-card-actions">
+              <a class="btn btn-primary" href="/hojas-vida/persona-juridica/llenar-en-linea/" target="_blank"
+                rel="noopener noreferrer">
+                Llenar en línea
+              </a>
+              <a class="btn btn-ghost" href="#"> Ver formato </a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="process-highlight">
+      <div class="process-highlight-grid">
+        <div style="
               display: flex;
               flex-direction: column;
               gap: 12px;
               align-items: center;
               justify-content: center;
-            "
-          >
-            <svg
-              width="140"
-              height="120"
-              viewBox="0 0 160 140"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <!-- Documento -->
-              <rect
-                x="30"
-                y="20"
-                width="80"
-                height="100"
-                rx="6"
-                fill="#fff"
-                stroke="#e6eef2"
-                stroke-width="2"
-              />
-              <line
-                x1="45"
-                y1="35"
-                x2="100"
-                y2="35"
-                stroke="#e6eef2"
-                stroke-width="1.5"
-                stroke-linecap="round"
-              />
-              <line
-                x1="45"
-                y1="50"
-                x2="100"
-                y2="50"
-                stroke="#e6eef2"
-                stroke-width="1.5"
-                stroke-linecap="round"
-              />
-              <line
-                x1="45"
-                y1="65"
-                x2="95"
-                y2="65"
-                stroke="#e6eef2"
-                stroke-width="1.5"
-                stroke-linecap="round"
-              />
-              <line
-                x1="45"
-                y1="80"
-                x2="100"
-                y2="80"
-                stroke="#e6eef2"
-                stroke-width="1.5"
-                stroke-linecap="round"
-              />
-              <line
-                x1="45"
-                y1="95"
-                x2="85"
-                y2="95"
-                stroke="#e6eef2"
-                stroke-width="1.5"
-                stroke-linecap="round"
-              />
-              <!-- Checkmark círculo -->
-              <circle cx="115" cy="55" r="20" fill="#0b91a6" />
-              <path
-                d="M108 55 L113 62 L122 48"
-                stroke="#fff"
-                stroke-width="3"
-                fill="none"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </div>
-          <div class="process-highlight-content">
-            <h3>Proceso simple y rápido</h3>
-            <p>
-              Rellena tu documento en línea, descarga el PDF listo para usar e
-              imprímelo cuando lo necesites.
-            </p>
-            <div class="process-items">
-              <div class="process-item">
-                <span class="process-item-icon">✓</span>
-                <span>Rellena en línea</span>
-              </div>
-              <div class="process-item">
-                <span class="process-item-icon">✓</span>
-                <span>Descarga PDF</span>
-              </div>
-              <div class="process-item">
-                <span class="process-item-icon">✓</span>
-                <span>Imprime cuando quieras</span>
-              </div>
-            </div>
-          </div>
+            ">
+          <svg width="140" height="120" viewBox="0 0 160 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Documento -->
+            <rect x="30" y="20" width="80" height="100" rx="6" fill="#fff" stroke="#e6eef2" stroke-width="2" />
+            <line x1="45" y1="35" x2="100" y2="35" stroke="#e6eef2" stroke-width="1.5" stroke-linecap="round" />
+            <line x1="45" y1="50" x2="100" y2="50" stroke="#e6eef2" stroke-width="1.5" stroke-linecap="round" />
+            <line x1="45" y1="65" x2="95" y2="65" stroke="#e6eef2" stroke-width="1.5" stroke-linecap="round" />
+            <line x1="45" y1="80" x2="100" y2="80" stroke="#e6eef2" stroke-width="1.5" stroke-linecap="round" />
+            <line x1="45" y1="95" x2="85" y2="95" stroke="#e6eef2" stroke-width="1.5" stroke-linecap="round" />
+            <!-- Checkmark círculo -->
+            <circle cx="115" cy="55" r="20" fill="#0b91a6" />
+            <path d="M108 55 L113 62 L122 48" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
         </div>
-      </section>
-
-      <section class="why-choose">
-        <h2>¿Por qué elegir formatounico.com?</h2>
-        <div class="why-choose-grid">
-          <div class="why-choose-item">
-            <div class="why-choose-icon">⚡</div>
-            <div class="why-choose-content">
-              <div class="why-choose-title">Rápido y eficiente</div>
-              <div class="why-choose-desc">
-                Completa tus documentos en minutos, no en horas.
-              </div>
-            </div>
-          </div>
-          <div class="why-choose-item">
-            <div class="why-choose-icon">✓</div>
-            <div class="why-choose-content">
-              <div class="why-choose-title">Legalmente válido</div>
-              <div class="why-choose-desc">
-                formatos oficiales, en línea con normativas vigentes.
-              </div>
-            </div>
-          </div>
-          <div class="why-choose-item">
-            <div class="why-choose-icon">🎯</div>
-            <div class="why-choose-content">
-              <div class="why-choose-title">Fácil de usar</div>
-              <div class="why-choose-desc">
-                Interfaz intuitiva sin necesidad de experiencia legal previa.
-              </div>
-            </div>
-          </div>
-          <div class="why-choose-item">
-            <div class="why-choose-icon">📥</div>
-            <div class="why-choose-content">
-              <div class="why-choose-title">Descargable y personalizable</div>
-              <div class="why-choose-desc">
-                Obtén PDF listo para imprimir o según necesites.
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="como-funciona" class="explain">
-        <div>
-          <h2>Cómo funciona</h2>
-          <p style="color: var(--muted); margin-top: 8px">
-            En tres pasos simples tendrás tu documento oficial listo.
+        <div class="process-highlight-content">
+          <h3>Proceso simple y rápido</h3>
+          <p>
+            Rellena tu documento en línea, descarga el PDF listo para usar e
+            imprímelo cuando lo necesites.
           </p>
+          <div class="process-items">
+            <div class="process-item">
+              <span class="process-item-icon">✓</span>
+              <span>Rellena en línea</span>
+            </div>
+            <div class="process-item">
+              <span class="process-item-icon">✓</span>
+              <span>Descarga PDF</span>
+            </div>
+            <div class="process-item">
+              <span class="process-item-icon">✓</span>
+              <span>Imprime cuando quieras</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-          <div
-            style="
+    <section class="why-choose">
+      <h2>¿Por qué elegir formatounico.com?</h2>
+      <div class="why-choose-grid">
+        <div class="why-choose-item">
+          <div class="why-choose-icon">⚡</div>
+          <div class="why-choose-content">
+            <div class="why-choose-title">Rápido y eficiente</div>
+            <div class="why-choose-desc">
+              Completa tus documentos en minutos, no en horas.
+            </div>
+          </div>
+        </div>
+        <div class="why-choose-item">
+          <div class="why-choose-icon">✓</div>
+          <div class="why-choose-content">
+            <div class="why-choose-title">Legalmente válido</div>
+            <div class="why-choose-desc">
+              formatos oficiales, en línea con normativas vigentes.
+            </div>
+          </div>
+        </div>
+        <div class="why-choose-item">
+          <div class="why-choose-icon">🎯</div>
+          <div class="why-choose-content">
+            <div class="why-choose-title">Fácil de usar</div>
+            <div class="why-choose-desc">
+              Interfaz intuitiva sin necesidad de experiencia legal previa.
+            </div>
+          </div>
+        </div>
+        <div class="why-choose-item">
+          <div class="why-choose-icon">📥</div>
+          <div class="why-choose-content">
+            <div class="why-choose-title">Descargable y personalizable</div>
+            <div class="why-choose-desc">
+              Obtén PDF listo para imprimir o según necesites.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="como-funciona" class="explain">
+      <div>
+        <h2>Cómo funciona</h2>
+        <p style="color: var(--muted); margin-top: 8px">
+          En tres pasos simples tendrás tu documento oficial listo.
+        </p>
+
+        <div style="
               margin-top: 24px;
               display: grid;
               grid-template-columns: 1fr;
               gap: 16px;
-            "
-          >
-            <div style="display: flex; gap: 14px">
-              <div
-                style="
+            ">
+          <div style="display: flex; gap: 14px">
+            <div style="
                   flex-shrink: 0;
                   width: 40px;
                   height: 40px;
@@ -752,324 +712,276 @@
                   color: #fff;
                   font-weight: 700;
                   font-size: 16px;
-                "
-              >
-                1
-              </div>
-              <div>
-                <div style="font-weight: 700; color: #06233a">
-                  Selecciona el formato
-                </div>
-                <div
-                  style="color: var(--muted); font-size: 14px; margin-top: 4px"
-                >
-                  Elige entre nuestros formatos disponibles el que necesites.
-                </div>
-              </div>
+                ">
+              1
             </div>
-            <div style="display: flex; gap: 14px">
-              <div
-                style="
-                  flex-shrink: 0;
-                  width: 40px;
-                  height: 40px;
-                  background: var(--accent);
-                  border-radius: 50%;
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-                  color: #fff;
-                  font-weight: 700;
-                  font-size: 16px;
-                "
-              >
-                2
+            <div>
+              <div style="font-weight: 700; color: #06233a">
+                Selecciona el formato
               </div>
-              <div>
-                <div style="font-weight: 700; color: #06233a">
-                  Completa la información
-                </div>
-                <div
-                  style="color: var(--muted); font-size: 14px; margin-top: 4px"
-                >
-                  Rellena los campos con tus datos. El formulario guía cada
-                  paso.
-                </div>
-              </div>
-            </div>
-            <div style="display: flex; gap: 14px">
-              <div
-                style="
-                  flex-shrink: 0;
-                  width: 40px;
-                  height: 40px;
-                  background: var(--accent);
-                  border-radius: 50%;
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-                  color: #fff;
-                  font-weight: 700;
-                  font-size: 16px;
-                "
-              >
-                3
-              </div>
-              <div>
-                <div style="font-weight: 700; color: #06233a">
-                  Descarga tu documento
-                </div>
-                <div
-                  style="color: var(--muted); font-size: 14px; margin-top: 4px"
-                >
-                  Obtén tu PDF listo para usar, imprimir o compartir.
-                </div>
+              <div style="color: var(--muted); font-size: 14px; margin-top: 4px">
+                Elige entre nuestros formatos disponibles el que necesites.
               </div>
             </div>
           </div>
-
-          <h3 style="margin-top: 28px; color: #06233a">¿Quiénes somos?</h3>
-          <p style="color: var(--muted)">
-            formatounico.com nace con la misión de simplificar el acceso a
-            documentos legales confiables. Nuestras plantillas son diseñadas y
-            revisadas por profesionales del derecho para garantizar que cumplan
-            con los estándares legales vigentes en Colombia.
-          </p>
+          <div style="display: flex; gap: 14px">
+            <div style="
+                  flex-shrink: 0;
+                  width: 40px;
+                  height: 40px;
+                  background: var(--accent);
+                  border-radius: 50%;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  color: #fff;
+                  font-weight: 700;
+                  font-size: 16px;
+                ">
+              2
+            </div>
+            <div>
+              <div style="font-weight: 700; color: #06233a">
+                Completa la información
+              </div>
+              <div style="color: var(--muted); font-size: 14px; margin-top: 4px">
+                Rellena los campos con tus datos. El formulario guía cada
+                paso.
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 14px">
+            <div style="
+                  flex-shrink: 0;
+                  width: 40px;
+                  height: 40px;
+                  background: var(--accent);
+                  border-radius: 50%;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  color: #fff;
+                  font-weight: 700;
+                  font-size: 16px;
+                ">
+              3
+            </div>
+            <div>
+              <div style="font-weight: 700; color: #06233a">
+                Descarga tu documento
+              </div>
+              <div style="color: var(--muted); font-size: 14px; margin-top: 4px">
+                Obtén tu PDF listo para usar, imprimir o compartir.
+              </div>
+            </div>
+          </div>
         </div>
 
-        <aside class="card">
-          <h4 style="margin: 0 0 8px 0">Comienza ahora</h4>
-          <p style="color: var(--muted); margin-bottom: 12px">
-            No necesitas experiencia legal. Solo completa el formulario y listo.
-          </p>
-          <div style="display: flex; flex-direction: column; gap: 8px">
-            <button class="btn btn-primary" id="start-fill">
-              Ver formatos disponibles
-            </button>
-            <a class="btn btn-ghost" href="#"> Más información </a>
-          </div>
-        </aside>
-      </section>
+        <h3 style="margin-top: 28px; color: #06233a">¿Quiénes somos?</h3>
+        <p style="color: var(--muted)">
+          formatounico.com nace con la misión de simplificar el acceso a
+          documentos legales confiables. Nuestras plantillas son diseñadas y
+          revisadas por profesionales del derecho para garantizar que cumplan
+          con los estándares legales vigentes en Colombia.
+        </p>
+      </div>
 
-      <footer>
-        <div
-          style="
+      <aside class="card">
+        <h4 style="margin: 0 0 8px 0">Comienza ahora</h4>
+        <p style="color: var(--muted); margin-bottom: 12px">
+          No necesitas experiencia legal. Solo completa el formulario y listo.
+        </p>
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <button class="btn btn-primary" id="start-fill">
+            Ver formatos disponibles
+          </button>
+          <a class="btn btn-ghost" href="#"> Más información </a>
+        </div>
+      </aside>
+    </section>
+
+    <footer>
+      <div style="
             border-top: 1px solid #e6eef2;
             padding-top: 24px;
             margin-top: 40px;
-          "
-        >
-          <div class="footer-grid">
-            <div>
-              <strong style="color: #06233a; font-size: 16px"
-                >formatounico.com</strong
-              >
-              <div
-                style="margin-top: 8px; color: var(--muted); font-size: 13px"
-              >
-                Formatos legales estandarizados<br />
-                Rápidos • Confiables • Profesionales
-              </div>
+          ">
+        <div class="footer-grid">
+          <div>
+            <strong style="color: #06233a; font-size: 16px">formatounico.com</strong>
+            <div style="margin-top: 8px; color: var(--muted); font-size: 13px">
+              Formatos legales estandarizados<br />
+              Rápidos • Confiables • Profesionales
             </div>
-            <div>
-              <div
-                style="
+          </div>
+          <div>
+            <div style="
                   font-weight: 700;
                   color: #06233a;
                   font-size: 13px;
                   margin-bottom: 8px;
-                "
-              >
-                Producto
-              </div>
-              <ul
-                style="
+                ">
+              Producto
+            </div>
+            <ul style="
                   list-style: none;
                   padding: 0;
                   margin: 0;
                   display: flex;
                   flex-direction: column;
                   gap: 6px;
-                "
-              >
-                <li>
-                  <a
-                    href="#formatos"
-                    style="
+                ">
+              <li>
+                <a href="#formatos" style="
                       color: var(--muted);
                       text-decoration: none;
                       font-size: 13px;
                       display: inline-block;
-                    "
-                    >Formatos</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#como-funciona"
-                    style="
+                    ">Formatos</a>
+              </li>
+              <li>
+                <a href="#como-funciona" style="
                       color: var(--muted);
                       text-decoration: none;
                       font-size: 13px;
                       display: inline-block;
-                    "
-                    >Cómo funciona</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    style="
+                    ">Cómo funciona</a>
+              </li>
+              <li>
+                <a href="#" style="
                       color: var(--muted);
                       text-decoration: none;
                       font-size: 13px;
                       display: inline-block;
-                    "
-                    >Precios</a
-                  >
-                </li>
-              </ul>
-            </div>
-            <div>
-              <div
-                style="
+                    ">Precios</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div style="
                   font-weight: 700;
                   color: #06233a;
                   font-size: 13px;
                   margin-bottom: 8px;
-                "
-              >
-                Legal
-              </div>
-              <ul
-                style="
+                ">
+              Legal
+            </div>
+            <ul style="
                   list-style: none;
                   padding: 0;
                   margin: 0;
                   display: flex;
                   flex-direction: column;
                   gap: 6px;
-                "
-              >
-                <li>
-                  <a
-                    href="#"
-                    style="
+                ">
+              <li>
+                <a href="#" style="
                       color: var(--muted);
                       text-decoration: none;
                       font-size: 13px;
                       display: inline-block;
-                    "
-                    >Términos de uso</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    style="
+                    ">Términos de uso</a>
+              </li>
+              <li>
+                <a href="#" style="
                       color: var(--muted);
                       text-decoration: none;
                       font-size: 13px;
                       display: inline-block;
-                    "
-                    >Privacidad</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    style="
+                    ">Privacidad</a>
+              </li>
+              <li>
+                <a href="#" style="
                       color: var(--muted);
                       text-decoration: none;
                       font-size: 13px;
                       display: inline-block;
-                    "
-                    >Contacto</a
-                  >
-                </li>
-              </ul>
-            </div>
-            <div style="text-align: right">
-              <div style="color: var(--muted); font-size: 13px">
-                <div>© 2026 formatounico.com</div>
-                <div style="margin-top: 8px">
-                  <strong style="color: #06233a">País:</strong> Colombia
-                </div>
+                    ">Contacto</a>
+              </li>
+            </ul>
+          </div>
+          <div style="text-align: right">
+            <div style="color: var(--muted); font-size: 13px">
+              <div>© 2026 formatounico.com</div>
+              <div style="margin-top: 8px">
+                <strong style="color: #06233a">País:</strong> Colombia
               </div>
             </div>
           </div>
         </div>
-      </footer>
-    </main>
+      </div>
+    </footer>
+  </main>
 
-    <script>
-      // Navegación: scroll suave a secciones
-      document
-        .getElementById("cta-explorar")
-        ?.addEventListener("click", function () {
-          document
-            .getElementById("formatos")
-            .scrollIntoView({ behavior: "smooth" });
-        });
-      document
-        .getElementById("cta-como")
-        ?.addEventListener("click", function () {
-          document
-            .getElementById("como-funciona")
-            .scrollIntoView({ behavior: "smooth" });
-        });
-      document
-        .getElementById("start-fill")
-        ?.addEventListener("click", function () {
-          document
-            .getElementById("formatos")
-            .scrollIntoView({ behavior: "smooth" });
-        });
+  <script>
+    // Navegación: scroll suave a secciones
+    document
+      .getElementById("cta-explorar")
+      ?.addEventListener("click", function () {
+        document
+          .getElementById("formatos")
+          .scrollIntoView({ behavior: "smooth" });
+      });
+    document
+      .getElementById("cta-como")
+      ?.addEventListener("click", function () {
+        document
+          .getElementById("como-funciona")
+          .scrollIntoView({ behavior: "smooth" });
+      });
+    document
+      .getElementById("start-fill")
+      ?.addEventListener("click", function () {
+        document
+          .getElementById("formatos")
+          .scrollIntoView({ behavior: "smooth" });
+      });
 
-      // Mobile menu: accessible overlay panel
-      (function () {
-        const menuToggle = document.getElementById("menu-toggle");
-        const nav = document.getElementById("main-nav");
-        const backdrop = document.getElementById("nav-backdrop");
-        const navClose = document.getElementById("nav-close");
+    // Mobile menu: accessible overlay panel
+    (function () {
+      const menuToggle = document.getElementById("menu-toggle");
+      const nav = document.getElementById("main-nav");
+      const backdrop = document.getElementById("nav-backdrop");
+      const navClose = document.getElementById("nav-close");
 
-        function openNav() {
-          nav.classList.add("open");
-          backdrop.classList.add("open");
-          menuToggle.setAttribute("aria-expanded", "true");
-          nav.setAttribute("aria-hidden", "false");
-          document.body.style.overflow = "hidden";
-        }
-        function closeNav() {
-          nav.classList.remove("open");
-          backdrop.classList.remove("open");
-          menuToggle.setAttribute("aria-expanded", "false");
-          nav.setAttribute("aria-hidden", "true");
-          document.body.style.overflow = "";
-        }
+      function openNav() {
+        nav.classList.add("open");
+        backdrop.classList.add("open");
+        menuToggle.setAttribute("aria-expanded", "true");
+        nav.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+      }
+      function closeNav() {
+        nav.classList.remove("open");
+        backdrop.classList.remove("open");
+        menuToggle.setAttribute("aria-expanded", "false");
+        nav.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+      }
 
-        if (menuToggle) {
-          menuToggle.addEventListener("click", () => {
-            const opened = nav.classList.contains("open");
-            if (opened) closeNav();
-            else openNav();
-          });
-        }
-        if (backdrop) {
-          backdrop.addEventListener("click", closeNav);
-        }
-        if (navClose) {
-          navClose.addEventListener("click", closeNav);
-        }
-        // Cerrar menú al hacer click en un enlace
-        const navLinks = nav.querySelectorAll("a");
-        navLinks.forEach((link) => {
-          link.addEventListener("click", closeNav);
+      if (menuToggle) {
+        menuToggle.addEventListener("click", () => {
+          const opened = nav.classList.contains("open");
+          if (opened) closeNav();
+          else openNav();
         });
-        document.addEventListener("keydown", (e) => {
-          if (e.key === "Escape" && nav.classList.contains("open")) closeNav();
-        });
-      })();
-    </script>
-  </body>
+      }
+      if (backdrop) {
+        backdrop.addEventListener("click", closeNav);
+      }
+      if (navClose) {
+        navClose.addEventListener("click", closeNav);
+      }
+      // Cerrar menú al hacer click en un enlace
+      const navLinks = nav.querySelectorAll("a");
+      navLinks.forEach((link) => {
+        link.addEventListener("click", closeNav);
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && nav.classList.contains("open")) closeNav();
+      });
+    })();
+  </script>
+</body>
+
 </html>

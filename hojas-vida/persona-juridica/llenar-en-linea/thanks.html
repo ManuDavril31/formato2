@@ -11,19 +11,27 @@
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 20px;
+      margin: 0;
+      padding: 0;
     }
 
-    .container {
+    /* Header adjustments for this page */
+    header {
+      width: 100%;
+      margin-bottom: 40px;
+    }
+
+    .container.main-card {
       background: white;
+      padding: 40px;
       border-radius: 12px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-      padding: 40px 30px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      max-width: 600px;
+      width: 90%;
       text-align: center;
-      max-width: 500px;
-      animation: slideUp 0.5s ease-out;
+      margin-bottom: 40px;
     }
 
     @keyframes slideUp {
@@ -202,7 +210,38 @@
 </head>
 
 <body>
-  <div class="container">
+  <header>
+    <div class="container topbar">
+      <div class="brand">
+        <div class="logo">F</div>
+        <div>
+          formatounico.com
+          <div style="font-size: 12px; color: var(--muted); font-weight: 600">
+            Formatos legales listos para llenar en línea
+          </div>
+        </div>
+      </div>
+      <nav id="main-nav" aria-hidden="true">
+        <button class="nav-close" aria-label="Cerrar menú" id="nav-close">
+          ×
+        </button>
+        <ul>
+          <li><a href="/">Inicio</a></li>
+          <li><a href="/#formatos">Formatos</a></li>
+          <li><a href="/#como-funciona">Cómo funciona</a></li>
+          <li><a href="/">FAQ</a></li>
+        </ul>
+      </nav>
+      <div id="nav-backdrop" class="nav-backdrop" aria-hidden="true"></div>
+      <div class="search">
+        <button class="btn btn-ghost mobile-only" id="menu-toggle" aria-controls="main-nav" aria-expanded="false">
+          ☰
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container main-card">
     <div class="success-icon" id="success-icon">✅</div>
     <h1 id="page-title">Verificando Pago...</h1>
     <p id="page-description">Estamos validando tu pago con Wompi para habilitar la descarga.</p>
@@ -469,69 +508,116 @@
     }
 
     // Cuando se carga la página
-    document.addEventListener('DOMContentLoaded', async () => {
-      // VALIDAR CÓDIGO DE TRANSACCIÓN DESDE URL
-      const validation = validateTransactionCode();
-      if (!validation.valid) {
-        console.error('❌ Validación fallida: No hay código de transacción');
-        showErrorScreen('Acceso Denegado', 'No se encontró un ID de transacción válido. Si acabas de pagar, asegúrate de no haber cerrado la página antes de tiempo.');
-        return;
+    (function () {
+      document.addEventListener('DOMContentLoaded', async () => {
+        // VALIDAR CÓDIGO DE TRANSACCIÓN DESDE URL
+        const validation = validateTransactionCode();
+        if (!validation.valid) {
+          console.error('❌ Validación fallida: No hay código de transacción');
+          showErrorScreen('Acceso Denegado', 'No se encontró un ID de transacción válido. Si acabas de pagar, asegúrate de no haber cerrado la página antes de tiempo.');
+          return;
+        }
+
+        const transactionId = validation.value;
+        console.log('✅ ID de transacción encontrado:', transactionId);
+
+        // INICIAR VERIFICACIÓN REAL CON WOMPI
+        await checkWompiStatus(transactionId);
+
+        const downloadBtn = document.getElementById('btn-download-pdf');
+        const downloadSpinner = document.getElementById('download-spinner');
+        const errorMessage = document.getElementById('error-message');
+
+        downloadBtn.addEventListener('click', async () => {
+          try {
+            // Obtener datos del localStorage
+            const formDataJson = localStorage.getItem('hojaVidaFormData');
+            if (!formDataJson) {
+              throw new Error(
+                'No se encontraron los datos del formulario. Por favor, intenta de nuevo.'
+              );
+            }
+
+            const formData = JSON.parse(formDataJson);
+
+            // Mostrar spinner de descarga
+            downloadSpinner.style.display = 'block';
+            downloadBtn.disabled = true;
+
+            // Generar PDF
+            const finalPdfBytes = await generateFinalPDF(formData);
+            const blob = new Blob([finalPdfBytes], { type: 'application/pdf' });
+
+            // Descargar
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'Hoja_de_Vida_Persona_Juridica.pdf';
+            link.click();
+
+            // Ocultar spinner y mostrar mensaje de éxito
+            downloadSpinner.style.display = 'none';
+            downloadBtn.disabled = false;
+            document.getElementById('success-message').style.display = 'block';
+
+            // Limpiar localStorage después de descargar
+            setTimeout(() => {
+              localStorage.removeItem('hojaVidaFormData');
+            }, 2000);
+          } catch (error) {
+            spinner.style.display = 'none';
+            downloadBtn.disabled = false;
+            errorMessage.textContent = '❌ ' + error.message;
+            errorMessage.style.display = 'block';
+            console.error(error);
+          }
+        });
+      });
+    })();
+
+    // Funcionalidad del Menú Móvil
+    (function () {
+      const menuToggle = document.getElementById("menu-toggle");
+      const navClose = document.getElementById("nav-close");
+      const nav = document.getElementById("main-nav");
+      const backdrop = document.getElementById("nav-backdrop");
+
+      function openNav() {
+        nav.classList.add("open");
+        backdrop.classList.add("open");
+        menuToggle.setAttribute("aria-expanded", "true");
+        nav.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+      }
+      function closeNav() {
+        nav.classList.remove("open");
+        backdrop.classList.remove("open");
+        menuToggle.setAttribute("aria-expanded", "false");
+        nav.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
       }
 
-      const transactionId = validation.value;
-      console.log('✅ ID de transacción encontrado:', transactionId);
-
-      // INICIAR VERIFICACIÓN REAL CON WOMPI
-      await checkWompiStatus(transactionId);
-
-      const downloadBtn = document.getElementById('btn-download-pdf');
-      const downloadSpinner = document.getElementById('download-spinner');
-      const errorMessage = document.getElementById('error-message');
-
-      downloadBtn.addEventListener('click', async () => {
-        try {
-          // Obtener datos del localStorage
-          const formDataJson = localStorage.getItem('hojaVidaFormData');
-          if (!formDataJson) {
-            throw new Error(
-              'No se encontraron los datos del formulario. Por favor, intenta de nuevo.'
-            );
-          }
-
-          const formData = JSON.parse(formDataJson);
-
-          // Mostrar spinner de descarga
-          downloadSpinner.style.display = 'block';
-          downloadBtn.disabled = true;
-
-          // Generar PDF
-          const finalPdfBytes = await generateFinalPDF(formData);
-          const blob = new Blob([finalPdfBytes], { type: 'application/pdf' });
-
-          // Descargar
-          const link = document.createElement('a');
-          link.href = URL.createObjectURL(blob);
-          link.download = 'Hoja_de_Vida_Persona_Juridica.pdf';
-          link.click();
-
-          // Ocultar spinner y mostrar mensaje de éxito
-          downloadSpinner.style.display = 'none';
-          downloadBtn.disabled = false;
-          document.getElementById('success-message').style.display = 'block';
-
-          // Limpiar localStorage después de descargar
-          setTimeout(() => {
-            localStorage.removeItem('hojaVidaFormData');
-          }, 2000);
-        } catch (error) {
-          spinner.style.display = 'none';
-          downloadBtn.disabled = false;
-          errorMessage.textContent = '❌ ' + error.message;
-          errorMessage.style.display = 'block';
-          console.error(error);
-        }
+      if (menuToggle) {
+        menuToggle.addEventListener("click", () => {
+          const opened = nav.classList.contains("open");
+          if (opened) closeNav();
+          else openNav();
+        });
+      }
+      if (backdrop) {
+        backdrop.addEventListener("click", closeNav);
+      }
+      if (navClose) {
+        navClose.addEventListener("click", closeNav);
+      }
+      // Cerrar menú al hacer click en un enlace
+      const navLinks = nav.querySelectorAll("a");
+      navLinks.forEach((link) => {
+        link.addEventListener("click", closeNav);
       });
-    });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && nav.classList.contains("open")) closeNav();
+      });
+    })();
   </script>
 </body>
 
