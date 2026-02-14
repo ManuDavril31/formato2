@@ -77,12 +77,12 @@ const pdfCoordinates = {
   telefonos: { x: 72, y: 535 },
   fax: { x: 255, y: 535 },
   apartadoAereo: { x: 500, y: 535 },
-    
+
   // II. SERVICIOS
-    servicio1: { x: 50, y: 485 },
-    servicio2: { x: 320, y: 485 },
-    servicio3: { x: 50, y: 470 },
-    servicio4: { x: 320, y: 470 },
+  servicio1: { x: 50, y: 485 },
+  servicio2: { x: 320, y: 485 },
+  servicio3: { x: 50, y: 470 },
+  servicio4: { x: 320, y: 470 },
   servicio5: { x: 50, y: 458 },
   servicio6: { x: 320, y: 458 },
 
@@ -124,7 +124,7 @@ const pdfCoordinates = {
   fecha_term_exp5: { x: 420, y: 341 },
   valorContrato_exp5: { x: 502, y: 341 },
 
-  
+
   // IV. REPRESENTANTE LEGAL
   primerApellido: { x: 87, y: 303 },
   segundoApellido: { x: 306, y: 303 },
@@ -141,7 +141,7 @@ const pdfCoordinates = {
   inhabilidad_no: { x: 412, y: 236 },
   observaciones: { x: 100, y: 210 },
   // Coordenadas para firma (esquina inferior derecha)
-  firma: { x: 50, y:155, width: 80, height: 40 },
+  firma: { x: 50, y: 155, width: 80, height: 40 },
   fecha_diligenciamiento: { x: 460, y: 172 }
 }
 
@@ -159,7 +159,7 @@ function loadFirmaImage(file) {
     firmaImageData = null
     return
   }
-  
+
   // Validar que sea una imagen
   if (!file.type.startsWith('image/')) {
     alert('Por favor selecciona un archivo de imagen para la firma')
@@ -167,7 +167,7 @@ function loadFirmaImage(file) {
     firmaImageData = null
     return
   }
-  
+
   const reader = new FileReader()
   reader.onload = (e) => {
     const img = new Image()
@@ -197,37 +197,37 @@ function getMarkingCoords(selectName, value) {
 async function initializePDF() {
   if (window['pdfjsLib']) {
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'
-    
+
     const pdfBytes = await fetch('plantilla.pdf').then(res => res.arrayBuffer())
     const pdf = await pdfjsLib.getDocument({ data: pdfBytes }).promise
     const pdfPage = await pdf.getPage(1)
-    
+
     // ⭐ Canvas OCULTO para renderizar el PDF con PDF.js
     const hiddenCanvas = document.getElementById('pdf-canvas-hidden')
     const hiddenCtx = hiddenCanvas.getContext('2d')
     const viewport = pdfPage.getViewport({ scale })
-    
+
     hiddenCanvas.width = viewport.width
     hiddenCanvas.height = viewport.height
-    
+
     // Pintar fondo blanco en canvas oculto
     hiddenCtx.fillStyle = '#fff'
     hiddenCtx.fillRect(0, 0, hiddenCanvas.width, hiddenCanvas.height)
-    
+
     // Renderizar PDF en canvas OCULTO (sin conflictos)
     await pdfPage.render({
       canvasContext: hiddenCtx,
       viewport: viewport
     }).promise
-    
+
     // ⭐ CLAVE: Guardar la imagen base del canvas oculto
     baseCanvasImage = hiddenCtx.getImageData(0, 0, hiddenCanvas.width, hiddenCanvas.height)
-    
+
     // Configurar canvas VISIBLE con las mismas dimensiones
     const visibleCanvas = document.getElementById('pdf-preview')
     visibleCanvas.width = hiddenCanvas.width
     visibleCanvas.height = hiddenCanvas.height
-    
+
     // Dibujar la imagen base en el canvas visible
     const visibleCtx = visibleCanvas.getContext('2d')
     visibleCtx.putImageData(baseCanvasImage, 0, 0)
@@ -239,27 +239,27 @@ async function initializePDF() {
 // ============================================================
 function splitTextAt95(text) {
   if (!text || text.length <= 95) return [text]
-  
+
   const lines = []
   let remaining = text
-  
+
   while (remaining.length > 0) {
     if (remaining.length <= 95) {
       lines.push(remaining)
       break
     }
-    
+
     // Intentar dividir en un espacio si existe antes de los 95 caracteres
     let cutPoint = 95
     const lastSpace = remaining.lastIndexOf(' ', 95)
     if (lastSpace > 70) { // Si hay espacio razonable
       cutPoint = lastSpace
     }
-    
+
     lines.push(remaining.substring(0, cutPoint).trimEnd())
     remaining = remaining.substring(cutPoint).trimStart()
   }
-  
+
   return lines
 }
 
@@ -280,24 +280,24 @@ function convertFechaFromDateInput(fechaStr) {
 function updateCanvasPreview(formData) {
   const canvas = document.getElementById('pdf-preview')
   const ctx = canvas.getContext('2d')
-  
+
   // Restaurar la imagen base sin regenerar PDF
   ctx.putImageData(baseCanvasImage, 0, 0)
-  
+
   // Superponer texto con Canvas API (mismo estilo que el PDF)
   ctx.font = 'bold 12px Helvetica, Arial, sans-serif'
   ctx.fillStyle = '#000'
-  
+
   // Iterar cada campo y dibujarlo
   Object.entries(pdfCoordinates).forEach(([field, coords]) => {
     // Saltar el campo 'firma' que se dibuja por separado
     if (field === 'firma') return
-    
+
     if (formData[field]) {
       // Convertir coordenadas PDF a canvas
       const canvasX = coords.x * scale
       const canvasY = canvas.height - (coords.y * scale)
-      
+
       // Caso especial: observaciones se divide en múltiples líneas
       if (field === 'observaciones') {
         const lines = splitTextAt95(String(formData[field]))
@@ -318,7 +318,7 @@ function updateCanvasPreview(formData) {
       }
     }
   })
-  
+
   // Dibujar X según la opción seleccionada
   const coords = getMarkingCoords('orden', formData.orden)
 
@@ -446,7 +446,7 @@ async function generateFinalPDF(formData) {
     if (!text) return
     let currentX = x
     const textStr = String(text)
-    
+
     for (let char of textStr) {
       page.drawText(char, {
         x: currentX,
@@ -465,7 +465,7 @@ async function generateFinalPDF(formData) {
   Object.entries(pdfCoordinates).forEach(([field, coords]) => {
     // Saltar el campo 'firma' que se dibuja por separado
     if (field === 'firma') return
-    
+
     if (formData[field]) {
       // Caso especial: observaciones se divide en múltiples líneas
       if (field === 'observaciones') {
@@ -561,18 +561,18 @@ async function generateFinalPDF(formData) {
       tempCanvas.height = firmaImageData.height
       const tempCtx = tempCanvas.getContext('2d')
       tempCtx.drawImage(firmaImageData, 0, 0)
-      
+
       // Convertir canvas a data URL y luego a blob
       const dataUrl = tempCanvas.toDataURL('image/png')
       const base64Data = dataUrl.split(',')[1]
-      
+
       // Convertir base64 a Uint8Array para pdf-lib
       const binaryString = atob(base64Data)
       const bytes = new Uint8Array(binaryString.length)
       for (let i = 0; i < binaryString.length; i++) {
         bytes[i] = binaryString.charCodeAt(i)
       }
-      
+
       // Embedir PNG en el PDF
       const firmaImage = await pdfDoc.embedPng(bytes)
       page.drawImage(firmaImage, {
@@ -596,9 +596,9 @@ async function generateFinalPDF(formData) {
 // Al cargar página: inicializar + escuchar inputs
 document.addEventListener('DOMContentLoaded', async () => {
   const form = document.getElementById('form')
-  
+
   await initializePDF()
-  
+
   // Establecer fecha actual por defecto
   const fechaDiligenciamiento = document.getElementById('fecha_diligenciamiento')
   if (fechaDiligenciamiento && !fechaDiligenciamiento.value) {
@@ -608,11 +608,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const day = String(hoy.getDate()).padStart(2, '0')
     fechaDiligenciamiento.value = `${year}-${month}-${day}`
   }
-  
+
   // ⭐ IMPORTANTE: Mostrar valores por defecto que ya están en los inputs
   const formData = Object.fromEntries(new FormData(form))
   updateCanvasPreview(formData)
-  
+
   const inputs = form.querySelectorAll('input[name]')
   const ordenSelect = document.getElementById('orden')
   const tipoSelect = document.getElementById('tipo')
@@ -624,7 +624,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const claseSelect = document.getElementById('clase')
   const tipoDocumentoRepSelect = document.getElementById('tipo_documento_rep')
   const ordenCualInput = document.querySelector('input[name="ordenCual"]')
-  
+
   // Función para mostrar/ocultar campo ordenCual (protegida)
   const toggleOrdenCualField = () => {
     if (!ordenSelect || !ordenCualInput) return
@@ -642,7 +642,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Inicializar estado del campo ordenCual si los elementos existen
   if (ordenSelect && ordenCualInput) toggleOrdenCualField()
-  
+
   // Escuchar cambios en inputs
   inputs.forEach(input => {
     input.addEventListener('input', () => {
@@ -650,7 +650,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       updateCanvasPreview(formData)  // Preview rápido (<50ms)
     })
   })
-  
+
   // Escuchar cambios en el select "orden"
   if (ordenSelect) {
     ordenSelect.addEventListener('change', () => {
@@ -661,7 +661,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   } else {
     console.warn('No se encontró #orden; listener no registrado.')
   }
-  
+
   // Escuchar cambios en el select "tipo"
   if (tipoSelect) {
     tipoSelect.addEventListener('change', () => {
@@ -765,33 +765,33 @@ document.addEventListener('DOMContentLoaded', async () => {
     fields.forEach(field => {
       field.style.display = ''
     })
-    
+
     // Envolver los 5 campos en un contenedor visual
     wrapExperienceFields(i)
-    
+
     // Agregar botón X en la esquina superior derecha
     attachRemoveButton(i)
-    
+
     // Agregar listeners a los inputs dinámicamente
     attachExperienceInputListeners(i)
-    
+
     updateAddButtonState()
   }
 
   function wrapExperienceFields(i) {
     const fields = getExpElementFields(i)
     if (fields.length === 0) return
-    
+
     // Si ya está envuelto, no hacer nada
     if (fields[0].parentElement.classList.contains('exp-wrapper')) return
-    
+
     // Crear contenedor
     const wrapper = document.createElement('div')
     wrapper.className = 'exp-wrapper'
-    
+
     // Insertar wrapper antes del primer campo
     fields[0].parentElement.insertBefore(wrapper, fields[0])
-    
+
     // Mover los 5 campos adentro del wrapper
     fields.forEach(field => {
       wrapper.appendChild(field)
@@ -801,19 +801,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   function unwrapExperienceFields(i) {
     const wrapper = document.querySelector(`.exp-wrapper:has(#experiencia${i})`)
     if (!wrapper) return
-    
+
     // Obtener el padre del wrapper (debe ser .fields)
     const parent = wrapper.parentElement
-    
+
     // Remover el botón X antes de desenvolver para evitar que quede visible
     const removeBtn = wrapper.querySelector('.remove-exp-btn')
     if (removeBtn) removeBtn.remove()
-    
+
     // Mover los campos fuera del wrapper
     while (wrapper.firstChild) {
       parent.insertBefore(wrapper.firstChild, wrapper)
     }
-    
+
     // Remover el wrapper
     parent.removeChild(wrapper)
   }
@@ -823,20 +823,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     fields.forEach(field => {
       field.style.display = 'none'
     })
-    
+
     // Desenvolver los campos
     unwrapExperienceFields(i)
-    
+
     updateAddButtonState()
   }
 
   function attachRemoveButton(i) {
     const wrapper = document.querySelector(`.exp-wrapper:has(#experiencia${i})`)
     if (!wrapper) return
-    
+
     // Evitar agregar múltiples botones
     if (wrapper.querySelector('.remove-exp-btn')) return
-    
+
     // Crear botón X elegante
     const btn = document.createElement('button')
     btn.type = 'button'
@@ -844,7 +844,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     btn.title = 'Eliminar experiencia'
     btn.innerHTML = '×' // ícono X
     btn.addEventListener('click', () => hideExperience(i))
-    
+
     wrapper.appendChild(btn)
   }
 
@@ -856,20 +856,20 @@ document.addEventListener('DOMContentLoaded', async () => {
       `fecha_term_exp${i}`,
       `valorContrato_exp${i}`
     ]
-    
+
     names.forEach(name => {
       const el = document.getElementById(name)
       if (!el) return
-      
+
       // Evitar agregar múltiples listeners
       if (el.dataset.listenerAttached) return
       el.dataset.listenerAttached = 'true'
-      
+
       el.addEventListener('input', () => {
         const formData = Object.fromEntries(new FormData(form))
         updateCanvasPreview(formData)
       })
-      
+
       // Para selects, usar 'change' en lugar de 'input'
       if (el.tagName === 'SELECT') {
         el.addEventListener('change', () => {
@@ -950,7 +950,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const fields = getSvcElementFields(i)
     if (fields.length === 0) return
     if (fields[0].parentElement.classList.contains('svc-wrapper')) return
-    
+
     const wrapper = document.createElement('div')
     wrapper.className = 'svc-wrapper'
     fields[0].parentElement.insertBefore(wrapper, fields[0])
@@ -962,11 +962,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   function unwrapServiceFields(i) {
     const wrapper = document.querySelector(`.svc-wrapper:has(#servicio${i})`)
     if (!wrapper) return
-    
+
     // Remover el botón X antes de desenvolver para evitar que quede visible
     const removeBtn = wrapper.querySelector('.remove-svc-btn')
     if (removeBtn) removeBtn.remove()
-    
+
     const parent = wrapper.parentElement
     while (wrapper.firstChild) {
       parent.insertBefore(wrapper.firstChild, wrapper)
@@ -978,7 +978,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const wrapper = document.querySelector(`.svc-wrapper:has(#servicio${i})`)
     if (!wrapper) return
     if (wrapper.querySelector('.remove-svc-btn')) return
-    
+
     const btn = document.createElement('button')
     btn.type = 'button'
     btn.className = 'remove-svc-btn'
@@ -991,11 +991,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   function attachServiceInputListeners(i) {
     const svcInput = document.getElementById(`servicio${i}`)
     if (!svcInput) return
-    
+
     // Evitar agregar múltiples listeners
     if (svcInput.dataset.listenerAttached) return
     svcInput.dataset.listenerAttached = 'true'
-    
+
     svcInput.addEventListener('input', () => {
       const formData = Object.fromEntries(new FormData(form))
       updateCanvasPreview(formData)
@@ -1032,71 +1032,71 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (mainCanvas) mainCanvas.addEventListener('contextmenu', (ev) => ev.preventDefault())
   if (mainCanvas) {
     mainCanvas.addEventListener('click', (e) => {
-    const isMobile = window.innerWidth <= 768
-    if (isMobile) return
+      const isMobile = window.innerWidth <= 768
+      if (isMobile) return
 
-    // si canvas no tiene contenido, ignorar
-    if (!mainCanvas.width || !mainCanvas.height) return
+      // si canvas no tiene contenido, ignorar
+      if (!mainCanvas.width || !mainCanvas.height) return
 
-    // crear overlay
-    const overlay = document.createElement('div')
-    overlay.id = 'canvas-preview-overlay'
-    overlay.style.position = 'fixed'
-    overlay.style.inset = '0'
-    overlay.style.background = 'rgba(0,0,0,0.75)'
-    overlay.style.display = 'flex'
-    overlay.style.alignItems = 'center'
-    overlay.style.justifyContent = 'center'
-    overlay.style.zIndex = '3000'
+      // crear overlay
+      const overlay = document.createElement('div')
+      overlay.id = 'canvas-preview-overlay'
+      overlay.style.position = 'fixed'
+      overlay.style.inset = '0'
+      overlay.style.background = 'rgba(0,0,0,0.75)'
+      overlay.style.display = 'flex'
+      overlay.style.alignItems = 'center'
+      overlay.style.justifyContent = 'center'
+      overlay.style.zIndex = '3000'
 
-    // contenedor para la imagen escalada
+      // contenedor para la imagen escalada
       const box = document.createElement('div')
       box.style.maxWidth = '98vw'
       box.style.maxHeight = '98vh'
       box.style.boxSizing = 'border-box'
       box.style.padding = '4px'
 
-    // crear canvas temporal para copiar la imagen y escalar preservando ratio
-    const temp = document.createElement('canvas')
-    const ctx = temp.getContext('2d')
-    const srcW = mainCanvas.width
-    const srcH = mainCanvas.height
+      // crear canvas temporal para copiar la imagen y escalar preservando ratio
+      const temp = document.createElement('canvas')
+      const ctx = temp.getContext('2d')
+      const srcW = mainCanvas.width
+      const srcH = mainCanvas.height
 
-    // calcular escala para que no supere 99vw/99vh y permitir un aumento mayor (hasta 1.6x)
-    const maxW = Math.floor(window.innerWidth * 0.99)
-    const maxH = Math.floor(window.innerHeight * 0.99)
-    let scale = Math.min(maxW / srcW, maxH / srcH, 1.6)
-    const destW = Math.floor(srcW * scale)
-    const destH = Math.floor(srcH * scale)
+      // calcular escala para que no supere 99vw/99vh y permitir un aumento mayor (hasta 1.6x)
+      const maxW = Math.floor(window.innerWidth * 0.99)
+      const maxH = Math.floor(window.innerHeight * 0.99)
+      let scale = Math.min(maxW / srcW, maxH / srcH, 1.6)
+      const destW = Math.floor(srcW * scale)
+      const destH = Math.floor(srcH * scale)
 
-    temp.width = destW
-    temp.height = destH
-    // Evitar menú contextual sobre la vista previa temporal
-    temp.addEventListener('contextmenu', (ev) => ev.preventDefault())
-    ctx.drawImage(mainCanvas, 0, 0, srcW, srcH, 0, 0, destW, destH)
-    temp.style.width = destW + 'px'
-    temp.style.height = destH + 'px'
-    temp.style.display = 'block'
-    temp.style.boxShadow = '0 8px 30px rgba(0,0,0,0.6)'
-    temp.style.background = '#fff'
+      temp.width = destW
+      temp.height = destH
+      // Evitar menú contextual sobre la vista previa temporal
+      temp.addEventListener('contextmenu', (ev) => ev.preventDefault())
+      ctx.drawImage(mainCanvas, 0, 0, srcW, srcH, 0, 0, destW, destH)
+      temp.style.width = destW + 'px'
+      temp.style.height = destH + 'px'
+      temp.style.display = 'block'
+      temp.style.boxShadow = '0 8px 30px rgba(0,0,0,0.6)'
+      temp.style.background = '#fff'
 
-    // cerrar al hacer click fuera del canvas o presionar ESC
-    overlay.addEventListener('click', (ev) => {
-      if (ev.target === overlay) {
-        document.body.removeChild(overlay)
+      // cerrar al hacer click fuera del canvas o presionar ESC
+      overlay.addEventListener('click', (ev) => {
+        if (ev.target === overlay) {
+          document.body.removeChild(overlay)
+        }
+      })
+      const onKey = (ev) => {
+        if (ev.key === 'Escape') {
+          if (document.body.contains(overlay)) document.body.removeChild(overlay)
+          document.removeEventListener('keydown', onKey)
+        }
       }
-    })
-    const onKey = (ev) => {
-      if (ev.key === 'Escape') {
-        if (document.body.contains(overlay)) document.body.removeChild(overlay)
-        document.removeEventListener('keydown', onKey)
-      }
-    }
-    document.addEventListener('keydown', onKey)
+      document.addEventListener('keydown', onKey)
 
-    box.appendChild(temp)
-    overlay.appendChild(box)
-    document.body.appendChild(overlay)
+      box.appendChild(temp)
+      overlay.appendChild(box)
+      document.body.appendChild(overlay)
     })
   }
 
@@ -1106,7 +1106,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       e.preventDefault()
 
       const data = Object.fromEntries(new FormData(e.target))
-      
+
       // Generar PDF final (una sola vez)
       const finalPdfBytes = await generateFinalPDF(data)
       const blob = new Blob([finalPdfBytes], { type: 'application/pdf' })
@@ -1122,25 +1122,25 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Botón de Vista Previa: abrir PDF en nueva pestaña en desktop, modal en móvil
   const previewBtn = document.getElementById('btn-preview')
   if (previewBtn) {
-    previewBtn.addEventListener('click', async (e) => {
+    previewBtn.addEventListener('click', (e) => {
       e.preventDefault()
 
       const isMobile = window.innerWidth <= 1024;
-      
+
       // En móvil, solo abrir el modal (manejado por el script en index.html)
       if (isMobile) {
         return;
       }
 
-      const formData = Object.fromEntries(new FormData(form))
-      
-      // Generar PDF en desktop
-      const pdfBytes = await generateFinalPDF(formData)
-      const blob = new Blob([pdfBytes], { type: 'application/pdf' })
-      
-      // Abrir en nueva pestaña
-      const pdfUrl = URL.createObjectURL(blob)
-      window.open(pdfUrl, '_blank')
+      // En desktop, abrir la imagen actual del canvas en una nueva pestaña (con marcas de agua)
+      const canvas = document.getElementById('pdf-preview')
+      if (canvas) {
+        // Convertir el canvas a un Blob PNG para abrirlo limpiamente
+        canvas.toBlob((blob) => {
+          const imageUrl = URL.createObjectURL(blob)
+          window.open(imageUrl, '_blank')
+        }, 'image/png')
+      }
     })
   }
 
@@ -1149,14 +1149,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (payDownloadBtn) {
     payDownloadBtn.addEventListener('click', (e) => {
       e.preventDefault()
-      
+
       try {
         // Obtener datos del formulario
         const formData = Object.fromEntries(new FormData(form))
-        
+
         // Guardar en localStorage para recuperar después del pago
         localStorage.setItem('hojaVidaFormData', JSON.stringify(formData))
-        
+
         // Redirigir al link de pago de Wompi
         // NOTA: Asegúrate de que en tu cuenta de Wompi esté configurada 
         // la URL de redirección a: /hojas-vida/persona-juridica/llenar-en-linea/thanks.html
