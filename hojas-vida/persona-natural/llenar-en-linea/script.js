@@ -1744,31 +1744,8 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
 
     // En desktop: abrir zoom (mismo que al hacer clic en canvas)
     if (!isMobile) {
-      const zoomOverlay = document.getElementById("zoomOverlay");
-      const zoomCanvas = document.getElementById("zoomCanvas");
-      const pdfLib = await ensurePdfJs();
-      const loadingTask = pdfLib.getDocument({ data: pdfBytes });
-      const pdf = await loadingTask.promise;
-      const safePage = Math.min(Math.max(1, _currentPreviewPage), pdf.numPages || 1);
-      const zoomPdfPage = await pdf.getPage(safePage);
-
-      // Renderizar zoom
-      const viewport = zoomPdfPage.getViewport({ scale: 1.5, rotation: 0, dontFlip: false });
-      zoomCanvas.width = Math.round(viewport.width);
-      zoomCanvas.height = Math.round(viewport.height);
-      const zoomCtx = zoomCanvas.getContext("2d");
-      const task = zoomPdfPage.render({ canvasContext: zoomCtx, viewport: viewport });
-      task.promise.then(() => {
-        drawWatermark(zoomCanvas);
-      });
-
-      zoomOverlay.removeAttribute("hidden");
-      zoomOverlay.setAttribute("role", "dialog");
-      zoomOverlay.setAttribute("aria-modal", "true");
-      document.documentElement.classList.add("lock-scroll");
-      const closeZoomBtn = document.getElementById("closeZoomBtn");
-      if (closeZoomBtn) closeZoomBtn.focus();
-
+      await updateDesktopPreview();
+      openDesktopCanvasPreview();
       return;
     }
 
