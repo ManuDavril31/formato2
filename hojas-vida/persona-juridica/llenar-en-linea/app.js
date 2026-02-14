@@ -1030,73 +1030,75 @@ document.addEventListener('DOMContentLoaded', async () => {
   const mainCanvas = document.getElementById('pdf-preview')
   // Evitar menú contextual al hacer clic derecho sobre el canvas principal
   if (mainCanvas) mainCanvas.addEventListener('contextmenu', (ev) => ev.preventDefault())
+  function openDesktopCanvasPreview() {
+    if (!mainCanvas || !mainCanvas.width || !mainCanvas.height) return
+
+    // crear overlay
+    const overlay = document.createElement('div')
+    overlay.id = 'canvas-preview-overlay'
+    overlay.style.position = 'fixed'
+    overlay.style.inset = '0'
+    overlay.style.background = 'rgba(0,0,0,0.75)'
+    overlay.style.display = 'flex'
+    overlay.style.alignItems = 'center'
+    overlay.style.justifyContent = 'center'
+    overlay.style.zIndex = '3000'
+
+    // contenedor para la imagen escalada
+    const box = document.createElement('div')
+    box.style.maxWidth = '98vw'
+    box.style.maxHeight = '98vh'
+    box.style.boxSizing = 'border-box'
+    box.style.padding = '4px'
+
+    // crear canvas temporal para copiar la imagen y escalar preservando ratio
+    const temp = document.createElement('canvas')
+    const ctx = temp.getContext('2d')
+    const srcW = mainCanvas.width
+    const srcH = mainCanvas.height
+
+    // calcular escala para que no supere 99vw/99vh y permitir un aumento mayor (hasta 1.6x)
+    const maxW = Math.floor(window.innerWidth * 0.99)
+    const maxH = Math.floor(window.innerHeight * 0.99)
+    let scale = Math.min(maxW / srcW, maxH / srcH, 1.6)
+    const destW = Math.floor(srcW * scale)
+    const destH = Math.floor(srcH * scale)
+
+    temp.width = destW
+    temp.height = destH
+    // Evitar menú contextual sobre la vista previa temporal
+    temp.addEventListener('contextmenu', (ev) => ev.preventDefault())
+    ctx.drawImage(mainCanvas, 0, 0, srcW, srcH, 0, 0, destW, destH)
+    temp.style.width = destW + 'px'
+    temp.style.height = destH + 'px'
+    temp.style.display = 'block'
+    temp.style.boxShadow = '0 8px 30px rgba(0,0,0,0.6)'
+    temp.style.background = '#fff'
+
+    // cerrar al hacer click fuera del canvas o presionar ESC
+    overlay.addEventListener('click', (ev) => {
+      if (ev.target === overlay) {
+        document.body.removeChild(overlay)
+      }
+    })
+    const onKey = (ev) => {
+      if (ev.key === 'Escape') {
+        if (document.body.contains(overlay)) document.body.removeChild(overlay)
+        document.removeEventListener('keydown', onKey)
+      }
+    }
+    document.addEventListener('keydown', onKey)
+
+    box.appendChild(temp)
+    overlay.appendChild(box)
+    document.body.appendChild(overlay)
+  }
+
   if (mainCanvas) {
     mainCanvas.addEventListener('click', (e) => {
       const isMobile = window.innerWidth <= 768
       if (isMobile) return
-
-      // si canvas no tiene contenido, ignorar
-      if (!mainCanvas.width || !mainCanvas.height) return
-
-      // crear overlay
-      const overlay = document.createElement('div')
-      overlay.id = 'canvas-preview-overlay'
-      overlay.style.position = 'fixed'
-      overlay.style.inset = '0'
-      overlay.style.background = 'rgba(0,0,0,0.75)'
-      overlay.style.display = 'flex'
-      overlay.style.alignItems = 'center'
-      overlay.style.justifyContent = 'center'
-      overlay.style.zIndex = '3000'
-
-      // contenedor para la imagen escalada
-      const box = document.createElement('div')
-      box.style.maxWidth = '98vw'
-      box.style.maxHeight = '98vh'
-      box.style.boxSizing = 'border-box'
-      box.style.padding = '4px'
-
-      // crear canvas temporal para copiar la imagen y escalar preservando ratio
-      const temp = document.createElement('canvas')
-      const ctx = temp.getContext('2d')
-      const srcW = mainCanvas.width
-      const srcH = mainCanvas.height
-
-      // calcular escala para que no supere 99vw/99vh y permitir un aumento mayor (hasta 1.6x)
-      const maxW = Math.floor(window.innerWidth * 0.99)
-      const maxH = Math.floor(window.innerHeight * 0.99)
-      let scale = Math.min(maxW / srcW, maxH / srcH, 1.6)
-      const destW = Math.floor(srcW * scale)
-      const destH = Math.floor(srcH * scale)
-
-      temp.width = destW
-      temp.height = destH
-      // Evitar menú contextual sobre la vista previa temporal
-      temp.addEventListener('contextmenu', (ev) => ev.preventDefault())
-      ctx.drawImage(mainCanvas, 0, 0, srcW, srcH, 0, 0, destW, destH)
-      temp.style.width = destW + 'px'
-      temp.style.height = destH + 'px'
-      temp.style.display = 'block'
-      temp.style.boxShadow = '0 8px 30px rgba(0,0,0,0.6)'
-      temp.style.background = '#fff'
-
-      // cerrar al hacer click fuera del canvas o presionar ESC
-      overlay.addEventListener('click', (ev) => {
-        if (ev.target === overlay) {
-          document.body.removeChild(overlay)
-        }
-      })
-      const onKey = (ev) => {
-        if (ev.key === 'Escape') {
-          if (document.body.contains(overlay)) document.body.removeChild(overlay)
-          document.removeEventListener('keydown', onKey)
-        }
-      }
-      document.addEventListener('keydown', onKey)
-
-      box.appendChild(temp)
-      overlay.appendChild(box)
-      document.body.appendChild(overlay)
+      openDesktopCanvasPreview()
     })
   }
 
@@ -1132,15 +1134,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
       }
 
-      // En desktop, abrir la imagen actual del canvas en una nueva pestaña (con marcas de agua)
-      const canvas = document.getElementById('pdf-preview')
-      if (canvas) {
-        // Convertir el canvas a un Blob PNG para abrirlo limpiamente
-        canvas.toBlob((blob) => {
-          const imageUrl = URL.createObjectURL(blob)
-          window.open(imageUrl, '_blank')
-        }, 'image/png')
-      }
+      // En desktop, abrir el mismo overlay que al presionar el canvas
+      openDesktopCanvasPreview()
     })
   }
 
