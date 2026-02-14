@@ -2,7 +2,6 @@
 html {
   box-sizing: border-box;
   width: 100%;
-  overflow-x: hidden;
 }
 
 *,
@@ -19,7 +18,6 @@ body {
   margin: 0;
   color: #333;
   width: 100%;
-  overflow-x: hidden;
 }
 
 :root {
@@ -601,6 +599,8 @@ h1 {
   gap: 20px;
   max-width: 1200px;
   margin: auto;
+  align-items: stretch;
+  /* Asegura que las columnas tengan el mismo alto */
 }
 
 /* Grid interno para distribuir los campos del formulario en dos columnas */
@@ -806,9 +806,12 @@ button:hover {
    ===================================================== */
 @media (min-width: 769px) {
   .canvas-zoom-wrapper {
-    position: relative;
+    position: sticky;
+    top: 90px;
+    /* Debajo del header fixed/sticky */
     display: inline-block;
     width: 100%;
+    z-index: 10;
   }
 
   .canvas-zoom-wrapper:hover canvas {
@@ -1211,15 +1214,11 @@ iframe {
     display: none;
   }
 
-  /* Mantener el preview siempre visible con posición sticky */
   #previewDesktopContainer {
-    position: sticky;
-    top: 16px;
-    /* margen superior cuando hace stick */
-    align-self: start;
-    /* evita estirar a toda la altura de la fila */
-    height: calc(100vh - 32px);
-    /* ocupa el alto de la ventana menos márgenes */
+    width: 100%;
+    height: 100%;
+    min-height: 800px;
+    position: relative;
   }
 
   #pdfCanvasDesktop {
