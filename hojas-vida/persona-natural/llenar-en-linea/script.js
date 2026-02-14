@@ -1690,7 +1690,7 @@ async function initBasePdfCache() {
       basePagesCache.push({ canvas: offscreen, width: viewport.width, height: viewport.height });
     }
     isPdfBaseLoaded = true;
-    console.log("PDF base cacheado con éxito.");
+    console.log(`PDF base cacheado con éxito: ${basePagesCache.length} páginas.`);
   } catch (e) {
     console.error("Error cacheando PDF:", e);
   }
@@ -1725,10 +1725,10 @@ function drawCanvasOverlay(ctx, formData, pageNum, canvasW, canvasH) {
     if (v.sexo === "M") ctx.fillText("X", 340 * scale, pageH - (575 * scale));
     else if (v.sexo === "F") ctx.fillText("X", 318 * scale, pageH - (575 * scale));
 
-    if (v.nacionalidadValor === "COLOMBIANA") ctx.fillText("X", 383 * scale, pageH - (575 * scale));
-    else if (v.nacionalidadValor === "EXTRANJERA") {
+    if (v.nacionalidad === "COLOMBIANA") ctx.fillText("X", 383 * scale, pageH - (575 * scale));
+    else if (v.nacionalidad === "EXTRANJERA") {
       ctx.fillText("X", 457 * scale, pageH - (575 * scale));
-      if (v.paisExtranjero) ctx.fillText(s(v.paisExtranjero).substring(0, 25), 474 * scale, pageH - (575 * scale));
+      if (v.pais) ctx.fillText(s(v.pais).substring(0, 25), 474 * scale, pageH - (575 * scale));
     }
 
     if (v.libretaMilitar === "PRIMERA") ctx.fillText("X", 146 * scale, pageH - (544 * scale));
@@ -1761,6 +1761,23 @@ function drawCanvasOverlay(ctx, formData, pageNum, canvasW, canvasH) {
     ctx.fillText(s(v.emailCorrespondecia).substring(0, 35), 473 * scale, pageH - (470 * scale));
     ctx.fillText(s(v.hostEmail).substring(0, 20), 473 * scale, pageH - (455 * scale));
     ctx.font = oldFontSmall;
+
+    // Nivel educativo
+    const mapping = {
+      "1": 103, "2": 120, "3": 137, "4": 154, "5": 171,
+      "6": 188, "7": 205, "8": 223, "9": 240, "10": 257, "11": 274
+    };
+    if (mapping[v.nivelEducativo]) {
+      ctx.fillText("X", mapping[v.nivelEducativo] * scale, pageH - (320 * scale));
+      if (v.nivelEducativo === "11") {
+        ctx.fillText(s(v.tituloObtenidoBachiller).substring(0, 40), 361 * scale, pageH - (350 * scale));
+        const f = v.fechaGradoBachiller ? new Date(v.fechaGradoBachiller) : null;
+        if (f && !isNaN(f)) {
+          ctx.fillText(String(f.getUTCFullYear()), 418 * scale, pageH - (320 * scale));
+          ctx.fillText(String(f.getUTCMonth() + 1).padStart(2, "0"), 353 * scale, pageH - (320 * scale));
+        }
+      }
+    }
 
     // Educación superior
     const items = (v.educacionSuperior || []).slice(0, 5);
@@ -1944,17 +1961,17 @@ function getFormData() {
   if (idiomasContainer) {
     idiomasContainer.querySelectorAll(".idioma-block").forEach((block) => {
       v.idiomas.push({
-        idioma: block.querySelector(".idioma")?.value || "",
-        habla: block.querySelector(".habla")?.value || "",
-        lee: block.querySelector(".lee")?.value || "",
-        escribe: block.querySelector(".escribe")?.value || "",
+        idioma: block.querySelector(".idioma-nombre")?.value || "",
+        habla: block.querySelector(".idioma-habla")?.value || "",
+        lee: block.querySelector(".idioma-lee")?.value || "",
+        escribe: block.querySelector(".idioma-escribe")?.value || "",
       });
     });
   }
 
   // Experiencias dinámicas
   v.experiencias = [];
-  const expContainer = document.getElementById("experienciasContainer");
+  const expContainer = document.getElementById("expContainer");
   if (expContainer) {
     expContainer.querySelectorAll(".exp-block").forEach((block) => {
       v.experiencias.push({
@@ -1962,7 +1979,7 @@ function getFormData() {
         tipoEmpresa: block.querySelector(".tipoEmpresa")?.value || "",
         pais: block.querySelector(".pais")?.value || "",
         depto: block.querySelector(".depto")?.value || "",
-        municipio: block.querySelector(".muni")?.value || "",
+        municipio: block.querySelector(".municipio")?.value || "",
         correo: block.querySelector(".correo")?.value || "",
         telefono: block.querySelector(".telefono")?.value || "",
         fechaIngreso: block.querySelector(".fechaIngreso")?.value || "",
@@ -1976,12 +1993,12 @@ function getFormData() {
 
   // Página 3 data (servidores)
   v.hoja3 = {
-    servidorPublicoAnios: document.getElementById("servidorPublicoAnios")?.value || "0",
-    servidorPublicoMeses: document.getElementById("servidorPublicoMeses")?.value || "0",
-    servidorPrivadoAnios: document.getElementById("servidorPrivadoAnios")?.value || "0",
-    servidorPrivadoMeses: document.getElementById("servidorPrivadoMeses")?.value || "0",
-    trabajadorIndependienteAnios: document.getElementById("trabajadorIndependienteAnios")?.value || "0",
-    trabajadorIndependienteMeses: document.getElementById("trabajadorIndependienteMeses")?.value || "0",
+    servidorPublicoAnios: document.getElementById("servidorPublicoAnios")?.value || "",
+    servidorPublicoMeses: document.getElementById("servidorPublicoMeses")?.value || "",
+    servidorPrivadoAnios: document.getElementById("servidorPrivadoAnios")?.value || "",
+    servidorPrivadoMeses: document.getElementById("servidorPrivadoMeses")?.value || "",
+    trabajadorIndependienteAnios: document.getElementById("trabajadorIndependienteAnios")?.value || "",
+    trabajadorIndependienteMeses: document.getElementById("trabajadorIndependienteMeses")?.value || "",
     Noinhabilidad: document.getElementById("Noinhabilidad")?.value || "",
     lugarFirma: document.getElementById("lugarFirma")?.value || "",
     fechaFirma: document.getElementById("fechaFirma")?.value || "",
@@ -1997,35 +2014,78 @@ function updatePageInfo() {
   if (info) info.textContent = `Página ${_currentPreviewPage} / 3`;
 }
 
-document.getElementById("prevPageBtn")?.addEventListener("click", () => {
+function goToPreviewPage(page) {
+  if (page < 1 || page > 3) return;
+  if (_currentPreviewPage === page) return;
+  _currentPreviewPage = page;
+  updateDesktopPreview();
+  updatePageInfo();
+}
+
+document.getElementById("prevPageBtn")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
   if (_currentPreviewPage > 1) {
-    _currentPreviewPage--;
-    updateDesktopPreview();
-    updatePageInfo();
+    goToPreviewPage(_currentPreviewPage - 1);
   }
 });
 
-document.getElementById("nextPageBtn")?.addEventListener("click", () => {
-  if (_currentPreviewPage < 3) { // Asumimos 3 páginas según buildPdfBytes
-    _currentPreviewPage++;
-    updateDesktopPreview();
-    updatePageInfo();
+document.getElementById("nextPageBtn")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  if (_currentPreviewPage < 3) {
+    goToPreviewPage(_currentPreviewPage + 1);
   }
 });
 
-// Adjuntar listeners a inputs
-document
-  .querySelectorAll("#formulario input, #formulario select")
-  .forEach((el) => {
-    el.addEventListener("input", (e) => {
-      debouncedUpdate(e);
+// Auto-switch page based on focus
+document.getElementById("formulario")?.addEventListener("focusin", (e) => {
+  const target = e.target;
+  // Encontrar en qué panel está el input
+  const panel = target.closest("section[role='tabpanel']");
+  if (!panel) return;
+
+  const panelId = panel.id;
+  if (panelId === "panel-p1") {
+    goToPreviewPage(1);
+  } else if (panelId === "panel-p2") {
+    goToPreviewPage(2);
+  } else if (panelId === "panel-p3") {
+    goToPreviewPage(3);
+  }
+});
+
+// Sincronizar con clics en los tabs superiores
+// This functionality is now handled by setupTopTabs
+// document.querySelectorAll(".tablist .tab").forEach((tab, idx) => {
+//   tab.addEventListener("click", () => {
+//     // idx 0 -> p1, idx 1 -> p2, idx 2 -> p3
+//     if (idx < 3) {
+//       goToPreviewPage(idx + 1);
+//     }
+//   });
+// });
+
+// Adjuntar listeners usando delegación de eventos para mayor eficiencia y soporte dinámico
+const formEl = document.getElementById("formulario");
+if (formEl) {
+  const handleInputChange = (e) => {
+    // Solo actuar si es un campo de entrada
+    if (e.target.matches("input, select, textarea")) {
+      debouncedUpdate();
       saveFormDataToStorage();
-    });
-    el.addEventListener("change", (e) => {
-      debouncedUpdate(e);
-      saveFormDataToStorage();
-    });
+    }
+  };
+
+  formEl.addEventListener("input", handleInputChange);
+  formEl.addEventListener("change", handleInputChange);
+  formEl.addEventListener("keyup", (e) => {
+    // Algunas teclas especiales no disparan 'input' en navegadores antiguos o casos específicos
+    if (e.target.matches("input, select, textarea")) {
+      debouncedUpdate();
+    }
   });
+}
 
 // Evento para el botón de limpiar formulario
 const clearFormBtn = document.getElementById("clearFormBtn");
@@ -2776,10 +2836,11 @@ collectFormValues = function () {
       t.setAttribute("aria-selected", selected ? "true" : "false");
       panels[i].hidden = !selected;
     });
-    _currentPreviewPage = index + 1; // 1..3
+    // Sincronizar con la vista previa optimizada
+    goToPreviewPage(index + 1);
+
     const dlBtn = document.getElementById("downloadPdfBtn");
     if (dlBtn) dlBtn.style.display = index === 2 ? "inline-block" : "none";
-    debouncedUpdate();
   }
 
   tabs.forEach((t, i) => {
