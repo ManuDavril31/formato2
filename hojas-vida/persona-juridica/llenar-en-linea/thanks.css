@@ -1,0 +1,203 @@
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header adjustments for this page */
+header {
+    width: 100%;
+    margin-bottom: 40px;
+}
+
+.container.main-card {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    width: 90%;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.success-icon {
+    font-size: 60px;
+    margin-bottom: 20px;
+    animation: pulse 0.6s ease-out;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+h1 {
+    color: #06233a;
+    font-size: 28px;
+    margin: 0 0 10px 0;
+}
+
+p {
+    color: #666;
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0 0 30px 0;
+}
+
+.download-section {
+    margin: 30px 0;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.download-section p {
+    color: #555;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+/* .btn estilos ahora vienen de styles-shared.css */
+
+.btn-secondary {
+    background: #6c757d;
+    margin-top: 15px;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+}
+
+.info-box {
+    background: #e7f3ff;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    text-align: left;
+    margin: 20px 0;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333;
+}
+
+.spinner {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #667eea;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.error-message {
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 4px;
+    margin: 20px 0;
+    display: none;
+}
+
+.success-message {
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+    padding: 15px;
+    border-radius: 4px;
+    margin: 20px 0;
+    display: none;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+.status-approved {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-declined {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.status-voided {
+    background: #e2e3e5;
+    color: #383d41;
+}
+
+.canvas-hidden {
+    display: none;
+}
+
+.loading-text-small {
+    font-size: 14px;
+    color: #666;
+}
+
+.back-link-container {
+    margin-top: 30px;
+    font-size: 14px;
+    color: #999;
+}
+
+.back-link {
+    color: #667eea;
+    text-decoration: none;
+}
+
+.spinner-download {
+    display: none;
+    margin-top: 10px;
+}
