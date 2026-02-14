@@ -1,0 +1,182 @@
+/* Page-specific styles for Persona Natural - Mobile first */
+main {
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+article {
+    background: #fff;
+    border: 1px solid #e6eef2;
+    padding: 16px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+}
+
+h2 {
+    margin: 0 0 12px 0;
+    color: #06233a;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+h3 {
+    margin: 24px 0 12px 0;
+    color: #06233a;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+p {
+    margin: 0 0 12px 0;
+    color: var(--muted, #666);
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+ul {
+    margin: 0 0 12px 0;
+    padding-left: 20px;
+    color: var(--muted, #666);
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.toc {
+    background: #f8fafc;
+    border: 1px solid #e6eef2;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+}
+
+.toc strong {
+    display: block;
+    margin-bottom: 8px;
+    color: #06233a;
+}
+
+.toc ol {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.toc li {
+    margin-bottom: 6px;
+}
+
+.toc a {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.toc a:hover {
+    text-decoration: underline;
+}
+
+.faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.faq-item {
+    border: 1px solid #e6eef2;
+    border-radius: 8px;
+    padding: 12px;
+}
+
+.faq-item summary {
+    font-weight: 600;
+    color: #06233a;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.faq-item summary::after {
+    content: '▼';
+    font-size: 12px;
+    transition: transform 0.2s;
+}
+
+.faq-item[open] summary::after {
+    transform: rotate(180deg);
+}
+
+.faq-item p {
+    margin-top: 8px;
+    margin-bottom: 0;
+}
+
+/* Hero article with image */
+.hero-article {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+}
+
+.hero-article img {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    object-fit: contain;
+    border-radius: 4px;
+    border: 1px solid #e6eef2;
+    background-color: #f8fafc;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Featured snippets / highlight boxes */
+.highlight-box {
+    background: #eefbff;
+    border-left: 4px solid #007bff;
+    padding: 12px 16px;
+    margin: 16px 0;
+    border-radius: 0 8px 8px 0;
+}
+
+/* Responsive adjustments */
+@media (min-width: 700px) {
+    main {
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+
+    article {
+        padding: 24px;
+        margin-bottom: 20px;
+    }
+
+    h2 {
+        font-size: 28px;
+    }
+
+    .hero-article {
+        flex-direction: row;
+        gap: 24px;
+        align-items: flex-start;
+    }
+
+    .hero-article img {
+        width: 280px;
+        height: 350px;
+        flex-shrink: 0;
+    }
+}
+
+@media (min-width: 1000px) {
+    h2 {
+        font-size: 34px;
+    }
+
+    .hero-article img {
+        width: 320px;
+        height: auto;
+        min-height: 400px;
+    }
+}
