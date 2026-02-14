@@ -167,33 +167,48 @@ nav a:hover {
 
 /* Button styles */
 .btn {
-  padding: 12px 20px;
-  border-radius: 10px;
+  padding: 12px 24px;
+  border-radius: var(--radius);
   border: 0;
   cursor: pointer;
   font-weight: 700;
   font-size: 15px;
   transition: all 0.25s ease;
   display: inline-block;
+  text-align: center;
+  text-decoration: none;
 }
 
 .btn-primary {
   background: var(--accent);
   color: #fff;
+  box-shadow: 0 2px 8px rgba(11, 145, 166, 0.2);
 }
 
 .btn-primary:hover {
   background: #0a7a8f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(11, 145, 166, 0.3);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
 }
 
 .btn-ghost {
   background: transparent;
   border: 1.5px solid #cfecee;
-  color: #0b91a6;
+  color: var(--accent);
 }
 
 .btn-ghost:hover {
   background: rgba(11, 145, 166, 0.05);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.btn-ghost:active {
+  transform: translateY(0);
 }
 
 /* Footer */

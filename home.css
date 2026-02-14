@@ -163,39 +163,7 @@
     padding-top: 4px;
 }
 
-.format-card .btn {
-    padding: 9px 12px;
-    font-size: 14px;
-    font-weight: 600;
-    transition: all 0.25s ease;
-    border-radius: 7px;
-    cursor: pointer;
-    width: 100%;
-    text-align: center;
-}
-
-.format-card .btn-primary {
-    background: var(--accent);
-    color: #fff;
-    border: 0;
-}
-
-.format-card .btn-primary:hover {
-    background: #0a7a8f;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(11, 145, 166, 0.3);
-}
-
-.format-card .btn-ghost {
-    background: transparent;
-    border: 1px solid #cfecee;
-    color: var(--accent);
-}
-
-.format-card .btn-ghost:hover {
-    background: rgba(11, 145, 166, 0.05);
-    border-color: var(--accent);
-}
+/* Botones en tarjeta de formato ahora usan estilos globales */
 
 .explain {
     margin-top: 20px;

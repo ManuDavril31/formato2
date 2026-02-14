@@ -138,18 +138,37 @@ form {
 }
 
 @keyframes slideUp {
-  from { transform: translateY(100%); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @keyframes slideDown {
-  from { transform: translateY(0); opacity: 1; }
-  to { transform: translateY(100%); opacity: 0; }
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .modal-header {
@@ -273,38 +292,30 @@ input[type="file"]::file-selector-button:hover {
 /* =====================================================
    BOTONES
    ===================================================== */
-button {
+/* Botones ahora heredan de styles-shared.css o usan .btn */
+button:not(.collapse-btn):not(.remove-exp-btn):not(.remove-svc-btn):not(.modal-close-btn) {
+  /* Estilos específicos para botones de acción principal que no tienen clase .btn */
   padding: 12px 24px;
   font-size: 16px;
-  font-weight: 600;
-  background: var(--primary);
+  font-weight: 700;
+  background: var(--accent);
   color: white;
   border: none;
   cursor: pointer;
   border-radius: var(--radius-lg);
-  transition: var(--transition);
-  box-shadow: var(--shadow-md);
-  position: relative;
-  overflow: hidden;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 8px rgba(11, 145, 166, 0.2);
 }
 
-button:hover {
-  background: var(--primary-dark);
+button:not(.collapse-btn):not(.remove-exp-btn):not(.remove-svc-btn):not(.modal-close-btn):hover {
+  background: #0a7a8f;
   transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
-}
-
-button:active {
-  transform: translateY(0);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 12px rgba(11, 145, 166, 0.3);
 }
 
 .fixed-actions button {
   flex: 1;
   max-width: 280px;
-  padding: 14px 28px;
-  font-size: 15px;
-  border-radius: var(--radius-lg);
 }
 
 .fixed-actions {
@@ -555,6 +566,7 @@ button:active {
   .field {
     display: block;
   }
+
   /* Mantener la vista de preview siempre visible en desktop */
   .preview-container {
     position: sticky;
@@ -573,6 +585,7 @@ button:active {
     opacity: 0;
     transform: translateX(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -586,4 +599,3 @@ form {
 fieldset {
   animation: slideInLeft 0.5s ease-out;
 }
-
