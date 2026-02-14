@@ -1,6 +1,6 @@
 /* Page-specific styles */
 .hero {
-    padding: 40px 0;
+    padding: 30px 0;
     display: block;
     text-align: center;
 }
@@ -198,7 +198,7 @@
 }
 
 .explain {
-    margin-top: 28px;
+    margin-top: 20px;
     display: block;
 }
 
@@ -221,8 +221,8 @@
 
 /* Sección destacada de proceso */
 .process-highlight {
-    margin-top: 36px;
-    padding: 28px;
+    margin-top: 24px;
+    padding: 24px;
     background: #fff;
     border-radius: 16px;
     border: 1px solid #e6eef2;
@@ -274,8 +274,8 @@
 
 /* Sección "Por qué elegir" responsiva */
 .why-choose {
-    margin-top: 40px;
-    padding: 28px;
+    margin-top: 28px;
+    padding: 24px;
     background: linear-gradient(135deg,
             rgba(11, 145, 166, 0.08),
             rgba(93, 212, 216, 0.08));
@@ -345,7 +345,7 @@
     }
 
     .hero {
-        padding: 56px 0;
+        padding: 40px 0;
         text-align: center;
     }
 
@@ -394,7 +394,7 @@
 
     .hero {
         display: block;
-        padding: 64px 0;
+        padding: 48px 0;
         text-align: center;
     }
 
@@ -454,7 +454,7 @@
         display: grid;
         grid-template-columns: 1fr 320px;
         gap: 24px;
-        margin-top: 36px;
+        margin-top: 24px;
     }
 
     .benefits {
