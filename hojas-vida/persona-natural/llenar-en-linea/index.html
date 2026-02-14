@@ -1,26 +1,31 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Formato Único de Hoja de Vida — Rellenar y descargar PDF | FormatoUnico</title>
-    <meta name="description" content="Formato Único de Hoja de Vida en Colombia – Descárgalo gratis en Word. Formato oficial, editable, compatible con ATS y actualizado para 2026." />
-    <link rel="canonical" href="/" />
-    <meta name="robots" content="index, follow" />
-    <meta property="og:locale" content="es_CO" />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Formato Único de Hoja de Vida — Rellenar y descargar PDF | FormatoUnico" />
-    <meta property="og:description" content="Rellena y descarga el Formato Único de Hoja de Vida (Colombia). Guía completa, vista previa en el navegador y descarga de PDF lista para postular." />
-    <meta property="og:url" content="/" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Formato Único de Hoja de Vida — FormatoUnico" />
-    <meta name="twitter:description" content="Rellena y descarga el Formato Único de Hoja de Vida (Colombia). Guía completa y descarga de PDF." />
-    <meta name="pdf-base" content="./formatounico.pdf" />
-    <link rel="stylesheet" href="./styles.css" />
-    <script type="application/ld+json">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formato Único de Hoja de Vida — Rellenar y descargar PDF | FormatoUnico</title>
+  <meta name="description"
+    content="Formato Único de Hoja de Vida en Colombia – Descárgalo gratis en Word. Formato oficial, editable, compatible con ATS y actualizado para 2026." />
+  <link rel="canonical" href="/" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:locale" content="es_CO" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Formato Único de Hoja de Vida — Rellenar y descargar PDF | FormatoUnico" />
+  <meta property="og:description"
+    content="Rellena y descarga el Formato Único de Hoja de Vida (Colombia). Guía completa, vista previa en el navegador y descarga de PDF lista para postular." />
+  <meta property="og:url" content="/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Formato Único de Hoja de Vida — FormatoUnico" />
+  <meta name="twitter:description"
+    content="Rellena y descarga el Formato Único de Hoja de Vida (Colombia). Guía completa y descarga de PDF." />
+  <meta name="pdf-base" content="./formatounico.pdf" />
+  <link rel="stylesheet" href="/styles-shared.css" />
+  <link rel="stylesheet" href="./styles.css" />
+  <script type="application/ld+json">
       {"@context":"https://schema.org","@type":"WebSite","name":"FormatoUnico","url":"/"}
     </script>
-    <script type="application/ld+json">
+  <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "Article",
@@ -32,7 +37,7 @@
         "mainEntityOfPage": { "@type": "WebPage", "@id": "/" }
       }
     </script>
-    <script type="application/ld+json">
+  <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "FAQPage",
@@ -46,485 +51,579 @@
         ]
       }
     </script>
-  </head>
-  <body>
-    <!-- Header -->
-    <header class="home-header" role="banner">
-      <div class="home-shell">
-        <a class="home-brand" href="/" aria-label="FormatoUnico">FormatoUnico</a>
-        <nav class="home-nav" aria-label="Navegación principal">
-          <a href="/" aria-current="page">Formato Único</a>
-        </nav>
-        <button class="home-navToggle" aria-expanded="false" aria-label="Abrir menú">☰</button>
+</head>
+
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container topbar">
+      <div class="brand">
+        <div class="logo">F</div>
+        <div>formatounico.com <div style="font-size: 12px; color: var(--muted); font-weight: 600">Formatos legales
+            listos para llenar en línea </div>
+        </div>
       </div>
-    </header>
+      <nav id="main-nav" aria-hidden="true"><button class="nav-close" aria-label="Cerrar menú" id="nav-close">×
+        </button>
+        <ul>
+          <li><a href="/">Inicio</a></li>
+          <li><a href="/#formatos">Formatos</a></li>
+          <li><a href="/#como-funciona">Cómo funciona</a></li>
+          <li><a href="/">FAQ</a></li>
+        </ul>
+      </nav>
+      <div id="nav-backdrop" class="nav-backdrop" aria-hidden="true"></div>
+      <div class="search"><button class="btn btn-ghost mobile-only" id="menu-toggle" aria-controls="main-nav"
+          aria-expanded="false">☰ </button></div>
+    </div>
+  </header>
 
-    <main class="home-main">
-      <!-- Import del contenido del Formato Único -->
-      <h1>Formato Único de Hoja de Vida - Rellenar PDF</h1>
+  <main class="container">
+    <!-- Import del contenido del Formato Único -->
+    <h1>Formato Único de Hoja de Vida - Rellenar PDF</h1>
 
-      <div class="container">
-        <!-- FORMULARIO -->
-        <form id="formulario" novalidate>
-          <!-- Tabs navegación superior (3 páginas) -->
-          <nav class="tabs" aria-label="Páginas del formulario">
-            <div role="tablist" aria-orientation="horizontal" class="tablist">
-              <button id="tab-p1" role="tab" aria-selected="true" aria-controls="panel-p1" class="tab active">Página 1</button>
-              <button id="tab-p2" role="tab" aria-selected="false" aria-controls="panel-p2" class="tab">Página 2</button>
-              <button id="tab-p3" role="tab" aria-selected="false" aria-controls="panel-p3" class="tab">Página 3</button>
-              <button id="clearFormBtn" type="button" class="btn-clear-form" title="Borrar todos los datos del formulario">🗑️ Limpiar formulario</button>
-            </div>
-          </nav>
-          <div id="tab-panels">
-            <section id="panel-p1" role="tabpanel" aria-labelledby="tab-p1">
-              <!-- Sección: Datos personales -->
-              <div class="panel-placeholder">
-                <h2>DATOS PERSONALES</h2>
-                <details class="section">
-                  <summary>Datos personales</summary>
-                  <div class="form-grid">
-                    <div>
-                      <label for="apellido1">Primer Apellido:</label>
-                      <input type="text" id="apellido1" value="" />
-                    </div>
-                    <div>
-                      <label for="apellido2">Segundo Apellido:</label>
-                      <input type="text" id="apellido2" value="" />
-                    </div>
-                    <div>
-                      <label for="nombres">Nombres:</label>
-                      <input type="text" id="nombres" value="" />
-                    </div>
-                    <div>
-                      <label for="sexo">Sexo:</label>
-                      <select name="sexo" id="sexo">
-                        <option value="">Seleccionar...</option>
-                        <option value="M">Masculino</option>
-                        <option value="F">Femenino</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label for="nacionalidad">Nacionalidad:</label>
-                      <select name="nacionalidad" id="nacionalidad">
-                        <option value="">Seleccionar...</option>
-                        <option value="COLOMBIANA">Colombiana</option>
-                        <option value="EXTRANJERA">Extranjera</option>
-                      </select>
-                    </div>
-                    <div id="campoPais" class="full" style="display: none">
-                      <label for="pais">País:</label>
-                      <input type="text" id="pais" />
-                    </div>
-                  </div>
-                </details>
-
-                <!-- Sección: Documento y servicio militar -->
-                <details class="section">
-                  <summary>Documento y servicio militar</summary>
-                  <div class="form-grid">
-                    <div>
-                      <label for="tipoDocumento">Tipo de Documento:</label>
-                      <select name="tipoDocumento" id="tipoDocumento">
-                        <option value="">Seleccionar...</option>
-                        <option value="CC">Cédula de Ciudadanía</option>
-                        <option value="CE">Cédula de Extranjería</option>
-                        <option value="PA">Pasaporte</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label for="documento">Número de Documento:</label>
-                      <input type="text" id="documento" value="" />
-                    </div>
-                    <div>
-                      <label for="libretaMilitar">Tipo de Libreta Militar:</label>
-                      <select name="libretaMilitar" id="libretaMilitar">
-                        <option value="">Seleccionar...</option>
-                        <option value="PRIMERA">Primera clase</option>
-                        <option value="SEGUNDA">Segunda clase</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label for="numeroLibretaMilitar">Número de Libreta Militar:</label>
-                      <input type="text" id="numeroLibretaMilitar" value="" />
-                    </div>
-                    <div>
-                      <label for="distritoMilitar">Distrito Militar:</label>
-                      <input type="text" id="distritoMilitar" value="" />
-                    </div>
-                  </div>
-                </details>
-
-                <!-- Sección: Nacimiento -->
-                <details class="section">
-                  <summary>Nacimiento</summary>
-                  <div class="form-grid">
-                    <div>
-                      <label for="fechaNacimiento">Fecha de Nacimiento (DD/MM/AAAA):</label>
-                      <input type="date" id="fechaNacimiento" value="" />
-                    </div>
-                    <div>
-                      <label for="paisNacimiento">Pais Nacimiento:</label>
-                      <input type="text" id="paisNacimiento" value="" />
-                    </div>
-                    <div>
-                      <label for="deptoNacimiento">Departamento Nacimiento:</label>
-                      <input type="text" id="deptoNacimiento" value="" />
-                    </div>
-                    <div>
-                      <label for="muniNacimiento">Municipio Nacimiento:</label>
-                      <input type="text" id="muniNacimiento" value="" />
-                    </div>
-                  </div>
-                </details>
-
-                <!-- Sección: Correspondencia -->
-                <details class="section">
-                  <summary>Correspondencia</summary>
-                  <div class="form-grid">
-                    <div>
-                      <label for="dirCorrespondecia">Dirección de Correspondencia:</label>
-                      <input type="text" id="dirCorrespondecia" value="" />
-                    </div>
-                    <div>
-                      <label for="paisCorrespondecia">Pais:</label>
-                      <input type="text" id="paisCorrespondecia" value="" />
-                    </div>
-                    <div>
-                      <label for="deptoCorrespondecia">Depto:</label>
-                      <input type="text" id="deptoCorrespondecia" value="" />
-                    </div>
-                    <div>
-                      <label for="muniCorrespondecia">Municipio:</label>
-                      <input type="text" id="muniCorrespondecia" value="" />
-                    </div>
-                    <div>
-                      <label for="telCorrespondecia">Teléfono de Contacto:</label>
-                      <input type="text" id="telCorrespondecia" value="" />
-                    </div>
-                    <div>
-                      <label for="emailCorrespondecia">Email:</label>
-                      <input type="text" id="emailCorrespondecia" value="" />
-                      <label for="hostEmail">@</label>
-                      <select name="hostEmail" id="hostEmail">
-                        <option value="" selected>Seleccionar...</option>
-                        <option value="@gmail.com">gmail.com</option>
-                        <option value="@hotmail.com">hotmail.com</option>
-                        <option value="@yahoo.com">yahoo.com</option>
-                        <option value="@outlook.com">outlook.com</option>
-                        <option value="@live.com">live.com</option>
-                      </select>
-                    </div>
-                  </div>
-                </details>
-
-                <h2>FORMACION ACADÉMICA</h2>
-                <!-- Sección: Educación básica y media -->
-                <details class="section">
-                  <summary>Educación básica</summary>
-                  <div class="form-grid">
-                    <div>
-                      <label for="nivelEducativo">Nivel Educativo:</label>
-                      <select name="nivelEducativo" id="nivelEducativo">
-                        <option value="">Seleccionar...</option>
-                        <option value="1">1°</option>
-                        <option value="2">2°</option>
-                        <option value="3">3°</option>
-                        <option value="4">4°</option>
-                        <option value="5">5°</option>
-                        <option value="6">6°</option>
-                        <option value="7">7°</option>
-                        <option value="8">8°</option>
-                        <option value="9">9°</option>
-                        <option value="10">10°</option>
-                        <option value="11">11°</option>
-                      </select>
-                    </div>
-                    <div id="campoTituloBachiller">
-                      <label for="tituloObtenidoBachiller">Titulo Obtenido:</label>
-                      <input type="text" id="tituloObtenidoBachiller" value="" />
-                    </div>
-                    <div id="campoFechaGradoBachiller">
-                      <label for="fechaGradoBachiller">Fecha de Grado (DD/MM/AAAA):</label>
-                      <input type="date" id="fechaGradoBachiller" value="" />
-                    </div>
-                  </div>
-                </details>
-
-                <!-- Sección: Educación superior (dinámica) -->
-                <details class="section" id="educacionSuperiorSection">
-                  <summary>Educación superior (hasta 5)</summary>
-                  <div id="eduContainer" class="edu-container"></div>
-                  <button type="button" id="addEduBtn" class="add-edu" aria-label="Agregar estudio" title="Agregar estudio">➕ Añadir estudio</button>
-                  <p class="hint" style="font-size: 12px; color: #555; margin-top: 8px">Puedes agregar hasta 5 estudios superiores. Usa el botón ➕ para añadir y la ✕ dentro de cada bloque para eliminar.</p>
-                </details>
-
-                <!-- Sección: Idiomas (dinámica) -->
-                <details class="section" id="idiomasSection">
-                  <summary>Idiomas (hasta 2)</summary>
-                  <div id="idiomasContainer" class="idiomas-container"></div>
-                  <button type="button" id="addIdiomaBtn" class="add-idioma" aria-label="Agregar idioma" title="Agregar idioma">➕ Añadir idioma</button>
-                  <p class="hint" style="font-size: 12px; color: #555; margin-top: 8px">Puede agregar hasta 2 idiomas. Use el botón ➕ para añadir y la ✕ dentro de cada bloque para eliminar.</p>
-                </details>
-              </div>
-            </section>
-
-            <section id="panel-p2" role="tabpanel" aria-labelledby="tab-p2" hidden>
-              <div class="panel-placeholder">
-                <h2>EXPERIENCIA LABORAL</h2>
-                <details class="section" id="experienciaLaboralSection">
-                  <summary>Experiencia Laboral (hasta 4)</summary>
-                  <div class="form-grid" style="padding: 0 14px 6px">
-                    <div class="full">
-                      <label for="trabajaActualmente">¿Empleo Actual?</label>
-                      <select id="trabajaActualmente" name="trabajaActualmente" required aria-required="true">
-                        <option value="">Seleccionar...</option>
-                        <option value="SI">Sí</option>
-                        <option value="NO">No</option>
-                      </select>
-                      <span id="trabajaError" class="field-error" role="alert" aria-live="polite" style="display:none"></span>
-                      <p class="hint" style="font-size: 12px; color: #666; margin: 6px 0 0">Si selecciona "No", el primer renglón de la Página 2 del PDF quedará vacío y sus experiencias se dibujarán desde la fila 2.</p>
-                    </div>
-                  </div>
-                  <div id="expContainer" class="exp-container"></div>
-                  <button type="button" id="addExpBtn" class="add-exp" aria-label="Agregar experiencia" title="Agregar experiencia">➕ Añadir experiencia</button>
-                  <p class="hint" style="font-size: 12px; color: #555; margin-top: 8px">Puedes agregar hasta 4 experiencias laborales. Usa el botón ➕ para añadir y la ✕ dentro de cada bloque para eliminar. Las filas se dibujan en la página 2 del PDF automáticamente.</p>
-                </details>
-              </div>
-            </section>
-
-            <section id="panel-p3" role="tabpanel" aria-labelledby="tab-p3" hidden>
-              <div class="panel-placeholder">
-                <h2>TIEMPO TOTAL DE EXPERIENCIA</h2>
-                <details class="section">
-                  <summary>Servidor Público</summary>
-                  <div class="form-grid">
-                    <div>
-                      <label for="servidorPublicoAnios">Años:</label>
-                      <input type="text" id="servidorPublicoAnios" value="" />
-                    </div>
-                    <div>
-                      <label for="servidorPublicoMeses">Meses:</label>
-                      <input type="text" id="servidorPublicoMeses" value="" />
-                    </div>
-                  </div>
-                </details>
-                <details class="section">
-                  <summary>Servidor Privado</summary>
-                  <div class="form-grid">
-                    <div>
-                      <label for="servidorPrivadoAnios">Años:</label>
-                      <input type="text" id="servidorPrivadoAnios" value="" />
-                    </div>
-                    <div>
-                      <label for="servidorPrivadoMeses">Meses:</label>
-                      <input type="text" id="servidorPrivadoMeses" value="" />
-                    </div>
-                  </div>
-                </details>
-                <details class="section">
-                  <summary>Trabajador Independiente</summary>
-                  <div class="form-grid">
-                    <div>
-                      <label for="trabajadorIndependienteAnios">Años:</label>
-                      <input type="text" id="trabajadorIndependienteAnios" value="" />
-                    </div>
-                    <div>
-                      <label for="trabajadorIndependienteMeses">Meses:</label>
-                      <input type="text" id="trabajadorIndependienteMeses" value="" />
-                    </div>
-                  </div>
-                </details>
-                <h2>FIRMA</h2>
-                <details class="section">
-                  <summary>Manifestación de No Inhabilidad</summary>
-                  <div class="form-grid">
-                    <div>
-                      <select name="Noinhabilidad" id="Noinhabilidad">
-                        <option value="" selected>Seleccionar...</option>
-                        <option value="SI">Si</option>
-                        <option value="NO">No</option>
-                      </select>
-                    </div>
-                  </div>
-                </details>
-                <details class="section">
-                  <summary>Ciudad y fecha de diligenciamiento</summary>
-                  <div class="form-grid">
-                    <div>
-                      <label for="lugarFirma">Ciudad</label>
-                      <input type="text" id="lugarFirma" value="" />
-                    </div>
-                    <div>
-                      <label for="fechaFirma">Fecha (DD/MM/AAAA)</label>
-                      <input type="date" id="fechaFirma" value="" />
-                    </div>
+    <div class="form-container">
+      <!-- FORMULARIO -->
+      <form id="formulario" novalidate>
+        <!-- Tabs navegación superior (3 páginas) -->
+        <nav class="tabs" aria-label="Páginas del formulario">
+          <div role="tablist" aria-orientation="horizontal" class="tablist">
+            <button id="tab-p1" role="tab" aria-selected="true" aria-controls="panel-p1" class="tab active">Página
+              1</button>
+            <button id="tab-p2" role="tab" aria-selected="false" aria-controls="panel-p2" class="tab">Página 2</button>
+            <button id="tab-p3" role="tab" aria-selected="false" aria-controls="panel-p3" class="tab">Página 3</button>
+            <button id="clearFormBtn" type="button" class="btn-clear-form"
+              title="Borrar todos los datos del formulario">🗑️ Limpiar formulario</button>
+          </div>
+        </nav>
+        <div id="tab-panels">
+          <section id="panel-p1" role="tabpanel" aria-labelledby="tab-p1">
+            <!-- Sección: Datos personales -->
+            <div class="panel-placeholder">
+              <h2>DATOS PERSONALES</h2>
+              <details class="section">
+                <summary>Datos personales</summary>
+                <div class="form-grid">
+                  <div>
+                    <label for="apellido1">Primer Apellido:</label>
+                    <input type="text" id="apellido1" value="" />
                   </div>
                   <div>
-                    <label for="imgFirma"> Imagen FIRMA</label>
-                    <input type="file" id="imgFirma" />
+                    <label for="apellido2">Segundo Apellido:</label>
+                    <input type="text" id="apellido2" value="" />
                   </div>
-                </details>
-              </div>
-            </section>
-          </div>
+                  <div>
+                    <label for="nombres">Nombres:</label>
+                    <input type="text" id="nombres" value="" />
+                  </div>
+                  <div>
+                    <label for="sexo">Sexo:</label>
+                    <select name="sexo" id="sexo">
+                      <option value="">Seleccionar...</option>
+                      <option value="M">Masculino</option>
+                      <option value="F">Femenino</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="nacionalidad">Nacionalidad:</label>
+                    <select name="nacionalidad" id="nacionalidad">
+                      <option value="">Seleccionar...</option>
+                      <option value="COLOMBIANA">Colombiana</option>
+                      <option value="EXTRANJERA">Extranjera</option>
+                    </select>
+                  </div>
+                  <div id="campoPais" class="full" style="display: none">
+                    <label for="pais">País:</label>
+                    <input type="text" id="pais" />
+                  </div>
+                </div>
+              </details>
 
-          <div class="form-actions">
-            <button type="submit">Vista Previa</button>
-            <button type="button" id="wompiPayBtn" style="display: none; margin-left: 8px; background: #00b2a9; color: #fff; border: none; border-radius: 4px; padding: 8px 16px; font-weight: bold;">Pagar y descargar PDF</button>
-          </div>
-        </form>
+              <!-- Sección: Documento y servicio militar -->
+              <details class="section">
+                <summary>Documento y servicio militar</summary>
+                <div class="form-grid">
+                  <div>
+                    <label for="tipoDocumento">Tipo de Documento:</label>
+                    <select name="tipoDocumento" id="tipoDocumento">
+                      <option value="">Seleccionar...</option>
+                      <option value="CC">Cédula de Ciudadanía</option>
+                      <option value="CE">Cédula de Extranjería</option>
+                      <option value="PA">Pasaporte</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="documento">Número de Documento:</label>
+                    <input type="text" id="documento" value="" />
+                  </div>
+                  <div>
+                    <label for="libretaMilitar">Tipo de Libreta Militar:</label>
+                    <select name="libretaMilitar" id="libretaMilitar">
+                      <option value="">Seleccionar...</option>
+                      <option value="PRIMERA">Primera clase</option>
+                      <option value="SEGUNDA">Segunda clase</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="numeroLibretaMilitar">Número de Libreta Militar:</label>
+                    <input type="text" id="numeroLibretaMilitar" value="" />
+                  </div>
+                  <div>
+                    <label for="distritoMilitar">Distrito Militar:</label>
+                    <input type="text" id="distritoMilitar" value="" />
+                  </div>
+                </div>
+              </details>
 
-        <!-- VISTA PREVIA: canvas inline para escritorio -->
-        <div id="previewDesktopContainer" style="width: 100%; position: relative;">
-          <canvas id="pdfCanvasDesktop" aria-label="Vista previa PDF escritorio" style="width: 100%; height: 750px; display: block; background: #fff; border-radius: 10px;"></canvas>
-          <div id="zoomLabel" class="zoom-label">Zoom</div>
+              <!-- Sección: Nacimiento -->
+              <details class="section">
+                <summary>Nacimiento</summary>
+                <div class="form-grid">
+                  <div>
+                    <label for="fechaNacimiento">Fecha de Nacimiento (DD/MM/AAAA):</label>
+                    <input type="date" id="fechaNacimiento" value="" />
+                  </div>
+                  <div>
+                    <label for="paisNacimiento">Pais Nacimiento:</label>
+                    <input type="text" id="paisNacimiento" value="" />
+                  </div>
+                  <div>
+                    <label for="deptoNacimiento">Departamento Nacimiento:</label>
+                    <input type="text" id="deptoNacimiento" value="" />
+                  </div>
+                  <div>
+                    <label for="muniNacimiento">Municipio Nacimiento:</label>
+                    <input type="text" id="muniNacimiento" value="" />
+                  </div>
+                </div>
+              </details>
+
+              <!-- Sección: Correspondencia -->
+              <details class="section">
+                <summary>Correspondencia</summary>
+                <div class="form-grid">
+                  <div>
+                    <label for="dirCorrespondecia">Dirección de Correspondencia:</label>
+                    <input type="text" id="dirCorrespondecia" value="" />
+                  </div>
+                  <div>
+                    <label for="paisCorrespondecia">Pais:</label>
+                    <input type="text" id="paisCorrespondecia" value="" />
+                  </div>
+                  <div>
+                    <label for="deptoCorrespondecia">Depto:</label>
+                    <input type="text" id="deptoCorrespondecia" value="" />
+                  </div>
+                  <div>
+                    <label for="muniCorrespondecia">Municipio:</label>
+                    <input type="text" id="muniCorrespondecia" value="" />
+                  </div>
+                  <div>
+                    <label for="telCorrespondecia">Teléfono de Contacto:</label>
+                    <input type="text" id="telCorrespondecia" value="" />
+                  </div>
+                  <div>
+                    <label for="emailCorrespondecia">Email:</label>
+                    <input type="text" id="emailCorrespondecia" value="" />
+                    <label for="hostEmail">@</label>
+                    <select name="hostEmail" id="hostEmail">
+                      <option value="" selected>Seleccionar...</option>
+                      <option value="@gmail.com">gmail.com</option>
+                      <option value="@hotmail.com">hotmail.com</option>
+                      <option value="@yahoo.com">yahoo.com</option>
+                      <option value="@outlook.com">outlook.com</option>
+                      <option value="@live.com">live.com</option>
+                    </select>
+                  </div>
+                </div>
+              </details>
+
+              <h2>FORMACION ACADÉMICA</h2>
+              <!-- Sección: Educación básica y media -->
+              <details class="section">
+                <summary>Educación básica</summary>
+                <div class="form-grid">
+                  <div>
+                    <label for="nivelEducativo">Nivel Educativo:</label>
+                    <select name="nivelEducativo" id="nivelEducativo">
+                      <option value="">Seleccionar...</option>
+                      <option value="1">1°</option>
+                      <option value="2">2°</option>
+                      <option value="3">3°</option>
+                      <option value="4">4°</option>
+                      <option value="5">5°</option>
+                      <option value="6">6°</option>
+                      <option value="7">7°</option>
+                      <option value="8">8°</option>
+                      <option value="9">9°</option>
+                      <option value="10">10°</option>
+                      <option value="11">11°</option>
+                    </select>
+                  </div>
+                  <div id="campoTituloBachiller">
+                    <label for="tituloObtenidoBachiller">Titulo Obtenido:</label>
+                    <input type="text" id="tituloObtenidoBachiller" value="" />
+                  </div>
+                  <div id="campoFechaGradoBachiller">
+                    <label for="fechaGradoBachiller">Fecha de Grado (DD/MM/AAAA):</label>
+                    <input type="date" id="fechaGradoBachiller" value="" />
+                  </div>
+                </div>
+              </details>
+
+              <!-- Sección: Educación superior (dinámica) -->
+              <details class="section" id="educacionSuperiorSection">
+                <summary>Educación superior (hasta 5)</summary>
+                <div id="eduContainer" class="edu-container"></div>
+                <button type="button" id="addEduBtn" class="add-edu" aria-label="Agregar estudio"
+                  title="Agregar estudio">➕ Añadir estudio</button>
+                <p class="hint" style="font-size: 12px; color: #555; margin-top: 8px">Puedes agregar hasta 5 estudios
+                  superiores. Usa el botón ➕ para añadir y la ✕ dentro de cada bloque para eliminar.</p>
+              </details>
+
+              <!-- Sección: Idiomas (dinámica) -->
+              <details class="section" id="idiomasSection">
+                <summary>Idiomas (hasta 2)</summary>
+                <div id="idiomasContainer" class="idiomas-container"></div>
+                <button type="button" id="addIdiomaBtn" class="add-idioma" aria-label="Agregar idioma"
+                  title="Agregar idioma">➕ Añadir idioma</button>
+                <p class="hint" style="font-size: 12px; color: #555; margin-top: 8px">Puede agregar hasta 2 idiomas. Use
+                  el botón ➕ para añadir y la ✕ dentro de cada bloque para eliminar.</p>
+              </details>
+            </div>
+          </section>
+
+          <section id="panel-p2" role="tabpanel" aria-labelledby="tab-p2" hidden>
+            <div class="panel-placeholder">
+              <h2>EXPERIENCIA LABORAL</h2>
+              <details class="section" id="experienciaLaboralSection">
+                <summary>Experiencia Laboral (hasta 4)</summary>
+                <div class="form-grid" style="padding: 0 14px 6px">
+                  <div class="full">
+                    <label for="trabajaActualmente">¿Empleo Actual?</label>
+                    <select id="trabajaActualmente" name="trabajaActualmente" required aria-required="true">
+                      <option value="">Seleccionar...</option>
+                      <option value="SI">Sí</option>
+                      <option value="NO">No</option>
+                    </select>
+                    <span id="trabajaError" class="field-error" role="alert" aria-live="polite"
+                      style="display:none"></span>
+                    <p class="hint" style="font-size: 12px; color: #666; margin: 6px 0 0">Si selecciona "No", el primer
+                      renglón de la Página 2 del PDF quedará vacío y sus experiencias se dibujarán desde la fila 2.</p>
+                  </div>
+                </div>
+                <div id="expContainer" class="exp-container"></div>
+                <button type="button" id="addExpBtn" class="add-exp" aria-label="Agregar experiencia"
+                  title="Agregar experiencia">➕ Añadir experiencia</button>
+                <p class="hint" style="font-size: 12px; color: #555; margin-top: 8px">Puedes agregar hasta 4
+                  experiencias laborales. Usa el botón ➕ para añadir y la ✕ dentro de cada bloque para eliminar. Las
+                  filas se dibujan en la página 2 del PDF automáticamente.</p>
+              </details>
+            </div>
+          </section>
+
+          <section id="panel-p3" role="tabpanel" aria-labelledby="tab-p3" hidden>
+            <div class="panel-placeholder">
+              <h2>TIEMPO TOTAL DE EXPERIENCIA</h2>
+              <details class="section">
+                <summary>Servidor Público</summary>
+                <div class="form-grid">
+                  <div>
+                    <label for="servidorPublicoAnios">Años:</label>
+                    <input type="text" id="servidorPublicoAnios" value="" />
+                  </div>
+                  <div>
+                    <label for="servidorPublicoMeses">Meses:</label>
+                    <input type="text" id="servidorPublicoMeses" value="" />
+                  </div>
+                </div>
+              </details>
+              <details class="section">
+                <summary>Servidor Privado</summary>
+                <div class="form-grid">
+                  <div>
+                    <label for="servidorPrivadoAnios">Años:</label>
+                    <input type="text" id="servidorPrivadoAnios" value="" />
+                  </div>
+                  <div>
+                    <label for="servidorPrivadoMeses">Meses:</label>
+                    <input type="text" id="servidorPrivadoMeses" value="" />
+                  </div>
+                </div>
+              </details>
+              <details class="section">
+                <summary>Trabajador Independiente</summary>
+                <div class="form-grid">
+                  <div>
+                    <label for="trabajadorIndependienteAnios">Años:</label>
+                    <input type="text" id="trabajadorIndependienteAnios" value="" />
+                  </div>
+                  <div>
+                    <label for="trabajadorIndependienteMeses">Meses:</label>
+                    <input type="text" id="trabajadorIndependienteMeses" value="" />
+                  </div>
+                </div>
+              </details>
+              <h2>FIRMA</h2>
+              <details class="section">
+                <summary>Manifestación de No Inhabilidad</summary>
+                <div class="form-grid">
+                  <div>
+                    <select name="Noinhabilidad" id="Noinhabilidad">
+                      <option value="" selected>Seleccionar...</option>
+                      <option value="SI">Si</option>
+                      <option value="NO">No</option>
+                    </select>
+                  </div>
+                </div>
+              </details>
+              <details class="section">
+                <summary>Ciudad y fecha de diligenciamiento</summary>
+                <div class="form-grid">
+                  <div>
+                    <label for="lugarFirma">Ciudad</label>
+                    <input type="text" id="lugarFirma" value="" />
+                  </div>
+                  <div>
+                    <label for="fechaFirma">Fecha (DD/MM/AAAA)</label>
+                    <input type="date" id="fechaFirma" value="" />
+                  </div>
+                </div>
+                <div>
+                  <label for="imgFirma"> Imagen FIRMA</label>
+                  <input type="file" id="imgFirma" />
+                </div>
+              </details>
+            </div>
+          </section>
         </div>
 
-        <!-- VISTA PREVIA (overlay para móvil) -->
-        <div id="previewOverlay" class="overlay" hidden>
-          <div class="overlay-header">
-            <button id="closePreview" class="close-btn" aria-label="Cerrar visor">✕</button>
-          </div>
-          <div id="pdfCanvasContainer" style="flex: 1; display: flex; align-items: center; justify-content: center;">
-            <canvas id="pdfCanvas" aria-label="Vista previa PDF" style="max-width: 100%; max-height: 100%"></canvas>
-          </div>
+        <div class="form-actions">
+          <button type="submit">Vista Previa</button>
+          <button type="button" id="wompiPayBtn"
+            style="display: none; margin-left: 8px; background: #00b2a9; color: #fff; border: none; border-radius: 4px; padding: 8px 16px; font-weight: bold;">Pagar
+            y descargar PDF</button>
         </div>
+      </form>
 
-        <!-- VISTA PREVIA CON ZOOM (desktop only) -->
-        <div id="zoomOverlay" class="zoom-overlay" hidden>
-          <div class="zoom-header">
-            <span class="zoom-info">Zoom: <span id="zoomLevel">100</span>%</span>
-            <button id="closeZoom" class="close-btn" aria-label="Cerrar zoom">✕</button>
-          </div>
-          <div id="zoomContainer" class="zoom-container">
-            <canvas id="zoomCanvas" aria-label="Vista previa con zoom"></canvas>
-          </div>
-          <p class="zoom-hint" style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); color: #999; font-size: 12px; text-align: center;">
-            Rueda del ratón para zoom | ESC para cerrar | Clic fuera para cerrar
-          </p>
+      <!-- VISTA PREVIA: canvas inline para escritorio -->
+      <div id="previewDesktopContainer" style="width: 100%; position: relative;">
+        <canvas id="pdfCanvasDesktop" aria-label="Vista previa PDF escritorio"
+          style="width: 100%; height: 750px; display: block; background: #fff; border-radius: 10px;"></canvas>
+        <div id="zoomLabel" class="zoom-label">Zoom</div>
+      </div>
+
+      <!-- VISTA PREVIA (overlay para móvil) -->
+      <div id="previewOverlay" class="overlay" hidden>
+        <div class="overlay-header">
+          <button id="closePreview" class="close-btn" aria-label="Cerrar visor">✕</button>
         </div>
+        <div id="pdfCanvasContainer" style="flex: 1; display: flex; align-items: center; justify-content: center;">
+          <canvas id="pdfCanvas" aria-label="Vista previa PDF" style="max-width: 100%; max-height: 100%"></canvas>
         </div>
       </div>
 
-      <!-- ARTÍCULO SEO: Contenido principal optimizado -->
-      <article id="guia-formato-unico" class="seo-article" itemscope itemtype="https://schema.org/Article">
-        <header>
-          <h2 itemprop="headline">Formato Único de Hoja de Vida en Colombia – Descárgalo Gratis en Word (Actualizado 2026)</h2>
-          <p itemprop="description">¿Buscas el formato único de hoja de vida correcto para aplicar a convocatorias públicas o privadas en Colombia? Aquí encontrarás el formato oficial, editable, gratis y compatible con ATS, listo para llenar, imprimir o subir a plataformas como SIGEP II.</p>
-          <meta itemprop="author" content="FormatoUnico.com" />
-          <meta itemprop="datePublished" content="2026-01-04" />
-          <meta itemprop="dateModified" content="2026-01-04" />
-        </header>
+      <!-- VISTA PREVIA CON ZOOM (desktop only) -->
+      <div id="zoomOverlay" class="zoom-overlay" hidden>
+        <div class="zoom-header">
+          <span class="zoom-info">Zoom: <span id="zoomLevel">100</span>%</span>
+          <button id="closeZoom" class="close-btn" aria-label="Cerrar zoom">✕</button>
+        </div>
+        <div id="zoomContainer" class="zoom-container">
+          <canvas id="zoomCanvas" aria-label="Vista previa con zoom"></canvas>
+        </div>
+        <p class="zoom-hint"
+          style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); color: #999; font-size: 12px; text-align: center;">
+          Rueda del ratón para zoom | ESC para cerrar | Clic fuera para cerrar
+        </p>
+      </div>
+    </div>
+    </div>
 
-        <nav class="toc" aria-label="Contenido del artículo">
-          <strong>Contenido</strong>
-          <ol>
-            <li><a href="#formato-word">Formato único en Word</a></li>
-            <li><a href="#gratis-actualizado">Formato gratis y actualizado</a></li>
-            <li><a href="#ats-compatible">Compatible con ATS (2026)</a></li>
-            <li><a href="#versiones-especificas">Versiones y compatibilidad (SIGEP, Función Pública, INVÍAS)</a></li>
-            <li><a href="#por-que-descargar">¿Por qué descargar?</a></li>
-            <li><a href="#faq-formato-unico">Preguntas frecuentes</a></li>
-          </ol>
-        </nav>
+    <!-- ARTÍCULO SEO: Contenido principal optimizado -->
+    <article id="guia-formato-unico" class="seo-article" itemscope itemtype="https://schema.org/Article">
+      <header>
+        <h2 itemprop="headline">Formato Único de Hoja de Vida en Colombia – Descárgalo Gratis en Word (Actualizado 2026)
+        </h2>
+        <p itemprop="description">¿Buscas el formato único de hoja de vida correcto para aplicar a convocatorias
+          públicas o privadas en Colombia? Aquí encontrarás el formato oficial, editable, gratis y compatible con ATS,
+          listo para llenar, imprimir o subir a plataformas como SIGEP II.</p>
+        <meta itemprop="author" content="FormatoUnico.com" />
+        <meta itemprop="datePublished" content="2026-01-04" />
+        <meta itemprop="dateModified" content="2026-01-04" />
+      </header>
 
-        <section id="formato-word">
-          <h3>Formato único de hoja de vida en Word listo para editar</h3>
-          <p>Nuestro formato único de hoja de vida en Word está diseñado para facilitar el diligenciamiento rápido y correcto de tu información personal, académica y laboral.</p>
-          <ul>
-            <li>Editable</li>
-            <li>Compatible con Word</li>
-            <li>Ideal para persona natural</li>
-            <li>Apto para imprimir</li>
-          </ul>
-          <p>También disponible como formato único de hoja de vida editable Word y formato único de hoja de vida para imprimir, sin restricciones.</p>
-        </section>
+      <nav class="toc" aria-label="Contenido del artículo">
+        <strong>Contenido</strong>
+        <ol>
+          <li><a href="#formato-word">Formato único en Word</a></li>
+          <li><a href="#gratis-actualizado">Formato gratis y actualizado</a></li>
+          <li><a href="#ats-compatible">Compatible con ATS (2026)</a></li>
+          <li><a href="#versiones-especificas">Versiones y compatibilidad (SIGEP, Función Pública, INVÍAS)</a></li>
+          <li><a href="#por-que-descargar">¿Por qué descargar?</a></li>
+          <li><a href="#faq-formato-unico">Preguntas frecuentes</a></li>
+        </ol>
+      </nav>
 
-        <section id="gratis-actualizado">
-          <h3>Formato de hoja de vida gratis y actualizado</h3>
-          <p>Aquí puedes acceder a un formato de hoja de vida gratis, sin registros obligatorios ni pagos ocultos.</p>
-          <ul>
-            <li>Formato de hoja de vida gratis en Word</li>
-            <li>Formato de hoja de vida ATS gratis</li>
-            <li>Formato único de hoja de vida para editar</li>
-            <li>Formato unico de hoja de vida lleno (ejemplo)</li>
-          </ul>
-          <p>Perfecto para estudiantes, profesionales y servidores públicos.</p>
-        </section>
+      <section id="formato-word">
+        <h3>Formato único de hoja de vida en Word listo para editar</h3>
+        <p>Nuestro formato único de hoja de vida en Word está diseñado para facilitar el diligenciamiento rápido y
+          correcto de tu información personal, académica y laboral.</p>
+        <ul>
+          <li>Editable</li>
+          <li>Compatible con Word</li>
+          <li>Ideal para persona natural</li>
+          <li>Apto para imprimir</li>
+        </ul>
+        <p>También disponible como formato único de hoja de vida editable Word y formato único de hoja de vida para
+          imprimir, sin restricciones.</p>
+      </section>
 
-        <section id="ats-compatible">
-          <h3>Formato de hoja de vida 2026 compatible con ATS</h3>
-          <p>El formato de hoja de vida 2026 cumple con los estándares actuales de selección y lectura automática. Está optimizado como:</p>
-          <ul>
-            <li>Formato de hoja de vida ATS</li>
-            <li>Formato de hoja de vida actual</li>
-            <li>Compatible con procesos digitales</li>
-          </ul>
-          <p>Si aplicas a empresas privadas o convocatorias masivas, este formato aumenta tus posibilidades de ser leído correctamente.</p>
-        </section>
+      <section id="gratis-actualizado">
+        <h3>Formato de hoja de vida gratis y actualizado</h3>
+        <p>Aquí puedes acceder a un formato de hoja de vida gratis, sin registros obligatorios ni pagos ocultos.</p>
+        <ul>
+          <li>Formato de hoja de vida gratis en Word</li>
+          <li>Formato de hoja de vida ATS gratis</li>
+          <li>Formato único de hoja de vida para editar</li>
+          <li>Formato unico de hoja de vida lleno (ejemplo)</li>
+        </ul>
+        <p>Perfecto para estudiantes, profesionales y servidores públicos.</p>
+      </section>
 
-        <section id="versiones-especificas">
-          <h3>Versiones: persona natural, SIGEP, Función Pública, INVÍAS</h3>
-          <p><strong>Formato único de hoja de vida persona natural</strong>: obligatorio en múltiples procesos del Estado. Versiones disponibles:</p>
-          <ul>
-            <li>Formato único de hoja de vida persona natural Word</li>
-            <li>Formato unico de hoja de vida persona natural para llenar</li>
-            <li>Formato unico de hoja de vida persona natural word</li>
-          </ul>
-          <p><strong>Formato único de hoja de vida SIGEP y SIGEP II</strong>: compatible con los sistemas oficiales para servidores públicos, contratistas y aspirantes a cargos estatales.</p>
-          <p><strong>Formato único de hoja de vida Función Pública y DAFP</strong>: cumple con lineamientos del Estado colombiano (Función Pública, DAFP).</p>
-          <p><strong>Formato hoja de vida INVÍAS y formatos específicos</strong>: útil para procesos del sector transporte e infraestructura; incluye compatibilidad con formatos solicitados internamente.</p>
-        </section>
+      <section id="ats-compatible">
+        <h3>Formato de hoja de vida 2026 compatible con ATS</h3>
+        <p>El formato de hoja de vida 2026 cumple con los estándares actuales de selección y lectura automática. Está
+          optimizado como:</p>
+        <ul>
+          <li>Formato de hoja de vida ATS</li>
+          <li>Formato de hoja de vida actual</li>
+          <li>Compatible con procesos digitales</li>
+        </ul>
+        <p>Si aplicas a empresas privadas o convocatorias masivas, este formato aumenta tus posibilidades de ser leído
+          correctamente.</p>
+      </section>
 
-        <section id="por-que-descargar">
-          <h3>¿Por qué descargar este formato único de hoja de vida?</h3>
-          <ul>
-            <li>Gratis</li>
-            <li>Editable en Word</li>
-            <li>Compatible con ATS</li>
-            <li>Apto para SIGEP II</li>
-            <li>Listo para imprimir</li>
-            <li>Actualizado a 2026</li>
-          </ul>
-        </section>
+      <section id="versiones-especificas">
+        <h3>Versiones: persona natural, SIGEP, Función Pública, INVÍAS</h3>
+        <p><strong>Formato único de hoja de vida persona natural</strong>: obligatorio en múltiples procesos del Estado.
+          Versiones disponibles:</p>
+        <ul>
+          <li>Formato único de hoja de vida persona natural Word</li>
+          <li>Formato unico de hoja de vida persona natural para llenar</li>
+          <li>Formato unico de hoja de vida persona natural word</li>
+        </ul>
+        <p><strong>Formato único de hoja de vida SIGEP y SIGEP II</strong>: compatible con los sistemas oficiales para
+          servidores públicos, contratistas y aspirantes a cargos estatales.</p>
+        <p><strong>Formato único de hoja de vida Función Pública y DAFP</strong>: cumple con lineamientos del Estado
+          colombiano (Función Pública, DAFP).</p>
+        <p><strong>Formato hoja de vida INVÍAS y formatos específicos</strong>: útil para procesos del sector transporte
+          e infraestructura; incluye compatibilidad con formatos solicitados internamente.</p>
+      </section>
 
-        <section id="faq-formato-unico">
-          <h3>Preguntas frecuentes</h3>
-          <div class="faq-list">
-            <details class="faq-item"><summary>¿Este formato sirve para convocatorias públicas?</summary><p>Sí, cumple con los requisitos de Función Pública, DAFP y SIGEP II.</p></details>
-            <details class="faq-item"><summary>¿Es un formato de hoja de vida gratis?</summary><p>Sí, puedes usarlo sin costo.</p></details>
-            <details class="faq-item"><summary>¿Puedo editarlo en Word?</summary><p>Sí, es un formato único de hoja de vida editable en Word.</p></details>
-            <details class="faq-item"><summary>¿Funciona para ATS?</summary><p>Sí, incluye estructura compatible con formato de hoja de vida ATS.</p></details>
-            <details class="faq-item"><summary>¿Es válido para 2024 y 2026?</summary><p>Sí, aplica tanto para formato de hoja de vida 2024 Colombia como 2026.</p></details>
-            <details class="faq-item"><summary>¿Sirve para imprimir?</summary><p>Sí, está optimizado como formato único de hoja de vida para imprimir.</p></details>
+      <section id="por-que-descargar">
+        <h3>¿Por qué descargar este formato único de hoja de vida?</h3>
+        <ul>
+          <li>Gratis</li>
+          <li>Editable en Word</li>
+          <li>Compatible con ATS</li>
+          <li>Apto para SIGEP II</li>
+          <li>Listo para imprimir</li>
+          <li>Actualizado a 2026</li>
+        </ul>
+      </section>
+
+      <section id="faq-formato-unico">
+        <h3>Preguntas frecuentes</h3>
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary>¿Este formato sirve para convocatorias públicas?</summary>
+            <p>Sí, cumple con los requisitos de Función Pública, DAFP y SIGEP II.</p>
+          </details>
+          <details class="faq-item">
+            <summary>¿Es un formato de hoja de vida gratis?</summary>
+            <p>Sí, puedes usarlo sin costo.</p>
+          </details>
+          <details class="faq-item">
+            <summary>¿Puedo editarlo en Word?</summary>
+            <p>Sí, es un formato único de hoja de vida editable en Word.</p>
+          </details>
+          <details class="faq-item">
+            <summary>¿Funciona para ATS?</summary>
+            <p>Sí, incluye estructura compatible con formato de hoja de vida ATS.</p>
+          </details>
+          <details class="faq-item">
+            <summary>¿Es válido para 2024 y 2026?</summary>
+            <p>Sí, aplica tanto para formato de hoja de vida 2024 Colombia como 2026.</p>
+          </details>
+          <details class="faq-item">
+            <summary>¿Sirve para imprimir?</summary>
+            <p>Sí, está optimizado como formato único de hoja de vida para imprimir.</p>
+          </details>
+        </div>
+      </section>
+
+      <footer>
+        <p>Guía elaborada por <strong>FormatoUnico.com</strong>. Actualizada a 2026.</p>
+      </footer>
+    </article>
+    <footer>
+      <div style="border-top: 1px solid #e6eef2; padding-top: 24px; margin-top: 40px;">
+        <div class="footer-grid">
+          <div><strong style="color: #06233a; font-size: 16px">formatounico.com</strong>
+            <div style="margin-top: 8px; color: var(--muted); font-size: 13px">Formatos legales
+              estandarizados<br />Rápidos • Confiables • Profesionales </div>
           </div>
-        </section>
-
-        <footer>
-          <p>Guía elaborada por <strong>FormatoUnico.com</strong>. Actualizada a 2026.</p>
-        </footer>
-      </article>
-    </main>
-
-    <footer class="home-footer" role="contentinfo">
-      <div class="home-shell">
-        <p>© 2026 FormatoUnico.com</p>
-        <nav class="home-footerNav" aria-label="Enlaces útiles">
-          <a href="/">Inicio</a>
-        </nav>
+          <div>
+            <div style="font-weight: 700; color: #06233a; font-size: 13px; margin-bottom: 8px;">Producto </div>
+            <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px;">
+              <li><a href="/#formatos"
+                  style="color: var(--muted); text-decoration: none; font-size: 13px; display: inline-block;">Formatos</a>
+              </li>
+              <li><a href="/#como-funciona"
+                  style="color: var(--muted); text-decoration: none; font-size: 13px; display: inline-block;">Cómo
+                  funciona</a></li>
+              <li><a href="#"
+                  style="color: var(--muted); text-decoration: none; font-size: 13px; display: inline-block;">Precios</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div style="font-weight: 700; color: #06233a; font-size: 13px; margin-bottom: 8px;">Legal </div>
+            <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px;">
+              <li><a href="#"
+                  style="color: var(--muted); text-decoration: none; font-size: 13px; display: inline-block;">Términos
+                  de
+                  uso</a></li>
+              <li><a href="#"
+                  style="color: var(--muted); text-decoration: none; font-size: 13px; display: inline-block;">Privacidad</a>
+              </li>
+              <li><a href="#"
+                  style="color: var(--muted); text-decoration: none; font-size: 13px; display: inline-block;">Contacto</a>
+              </li>
+            </ul>
+          </div>
+          <div style="text-align: right">
+            <div style="color: var(--muted); font-size: 13px">
+              <div>© 2026 formatounico.com</div>
+              <div style="margin-top: 8px"><strong style="color: #06233a">País:</strong>Colombia </div>
+            </div>
+          </div>
+        </div>
       </div>
     </footer>
+  </main>
 
-    <!-- Librería pdf-lib -->
-    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
-    
-    <script src="./script.js"></script>
-    <script>
+  <!-- Librería pdf-lib -->
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+
+  <script src="./script.js"></script>
+  <script>
     // --- VISTA PREVIA CON ZOOM (Desktop only) ---
     (function setupZoomPreview() {
       const isMobile = window.matchMedia("(max-width: 768px)").matches;
       if (isMobile) return; // Solo en desktop
-      
+
       const canvasDesktop = document.getElementById("pdfCanvasDesktop");
       const zoomOverlay = document.getElementById("zoomOverlay");
       const zoomCanvas = document.getElementById("zoomCanvas");
@@ -532,11 +631,11 @@
       const closeZoomBtn = document.getElementById("closeZoom");
       const zoomLevelSpan = document.getElementById("zoomLevel");
       const zoomCtx = zoomCanvas.getContext("2d");
-      
+
       let currentZoom = 1;
       let zoomPdfBytes = null;
       let zoomPdfPage = null;
-      
+
       // Abrir zoom al hacer clic en el canvas
       canvasDesktop.addEventListener("click", async () => {
         try {
@@ -558,7 +657,7 @@
           console.error("Error al abrir zoom:", e);
         }
       });
-      
+
       // Renderizar canvas con zoom
       function renderZoomCanvas() {
         if (!zoomPdfPage) return;
@@ -571,7 +670,7 @@
         });
         zoomLevelSpan.textContent = Math.round(currentZoom * 100);
       }
-      
+
       // Cerrar zoom
       const closeZoom = () => {
         zoomOverlay.setAttribute("hidden", "");
@@ -582,16 +681,16 @@
         const firstInput = document.getElementById("apellido1");
         if (firstInput) firstInput.focus();
       };
-      
+
       closeZoomBtn.addEventListener("click", closeZoom);
-      
+
       // Cerrar con ESC
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape" && !zoomOverlay.hasAttribute("hidden")) {
           closeZoom();
         }
       });
-      
+
       // Cerrar al hacer clic fuera del canvas
       zoomOverlay.addEventListener("click", (e) => {
         // Cierra si haces clic en el overlay oscuro, pero no en el canvas
@@ -600,20 +699,20 @@
         }
       });
     })();
-    
+
     // --- INTEGRACIÓN WOMPI CHECKOUT ---
     // --- INTEGRACIÓN WOMPI CHECKOUT ---
     (function setupWompiCheckout() {
       const tab3 = document.getElementById("tab-p3");
       const wompiBtn = document.getElementById("wompiPayBtn");
       if (!tab3 || !wompiBtn) return;
-      
+
       // Mostrar solo en página 3, tanto en desktop como en móvil
       function updateBtn() {
         const isPage3 = tab3.classList.contains("active");
         wompiBtn.style.display = isPage3 ? "inline-block" : "none";
       }
-      
+
       // Desktop: click en tab3
       tab3.addEventListener("click", updateBtn);
       // Móvil: escucha cambios de tabs
@@ -621,20 +720,20 @@
         tab.addEventListener('click', updateBtn);
       });
       updateBtn();
-      
+
       // Lógica de pago y redirección con IndexedDB
-      wompiBtn.addEventListener("click", async function() {
+      wompiBtn.addEventListener("click", async function () {
         // Mostrar confirmación de verificación
         const proceed = confirm("Revisa que los datos ingresados estén correctos y completos según tu información antes de pagar y descargar el formato.");
         if (!proceed) return;
-        
+
         wompiBtn.disabled = true;
         wompiBtn.textContent = "Procesando...";
-        
+
         try {
           // 1. Generar código único
           const code = Math.random().toString(36).substring(2, 8).toUpperCase();
-          
+
           // 2. Generar PDF
           let pdfBytes;
           try {
@@ -645,7 +744,7 @@
             wompiBtn.textContent = "Pagar y descargar PDF";
             return;
           }
-          
+
           // 3. Guardar PDF en IndexedDB + localStorage
           try {
             await savePdfToStorage(pdfBytes, code);
@@ -656,7 +755,7 @@
             wompiBtn.textContent = "Pagar y descargar PDF";
             return;
           }
-          
+
           // 4. Guardar datos del formulario para regeneración futura
           try {
             await saveFormDataToStorage();
@@ -664,7 +763,7 @@
             console.warn("No se pudo guardar datos del formulario:", e);
             // Continuar de todas formas, el PDF ya está guardado
           }
-          
+
           // 5. Guardar referencia en localStorage para validar en descarga.html
           try {
             localStorage.setItem("pdfReference", code);
@@ -672,7 +771,7 @@
           } catch (e) {
             console.warn("No se pudo guardar referencia:", e);
           }
-          
+
           // 6. Redirigir a Wompi Checkout
           window.location.href = `https://checkout.wompi.co/l/VjvhBz`;
         } catch (e) {
@@ -683,6 +782,53 @@
         }
       });
     })();
-    </script>
-  </body>
+  </script>
+  <script>
+    // General mobile menu logic
+    (function () {
+      const menuToggle = document.getElementById("menu-toggle");
+      const nav = document.getElementById("main-nav");
+      const backdrop = document.getElementById("nav-backdrop");
+      const navClose = document.getElementById("nav-close");
+
+      function openNav() {
+        nav.classList.add("open");
+        backdrop.classList.add("open");
+        menuToggle.setAttribute("aria-expanded", "true");
+        nav.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+      }
+      function closeNav() {
+        nav.classList.remove("open");
+        backdrop.classList.remove("open");
+        menuToggle.setAttribute("aria-expanded", "false");
+        nav.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+      }
+
+      if (menuToggle) {
+        menuToggle.addEventListener("click", () => {
+          const opened = nav.classList.contains("open");
+          if (opened) closeNav();
+          else openNav();
+        });
+      }
+      if (backdrop) {
+        backdrop.addEventListener("click", closeNav);
+      }
+      if (navClose) {
+        navClose.addEventListener("click", closeNav);
+      }
+      // Cerrar menú al hacer click en un enlace
+      const navLinks = nav.querySelectorAll("a");
+      navLinks.forEach((link) => {
+        link.addEventListener("click", closeNav);
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && nav.classList.contains("open")) closeNav();
+      });
+    })();
+  </script>
+</body>
+
 </html>
