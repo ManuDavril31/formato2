@@ -1,0 +1,1064 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Descargar PDF — Pago Wompi</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background-color: #f5f5f5;
+      }
+      .descarga-main {
+        max-width: 480px;
+        margin: 40px auto;
+        padding: 24px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 12px #0001;
+      }
+      h1 {
+        margin-top: 0;
+        color: #333;
+        font-size: 1.5em;
+      }
+      #estadoPago {
+        margin-bottom: 18px;
+        font-size: 1.1em;
+        color: #666;
+      }
+      #descargarBtn {
+        display: none;
+        background: #00b2a9;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        padding: 12px 24px;
+        font-size: 1em;
+        font-weight: bold;
+        cursor: pointer;
+        width: 100%;
+      }
+      #descargarBtn:hover {
+        background: #009a92;
+      }
+      #descargarBtn:disabled {
+        background: #999;
+        cursor: not-allowed;
+      }
+      #errorMsg {
+        color: #c00;
+        margin-top: 18px;
+        display: none;
+      }
+      .spinner {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid #f3f3f3;
+        border-top: 2px solid #00b2a9;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin-right: 8px;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .success-message {
+        display: none;
+        color: #060;
+        margin-top: 18px;
+        padding: 12px;
+        background-color: #f0fff0;
+        border-left: 4px solid #060;
+        border-radius: 4px;
+      }
+
+      /* Estilos mejorados para página de agradecimiento */
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .descarga-container {
+        max-width: 600px;
+        width: 100%;
+      }
+
+      .descarga-main {
+        max-width: 600px;
+        margin: 0 auto 24px;
+        padding: 40px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      }
+
+      .success-icon {
+        font-size: 48px;
+        text-align: center;
+        margin-bottom: 16px;
+      }
+
+      h1 {
+        margin: 0 0 8px 0;
+        color: #333;
+        font-size: 28px;
+        text-align: center;
+        font-weight: 700;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #666;
+        margin-bottom: 24px;
+        font-size: 14px;
+      }
+
+      #estadoPago {
+        margin-bottom: 24px;
+        font-size: 15px;
+        color: #555;
+        text-align: center;
+        line-height: 1.6;
+      }
+
+      #descargarBtn {
+        display: none;
+        background: #00b2a9;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 14px 32px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        width: 100%;
+        transition: all 0.3s ease;
+        margin-bottom: 12px;
+      }
+
+      #descargarBtn:hover {
+        background: #009a92;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 178, 169, 0.3);
+      }
+
+      #descargarBtn:disabled {
+        background: #999;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      #errorMsg {
+        color: #c00;
+        margin-top: 18px;
+        display: none;
+        padding: 12px;
+        background: #fef0f0;
+        border-left: 4px solid #c00;
+        border-radius: 4px;
+      }
+
+      .info-section {
+        background: #f9f9f9;
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 20px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .info-section h2 {
+        color: #333;
+        font-size: 18px;
+        margin: 0 0 16px 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .info-section ul {
+        margin: 0;
+        padding-left: 20px;
+        color: #555;
+        font-size: 14px;
+        line-height: 1.8;
+      }
+
+      .info-section li {
+        margin-bottom: 10px;
+      }
+
+      .support-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        padding: 32px 24px;
+        text-align: center;
+        max-width: 600px;
+        margin: 20px auto;
+        box-shadow: 0 8px 32px rgba(102, 126, 234, 0.25);
+      }
+
+      .support-section h3 {
+        color: #fff;
+        margin: 0 0 12px 0;
+        font-size: 22px;
+        font-weight: 700;
+      }
+
+      .support-section p {
+        color: rgba(255, 255, 255, 0.95);
+        margin: 8px 0 20px 0;
+        font-size: 15px;
+        line-height: 1.6;
+      }
+
+      .contact-info {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+      .contact-item {
+        padding: 14px 16px;
+        background: #fff;
+        border-radius: 8px;
+        text-decoration: none;
+        color: #333;
+        font-weight: 600;
+        font-size: 15px;
+        transition: all 0.3s ease;
+        border: 2px solid #fff;
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        text-align: center;
+      }
+
+      .contact-item:hover {
+        background: #f0f0f0;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .contact-item.whatsapp {
+        color: #25d366;
+      }
+
+      .contact-item.whatsapp:hover {
+        color: #1fa856;
+      }
+
+      @media (max-width: 600px) {
+        .descarga-main {
+          padding: 24px;
+        }
+        h1 {
+          font-size: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="descarga-container">
+      <main class="descarga-main">
+        <div class="success-icon">✅</div>
+        <h1>¡Gracias por tu compra!</h1>
+        <p class="subtitle">Tu Formato Único de Hoja de Vida está casi listo</p>
+        <div id="estadoPago" style="margin-bottom: 24px; font-size: 1em">
+          <span class="spinner"></span>Verificando pago...
+        </div>
+        <button id="descargarBtn">📥 Descargar PDF</button>
+        <div id="errorMsg"></div>
+        <div id="successMsg" class="success-message">
+          ✓ Tu descarga ha comenzado
+        </div>
+      </main>
+
+      <div class="info-section">
+        <h2>📎 Otros servicios: Integración de anexos en tu archivo PDF</h2>
+        <p
+          style="
+            color: #666;
+            font-size: 14px;
+            margin: 0 0 16px 0;
+            font-weight: 600;
+          "
+        >
+          Ayudamos en:
+        </p>
+        <ul>
+          <li>
+            Inserción y organización de documentos anexos a la hoja de vida
+          </li>
+          <li>Descarga segura e inserción de antecedentes judiciales</li>
+          <li>
+            Modificación, edición y corrección de documentos (ortografía,
+            redacción y formato)
+          </li>
+          <li>
+            Revisión final para asegurar que la información esté completa,
+            correcta y bien presentada
+          </li>
+          <li>
+            Conversión y unificación de archivos en un solo PDF profesional
+          </li>
+        </ul>
+      </div>
+
+      <div class="support-section">
+        <h3>❓ ¿Necesitas ayuda?</h3>
+        <p>
+          Si tuviste problemas con la generacion del documento, con la descarga
+          u otro problema relacionado, contáctanos:
+        </p>
+        <div class="contact-info">
+          <a href="mailto:manumar451@gmail.com" class="contact-item">
+            📧 manumar451@gmail.com
+          </a>
+          <a
+            href="https://wa.me/573204403165"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="contact-item whatsapp"
+          >
+            💬 WhatsApp: +57 320 4403165
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script>
+      // Importar funciones de almacenamiento desde script.js (replicadas aquí para independencia)
+      const DB_NAME = "FormatoUnicoDb";
+      const DB_VERSION = 1;
+      const FORMS_STORE = "forms";
+      const PDFS_STORE = "pdfs";
+      const STORAGE_KEY = "formatounico_form_data";
+
+      let _db = null;
+
+      async function initDb() {
+        if (_db) return _db;
+        return new Promise((resolve, reject) => {
+          const req = indexedDB.open(DB_NAME, DB_VERSION);
+          req.onerror = () => reject(req.error);
+          req.onsuccess = () => {
+            _db = req.result;
+            resolve(_db);
+          };
+          req.onupgradeneeded = (e) => {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains(FORMS_STORE)) {
+              db.createObjectStore(FORMS_STORE, { keyPath: "timestamp" });
+            }
+            if (!db.objectStoreNames.contains(PDFS_STORE)) {
+              db.createObjectStore(PDFS_STORE, { keyPath: "reference" });
+            }
+          };
+        });
+      }
+
+      async function getPdfFromStorage(reference) {
+        try {
+          try {
+            const db = await initDb();
+            const tx = db.transaction(PDFS_STORE, "readonly");
+            const store = tx.objectStore(PDFS_STORE);
+            const req = store.get(reference);
+
+            await new Promise((res, rej) => {
+              req.onsuccess = res;
+              req.onerror = () => rej(req.error);
+            });
+
+            if (req.result) {
+              return req.result;
+            }
+          } catch (e) {
+            console.warn("No se pudo leer PDF de IndexedDB:", e);
+          }
+
+          const stored = localStorage.getItem("pdf_" + reference);
+          if (stored) {
+            return {
+              reference: reference,
+              base64: stored.replace("data:application/pdf;base64,", ""),
+              timestamp: Date.now(),
+            };
+          }
+
+          return null;
+        } catch (e) {
+          console.warn("Error recuperando PDF:", e);
+          return null;
+        }
+      }
+
+      async function getFormDataFromStorage() {
+        try {
+          let formData = null;
+
+          try {
+            const db = await initDb();
+            const tx = db.transaction(FORMS_STORE, "readonly");
+            const store = tx.objectStore(FORMS_STORE);
+            const req = store.getAll();
+
+            await new Promise((res, rej) => {
+              req.onsuccess = res;
+              req.onerror = () => rej(req.error);
+            });
+
+            if (req.result && req.result.length > 0) {
+              formData = req.result[0].data;
+            }
+          } catch (e) {
+            console.warn("No se pudo leer de IndexedDB:", e);
+          }
+
+          if (!formData) {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+              formData = JSON.parse(saved);
+            }
+          }
+
+          return formData;
+        } catch (e) {
+          console.warn("Error recuperando datos:", e);
+          return null;
+        }
+      }
+
+      async function savePdfToStorage(pdfBytes, reference) {
+        try {
+          const uint8 = new Uint8Array(pdfBytes);
+          let binary = "";
+          for (let i = 0; i < uint8.length; i++) {
+            binary += String.fromCharCode(uint8[i]);
+          }
+          const base64 = btoa(binary);
+
+          const record = {
+            reference: reference || "default-" + Date.now(),
+            base64: base64,
+            timestamp: Date.now(),
+            size: pdfBytes.byteLength,
+          };
+
+          try {
+            const db = await initDb();
+            const tx = db.transaction(PDFS_STORE, "readwrite");
+            const store = tx.objectStore(PDFS_STORE);
+            store.put(record);
+            await new Promise((res, rej) => {
+              tx.oncomplete = res;
+              tx.onerror = () => rej(tx.error);
+            });
+          } catch (e) {
+            console.warn("IndexedDB no disponible:", e);
+          }
+
+          try {
+            localStorage.setItem(
+              "pdf_" + record.reference,
+              "data:application/pdf;base64," + base64,
+            );
+          } catch (e) {
+            console.warn("No se pudo guardar en localStorage:", e);
+          }
+
+          return record.reference;
+        } catch (e) {
+          console.warn("Error guardando PDF:", e);
+          return null;
+        }
+      }
+
+      // --- Regenerar PDF si es necesario ---
+      async function regenerarPdf(formData, reference) {
+        try {
+          if (!formData) return null;
+
+          console.log("Regenerando PDF desde datos almacenados...");
+
+          // Helper seguro para cadenas
+          const s = (v) => (v == null ? "" : typeof v === "string" ? v : String(v));
+
+          // Cargar el PDF base
+          let basePdfUrl = "./formatounico.pdf";
+          let existingPdfBytes = null;
+
+          try {
+            const res = await fetch(basePdfUrl);
+            if (res.ok) {
+              existingPdfBytes = await res.arrayBuffer();
+            }
+          } catch (e) {
+            console.warn("No se pudo cargar PDF base:", e);
+          }
+
+          if (!existingPdfBytes) {
+            console.warn("No se pudo obtener PDF base para regeneración");
+            return null;
+          }
+
+          // Usar PDFLib para dibujar datos en el PDF
+          const { PDFDocument, rgb } = PDFLib;
+          const pdfDoc = await PDFDocument.load(existingPdfBytes);
+          const pages = pdfDoc.getPages();
+          const page = pages[0];
+          const font = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+          const color = rgb(0, 0, 0);
+
+          // PÁGINA 1: Datos personales, educación y idiomas
+          page.drawText(s(formData.apellido1).substring(0, 20), { x: 65, y: 605, size: 10, font, color });
+          page.drawText(s(formData.apellido2).substring(0, 20), { x: 230, y: 605, size: 10, font, color });
+          page.drawText(s(formData.nombres).substring(0, 30), { x: 400, y: 605, size: 10, font, color });
+
+          if (formData.tipoDocumento === "CC")
+            page.drawText("X", { x: 83, y: 574, size: 10, font, color });
+          else if (formData.tipoDocumento === "CE")
+            page.drawText("X", { x: 113, y: 574, size: 10, font, color });
+          else if (formData.tipoDocumento === "PA")
+            page.drawText("X", { x: 148, y: 574, size: 10, font, color });
+          page.drawText(s(formData.documento).substring(0, 15), { x: 185, y: 575, size: 10, font, color });
+
+          if (formData.sexo === "M")
+            page.drawText("X", { x: 340, y: 575, size: 10, font, color });
+          else if (formData.sexo === "F")
+            page.drawText("X", { x: 318, y: 575, size: 10, font, color });
+
+          if (formData.nacionalidadValor === "COLOMBIANA")
+            page.drawText("X", { x: 383, y: 575, size: 10, font, color });
+          else if (formData.nacionalidadValor === "EXTRANJERA")
+            page.drawText("X", { x: 457, y: 575, size: 10, font, color });
+          if (formData.nacionalidadValor === "EXTRANJERA" && formData.paisExtranjero) {
+            page.drawText(s(formData.paisExtranjero).substring(0, 25), { x: 474, y: 575, size: 9, font, color });
+          }
+
+          if (formData.libretaMilitar === "PRIMERA")
+            page.drawText("X", { x: 146, y: 544, size: 10, font, color });
+          else if (formData.libretaMilitar === "SEGUNDA")
+            page.drawText("X", { x: 262, y: 544, size: 10, font, color });
+          page.drawText(s(formData.numeroLibretaMilitar).substring(0, 12), {
+            x: 338,
+            y: 545,
+            size: 10,
+            font,
+            color,
+          });
+          page.drawText(s(formData.distritoMilitar).substring(0, 15), { x: 495, y: 545, size: 9, font, color });
+
+          if (formData.fechaNacimiento) {
+            const fecha = new Date(formData.fechaNacimiento);
+            const dia = String(fecha.getUTCDate()).padStart(2, "0");
+            const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+            const anio = fecha.getFullYear();
+            page.drawText(dia, { x: 139, y: 508, size: 10, font, color });
+            page.drawText(mes, { x: 188, y: 508, size: 10, font, color });
+            page.drawText(anio.toString(), { x: 240, y: 508, size: 10, font, color });
+          }
+
+          page.drawText(s(formData.paisNacimiento).substring(0, 20), { x: 118, y: 490, size: 9, font, color });
+          page.drawText(s(formData.deptoNacimiento).substring(0, 20), { x: 118, y: 472, size: 9, font, color });
+          page.drawText(s(formData.muniNacimiento).substring(0, 20), { x: 118, y: 455, size: 9, font, color });
+
+          const dirTruncada = s(formData.dirCorrespondecia).substring(0, 50);
+          page.drawText(dirTruncada, { x: 292, y: 508, size: 9, font, color });
+          
+          page.drawText(s(formData.paisCorrespondecia).substring(0, 30), {
+            x: 317,
+            y: 490,
+            size: 9,
+            font,
+            color,
+          });
+          page.drawText(s(formData.deptoCorrespondecia).substring(0, 20), {
+            x: 473,
+            y: 490,
+            size: 9,
+            font,
+            color,
+          });
+          page.drawText(s(formData.muniCorrespondecia).substring(0, 20), {
+            x: 344,
+            y: 473,
+            size: 9,
+            font,
+            color,
+          });
+          page.drawText(s(formData.telCorrespondecia).substring(0, 20), { x: 344, y: 455, size: 9, font, color });
+          
+          const emailTruncada = s(formData.emailCorrespondecia).substring(0, 35);
+          page.drawText(emailTruncada, {
+            x: 473,
+            y: 470,
+            size: 7,
+            font,
+            color,
+          });
+
+          const hostTruncado = s(formData.hostEmail).substring(0, 20);
+          page.drawText(hostTruncado, { x: 473, y: 455, size: 7, font, color });
+
+          // Nivel educativo
+          switch (formData.nivelEducativo) {
+            case "1":
+              page.drawText("X", { x: 103, y: 320, size: 10, font, color });
+              break;
+            case "2":
+              page.drawText("X", { x: 120, y: 320, size: 10, font, color });
+              break;
+            case "3":
+              page.drawText("X", { x: 137, y: 320, size: 10, font, color });
+              break;
+            case "4":
+              page.drawText("X", { x: 154, y: 320, size: 10, font, color });
+              break;
+            case "5":
+              page.drawText("X", { x: 171, y: 320, size: 10, font, color });
+              break;
+            case "6":
+              page.drawText("X", { x: 188, y: 320, size: 10, font, color });
+              break;
+            case "7":
+              page.drawText("X", { x: 205, y: 320, size: 10, font, color });
+              break;
+            case "8":
+              page.drawText("X", { x: 223, y: 320, size: 10, font, color });
+              break;
+            case "9":
+              page.drawText("X", { x: 240, y: 320, size: 10, font, color });
+              break;
+            case "10":
+              page.drawText("X", { x: 257, y: 320, size: 10, font, color });
+              break;
+            case "11":
+              page.drawText("X", { x: 274, y: 320, size: 10, font, color });
+              const tituloBachillerTruncado = s(formData.tituloObtenidoBachiller).substring(0, 40);
+              page.drawText(tituloBachillerTruncado, {
+                x: 361,
+                y: 350,
+                size: 8,
+                font,
+                color,
+              });
+              const fechaBach = formData.fechaGradoBachiller
+                ? new Date(formData.fechaGradoBachiller)
+                : null;
+              const anioBach = fechaBach ? fechaBach.getFullYear().toString() : "";
+              page.drawText(anioBach, { x: 418, y: 320, size: 10, font, color });
+              const mesBach = fechaBach
+                ? String(fechaBach.getMonth() + 1).padStart(2, "0")
+                : "";
+              page.drawText(mesBach, { x: 353, y: 320, size: 10, font, color });
+              break;
+            default:
+              break;
+          }
+
+          // Educación superior dinámica (hasta 5 filas)
+          const eduSuperior = formData.educacionSuperior || [];
+          let baseY = 200;
+          const step = 16;
+          eduSuperior.slice(0, 5).forEach((it, idx) => {
+            const y = baseY - idx * step;
+            page.drawText(s(it.modalidad).substring(0, 25), { x: 70, y, size: 9, font, color });
+            page.drawText(s(it.semestres).substring(0, 10), { x: 130, y, size: 9, font, color });
+            if ((it.graduado || "") === "SI")
+              page.drawText("X", { x: 183, y, size: 10, font, color });
+            else if ((it.graduado || "") === "NO")
+              page.drawText("X", { x: 208, y, size: 10, font, color });
+            const tituloTruncado = s(it.titulo).substring(0, 35);
+            page.drawText(tituloTruncado, {
+              x: 225,
+              y: y + 1.5,
+              size: 7,
+              font,
+              color,
+            });
+            if (it.fecha) {
+              const f = new Date(it.fecha);
+              if (!isNaN(f)) {
+                const anio = String(f.getFullYear());
+                const mes = String(f.getMonth() + 1).padStart(2, "0");
+                page.drawText(mes, { x: 430, y, size: 10, font, color });
+                page.drawText(anio, { x: 460, y, size: 10, font, color });
+              }
+            }
+            const tarjetaTruncada = s(it.tarjeta).substring(0, 15);
+            page.drawText(tarjetaTruncada, { x: 505, y, size: 8, font, color });
+          });
+
+          // Idiomas dinámicos (máx 2 filas)
+          const idiomas = formData.idiomas || [];
+          const baseYIdiomas = 72;
+          const stepIdiomas = 17;
+          idiomas.slice(0, 2).forEach((it, idx) => {
+            const y = baseYIdiomas - idx * stepIdiomas;
+            const idiomaTruncado = s(it.idioma).substring(0, 20);
+            page.drawText(idiomaTruncado, { x: 160, y, size: 9, font, color });
+            // habla
+            switch (it.habla) {
+              case "REGULAR":
+                page.drawText("X", { x: 305, y, size: 10, font, color });
+                break;
+              case "BIEN":
+                page.drawText("X", { x: 320, y, size: 10, font, color });
+                break;
+              case "MUYBIEN":
+                page.drawText("X", { x: 338, y, size: 10, font, color });
+                break;
+              default:
+                break;
+            }
+            // lee
+            switch (it.lee) {
+              case "REGULAR":
+                page.drawText("X", { x: 355, y, size: 10, font, color });
+                break;
+              case "BIEN":
+                page.drawText("X", { x: 370, y, size: 10, font, color });
+                break;
+              case "MUYBIEN":
+                page.drawText("X", { x: 388, y, size: 10, font, color });
+                break;
+              default:
+                break;
+            }
+            // escribe
+            switch (it.escribe) {
+              case "REGULAR":
+                page.drawText("X", { x: 405, y, size: 10, font, color });
+                break;
+              case "BIEN":
+                page.drawText("X", { x: 422, y, size: 10, font, color });
+                break;
+              case "MUYBIEN":
+                page.drawText("X", { x: 440, y, size: 10, font, color });
+                break;
+              default:
+                break;
+            }
+          });
+
+          // PÁGINA 2: Experiencia laboral (hasta 4 bloques)
+          let page2 = pages[1];
+          let page3 = pages[2];
+          if (!page2) page2 = pdfDoc.addPage();
+          if (!page3) page3 = pdfDoc.addPage();
+
+          if (page2) {
+            const baseTopY = 552;
+            const blockStep = 130;
+            const offsets = { empresa: 0, linea2: -30, fechas: -60, linea4: -90 };
+
+            function drawFecha(y, fechaStr, xD, xM, xA) {
+              if (!fechaStr) return;
+              const fecha = new Date(fechaStr);
+              if (isNaN(fecha)) return;
+              const dia = String(fecha.getUTCDate()).padStart(2, "0");
+              const mes = String(fecha.getUTCMonth() + 1).padStart(2, "0");
+              const anio = String(fecha.getUTCFullYear());
+              page2.drawText(dia, { x: xD, y, size: 10, font, color });
+              page2.drawText(mes, { x: xM, y, size: 10, font, color });
+              page2.drawText(anio, { x: xA, y, size: 10, font, color });
+            }
+
+            const experiencias = formData.experiencias || [];
+            const startRowOffset = formData.trabajaActualmente ? 0 : 1;
+            const list = experiencias.slice(0, Math.max(0, 4 - startRowOffset));
+            list.forEach((e, idx) => {
+              const topY = baseTopY - (idx + startRowOffset) * blockStep;
+              page2.drawText(s(e.empresa).substring(0, 30), { x: 65, y: topY, size: 9, font, color });
+              if (e.tipoEmpresa === "PUBLICA")
+                page2.drawText("X", { x: 345, y: topY, size: 10, font, color });
+              else if (e.tipoEmpresa === "PRIVADA")
+                page2.drawText("X", { x: 390, y: topY, size: 10, font, color });
+              page2.drawText(s(e.pais).substring(0, 20), { x: 425, y: topY, size: 9, font, color });
+
+              const y2 = topY + offsets.linea2;
+              page2.drawText(s(e.depto).substring(0, 20), { x: 65, y: y2, size: 9, font, color });
+              page2.drawText(s(e.municipio).substring(0, 20), { x: 242, y: y2, size: 9, font, color });
+              page2.drawText(s(e.correo).substring(0, 25), { x: 412, y: y2, size: 6, font, color });
+
+              const y3 = topY + offsets.fechas;
+              page2.drawText(s(e.telefono).substring(0, 15), { x: 65, y: y3, size: 9, font, color });
+              drawFecha(y3, e.fechaIngreso, 263, 312, 362);
+              drawFecha(y3, e.fechaRetiro, 430, 479, 529);
+
+              const y4 = topY + offsets.linea4;
+              page2.drawText(s(e.cargo).substring(0, 25), { x: 65, y: y4, size: 9, font, color });
+              page2.drawText(s(e.dependencia).substring(0, 20), {
+                x: 243,
+                y: y4,
+                size: 9,
+                font,
+                color,
+              });
+              page2.drawText(s(e.direccion).substring(0, 25), { x: 410, y: y4, size: 9, font, color });
+            });
+          }
+
+          // PÁGINA 3: Firma y otros campos
+          if (page3) {
+            const data3 = formData.hoja3 || {};
+            page3.drawText(data3.servidorPublicoAnios || "", {
+              x: 390,
+              y: 595,
+              size: 10,
+              font,
+              color,
+            });
+            page3.drawText(data3.servidorPublicoMeses || "", {
+              x: 460,
+              y: 595,
+              size: 10,
+              font,
+              color,
+            });
+            page3.drawText(data3.servidorPrivadoAnios || "", {
+              x: 390,
+              y: 570,
+              size: 10,
+              font,
+              color,
+            });
+            page3.drawText(data3.servidorPrivadoMeses || "", {
+              x: 460,
+              y: 570,
+              size: 10,
+              font,
+              color,
+            });
+            page3.drawText(data3.trabajadorIndependienteAnios || "", {
+              x: 390,
+              y: 545,
+              size: 10,
+              font,
+              color,
+            });
+            page3.drawText(data3.trabajadorIndependienteMeses || "", {
+              x: 460,
+              y: 545,
+              size: 10,
+              font,
+              color,
+            });
+
+            const totalMeses =
+              Number(data3?.trabajadorIndependienteMeses) +
+              Number(data3?.servidorPublicoMeses) +
+              Number(data3?.servidorPrivadoMeses);
+            page3.drawText(`${totalMeses}`, {
+              x: 460,
+              y: 516,
+              size: 10,
+              font,
+              color,
+            });
+
+            const totalAnios =
+              Number(data3?.trabajadorIndependienteAnios) +
+              Number(data3?.servidorPublicoAnios) +
+              Number(data3?.servidorPrivadoAnios);
+            page3.drawText(`${totalAnios}`, {
+              x: 390,
+              y: 516,
+              size: 10,
+              font,
+              color,
+            });
+
+            if (data3.Noinhabilidad === "SI") {
+              page3.drawText("X", { x: 270, y: 420, size: 10, font, color });
+            }
+            if (data3.Noinhabilidad === "NO") {
+              page3.drawText("X", { x: 302, y: 420, size: 10, font, color });
+            }
+
+            let fecha;
+            if (data3.fechaFirma) {
+              fecha = new Date(data3.fechaFirma);
+            } else {
+              fecha = new Date();
+            }
+            const dia = String(fecha.getUTCDate()).padStart(2, "0");
+            const mes = String(fecha.getUTCMonth() + 1).padStart(2, "0");
+            const anio = fecha.getUTCFullYear();
+            const fechaFinal = `${dia}/${mes}/${anio}`;
+            const lugarTruncado = s(data3.lugarFirma).substring(0, 25);
+            page3.drawText(lugarTruncado + ", " + fechaFinal, {
+              x: 220,
+              y: 338,
+              size: 9,
+              font,
+              color,
+            });
+          }
+
+          // Guardar el PDF regenerado
+          const pdfBytes = await pdfDoc.save();
+          await savePdfToStorage(pdfBytes, reference);
+
+          return pdfBytes;
+        } catch (e) {
+          console.warn("Error regenerando PDF:", e);
+          return null;
+        }
+      }
+
+      // --- Descarga con validación de referencia ---
+      async function validarPagoYDescargar() {
+        // Verificar que viene del flujo legítimo (index.html -> pago -> descarga)
+        const pdfReference = localStorage.getItem("pdfReference");
+        
+        if (!pdfReference) {
+          mostrarError("Acceso no autorizado. Por favor completa el formulario y realiza el pago.");
+          return;
+        }
+
+        let reference = pdfReference;
+
+        try {
+          // Mostrar que se está preparando la descarga
+          let statusText = "Preparando tu descarga...";
+          document.getElementById("estadoPago").textContent = statusText;
+          document.getElementById("descargarBtn").style.display = "inline-block";
+
+          // Buscar el PDF almacenado con la referencia validada
+          let pdfRecord = await getPdfFromStorage(reference);
+
+          // Si no existe, regenerar desde datos del formulario
+          if (!pdfRecord && reference !== "default") {
+            pdfRecord = await getPdfFromStorage("default");
+          }
+
+          // Si aún no existe, regenerar desde datos del formulario
+          if (!pdfRecord) {
+            statusText = "Regenerando PDF desde tus datos...";
+            document.getElementById("estadoPago").textContent = statusText;
+
+            const formData = await getFormDataFromStorage();
+            if (formData) {
+              try {
+                const pdfBytes = await regenerarPdf(formData, reference || "default");
+                if (pdfBytes) {
+                  pdfRecord = await getPdfFromStorage(reference || "default");
+                  statusText = "✓ Tu PDF está listo para descargar.";
+                  document.getElementById("estadoPago").textContent = statusText;
+                } else {
+                  console.warn("No se pudo regenerar PDF");
+                  statusText = "⚠ PDF regenerado. Intenta descargar.";
+                  document.getElementById("estadoPago").textContent = statusText;
+                }
+              } catch (e) {
+                console.warn("Error regenerando PDF:", e);
+                statusText = "⚠ Hay un pequeño problema. Intenta descargar.";
+                document.getElementById("estadoPago").textContent = statusText;
+              }
+            } else {
+              mostrarError("No se encontraron datos del formulario. Por favor completa el formulario en la página principal.");
+              return;
+            }
+          } else {
+            statusText = "✓ Tu PDF está listo para descargar.";
+            document.getElementById("estadoPago").textContent = statusText;
+          }
+        } catch (e) {
+          console.warn("Error en descarga:", e);
+          document.getElementById("estadoPago").textContent = "Estamos preparando tu descarga...";
+        }
+
+        // Configurar botón de descarga
+        document.getElementById("descargarBtn").onclick = async function () {
+          this.disabled = true;
+          const textoOriginal = this.textContent;
+          this.textContent = "Descargando...";
+
+          try {
+            let pdfRecord = await getPdfFromStorage(reference);
+
+            // Si aún no existe, intentar regenerar una última vez
+            if (!pdfRecord) {
+              console.log("PDF no encontrado, intentando regenerar...");
+              const formData = await getFormDataFromStorage();
+              if (formData) {
+                const pdfBytes = await regenerarPdf(formData, reference);
+                if (pdfBytes) {
+                  pdfRecord = await getPdfFromStorage(reference);
+                }
+              }
+            }
+
+            if (!pdfRecord) {
+              mostrarError(
+                "El PDF no se pudo recuperar. Por favor recarga la página.",
+              );
+              this.disabled = false;
+              this.textContent = textoOriginal;
+              return;
+            }
+
+            // Descargar PDF desde almacenamiento
+            const a = document.createElement("a");
+            a.href = "data:application/pdf;base64," + pdfRecord.base64;
+            a.download = "formato_unico_hoja_vida.pdf";
+            document.body.appendChild(a);
+            a.click();
+
+            // Limpiar la referencia de localStorage después de descargar
+            try {
+              localStorage.removeItem("pdfReference");
+              localStorage.removeItem("pdfTimestamp");
+            } catch (e) {
+              console.warn("No se pudo limpiar localStorage:", e);
+            }
+
+            // Mostrar mensaje de éxito
+            document.getElementById("successMsg").style.display = "block";
+            document.getElementById("descargarBtn").style.display = "none";
+
+            setTimeout(() => a.remove(), 1000);
+          } catch (e) {
+            console.warn("Error descargando PDF:", e);
+            mostrarError(
+              "Hubo un problema descargando tu PDF. Intenta nuevamente.",
+            );
+            this.disabled = false;
+            this.textContent = textoOriginal;
+          }
+        };
+      }
+
+      function mostrarError(mensaje) {
+        const errorEl = document.getElementById("errorMsg");
+        errorEl.textContent = mensaje;
+        errorEl.style.display = "block";
+        document.getElementById("estadoPago").textContent = "Error";
+      }
+
+      window.onload = validarPagoYDescargar;
+    </script>
+  </body>
+</html>
