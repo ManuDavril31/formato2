@@ -40,6 +40,11 @@
 let _lastPdfUrl = null;
 // Página activa (1..3) para vista previa y overlay
 let _currentPreviewPage = 1;
+
+// --- OPTIMIZACIÓN: CACHE DE PDF ---
+let basePagesCache = []; // Array de { canvas, width, height }
+let isPdfBaseLoaded = false;
+const CACHE_SCALE = 1.6; // Escala base para alta resolución en la cache
 // Helper seguro para cadenas en drawText
 const s = (v) => (v == null ? "" : typeof v === "string" ? v : String(v));
 // Elementos relacionados con nacionalidad/pais: se manejan fuera del submit
@@ -1660,16 +1665,353 @@ function debounce(fn, delay = 350) {
 }
 
 // Auto update desktop preview
-async function updateDesktopPreview() {
-  if (window.matchMedia("(max-width: 768px)").matches) return; // solo escritorio
+async function initBasePdfCache() {
+  if (isPdfBaseLoaded) return;
   try {
-    const bytes = await buildPdfBytes();
-    await renderDesktop(bytes, _currentPreviewPage);
+    const pdfLib = await ensurePdfJs();
+    const pdfBytes = await fetch("formatounico.pdf").then((res) => res.arrayBuffer());
+    const pdf = await pdfLib.getDocument({ data: pdfBytes }).promise;
+
+    basePagesCache = [];
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const viewport = page.getViewport({ scale: CACHE_SCALE });
+
+      const offscreen = document.createElement("canvas");
+      offscreen.width = viewport.width;
+      offscreen.height = viewport.height;
+      const oCtx = offscreen.getContext("2d");
+
+      // Fondo blanco
+      oCtx.fillStyle = "#fff";
+      oCtx.fillRect(0, 0, offscreen.width, offscreen.height);
+
+      await page.render({ canvasContext: oCtx, viewport }).promise;
+      basePagesCache.push({ canvas: offscreen, width: viewport.width, height: viewport.height });
+    }
+    isPdfBaseLoaded = true;
+    console.log("PDF base cacheado con éxito.");
   } catch (e) {
-    console.warn("Auto update fallo", e);
+    console.error("Error cacheando PDF:", e);
   }
 }
-const debouncedUpdate = debounce(updateDesktopPreview, 400);
+
+/**
+ * Función central para dibujar los datos sobre el canvas usando solo Canvas API.
+ * Reemplaza el re-renderizado total con pdf-lib durante la escritura.
+ */
+function drawCanvasOverlay(ctx, formData, pageNum, canvasW, canvasH) {
+  const scale = canvasW / (basePagesCache[pageNum - 1]?.width / CACHE_SCALE || 595.28);
+  const pageH = canvasH;
+
+  // Configuración de fuente base
+  ctx.font = `bold ${Math.round(10 * scale)}px Helvetica, Arial, sans-serif`;
+  ctx.fillStyle = "#000";
+  ctx.textBaseline = "alphabetic";
+
+  const v = formData;
+  const s = (val) => (val == null ? "" : String(val));
+
+  if (pageNum === 1) {
+    ctx.fillText(s(v.apellido1).substring(0, 20), 65 * scale, pageH - (605 * scale));
+    ctx.fillText(s(v.apellido2).substring(0, 20), 230 * scale, pageH - (605 * scale));
+    ctx.fillText(s(v.nombres).substring(0, 30), 400 * scale, pageH - (605 * scale));
+
+    if (v.tipoDocumento === "CC") ctx.fillText("X", 83 * scale, pageH - (574 * scale));
+    else if (v.tipoDocumento === "CE") ctx.fillText("X", 113 * scale, pageH - (574 * scale));
+    else if (v.tipoDocumento === "PA") ctx.fillText("X", 148 * scale, pageH - (574 * scale));
+    ctx.fillText(s(v.documento).substring(0, 15), 185 * scale, pageH - (575 * scale));
+
+    if (v.sexo === "M") ctx.fillText("X", 340 * scale, pageH - (575 * scale));
+    else if (v.sexo === "F") ctx.fillText("X", 318 * scale, pageH - (575 * scale));
+
+    if (v.nacionalidadValor === "COLOMBIANA") ctx.fillText("X", 383 * scale, pageH - (575 * scale));
+    else if (v.nacionalidadValor === "EXTRANJERA") {
+      ctx.fillText("X", 457 * scale, pageH - (575 * scale));
+      if (v.paisExtranjero) ctx.fillText(s(v.paisExtranjero).substring(0, 25), 474 * scale, pageH - (575 * scale));
+    }
+
+    if (v.libretaMilitar === "PRIMERA") ctx.fillText("X", 146 * scale, pageH - (544 * scale));
+    else if (v.libretaMilitar === "SEGUNDA") ctx.fillText("X", 262 * scale, pageH - (544 * scale));
+    ctx.fillText(s(v.numeroLibretaMilitar).substring(0, 12), 338 * scale, pageH - (545 * scale));
+    ctx.fillText(s(v.distritoMilitar).substring(0, 15), 495 * scale, pageH - (545 * scale));
+
+    if (v.fechaNacimiento) {
+      const f = new Date(v.fechaNacimiento);
+      const d = String(f.getUTCDate()).padStart(2, "0");
+      const m = String(f.getMonth() + 1).padStart(2, "0");
+      const a = f.getFullYear();
+      ctx.fillText(d, 139 * scale, pageH - (508 * scale));
+      ctx.fillText(m, 188 * scale, pageH - (508 * scale));
+      ctx.fillText(a.toString(), 240 * scale, pageH - (508 * scale));
+    }
+
+    ctx.fillText(s(v.paisNacimiento).substring(0, 20), 118 * scale, pageH - (490 * scale));
+    ctx.fillText(s(v.deptoNacimiento).substring(0, 20), 118 * scale, pageH - (472 * scale));
+    ctx.fillText(s(v.muniNacimiento).substring(0, 20), 118 * scale, pageH - (455 * scale));
+
+    ctx.fillText(s(v.dirCorrespondecia).substring(0, 50), 292 * scale, pageH - (508 * scale));
+    ctx.fillText(s(v.paisCorrespondecia).substring(0, 30), 317 * scale, pageH - (490 * scale));
+    ctx.fillText(s(v.deptoCorrespondecia).substring(0, 20), 473 * scale, pageH - (490 * scale));
+    ctx.fillText(s(v.muniCorrespondecia).substring(0, 20), 344 * scale, pageH - (473 * scale));
+    ctx.fillText(s(v.telCorrespondecia).substring(0, 20), 344 * scale, pageH - (455 * scale));
+
+    const oldFontSmall = ctx.font;
+    ctx.font = `bold ${Math.round(7 * scale)}px Helvetica, Arial, sans-serif`;
+    ctx.fillText(s(v.emailCorrespondecia).substring(0, 35), 473 * scale, pageH - (470 * scale));
+    ctx.fillText(s(v.hostEmail).substring(0, 20), 473 * scale, pageH - (455 * scale));
+    ctx.font = oldFontSmall;
+
+    // Educación superior
+    const items = (v.educacionSuperior || []).slice(0, 5);
+    let baseY = 200;
+    const step = 16;
+    items.forEach((it, idx) => {
+      const y = baseY - idx * step;
+      ctx.fillText(s(it.modalidad).substring(0, 25), 70 * scale, pageH - (y * scale));
+      ctx.fillText(s(it.semestres).substring(0, 10), 130 * scale, pageH - (y * scale));
+      if (it.graduado === "SI") ctx.fillText("X", 183 * scale, pageH - (y * scale));
+      else if (it.graduado === "NO") ctx.fillText("X", 208 * scale, pageH - (y * scale));
+
+      const prevF = ctx.font;
+      ctx.font = `bold ${Math.round(7 * scale)}px Helvetica, Arial, sans-serif`;
+      ctx.fillText(s(it.titulo).substring(0, 35), 225 * scale, pageH - ((y + 1.5) * scale));
+      ctx.font = prevF;
+
+      if (it.fecha) {
+        const f = new Date(it.fecha);
+        if (!isNaN(f)) {
+          ctx.fillText(String(f.getMonth() + 1).padStart(2, "0"), 430 * scale, pageH - (y * scale));
+          ctx.fillText(String(f.getFullYear()), 460 * scale, pageH - (y * scale));
+        }
+      }
+      ctx.fillText(s(it.tarjeta).substring(0, 15), 505 * scale, pageH - (y * scale));
+    });
+
+    // Idiomas
+    const idiomas = (v.idiomas || []).slice(0, 2);
+    const baseYI = 72;
+    const stepI = 17;
+    idiomas.forEach((it, idx) => {
+      const y = baseYI - idx * stepI;
+      ctx.fillText(s(it.idioma).substring(0, 20), 160 * scale, pageH - (y * scale));
+      const mapping = { habla: [305, 320, 338], lee: [355, 370, 388], escribe: [405, 422, 440] };
+      ["habla", "lee", "escribe"].forEach(type => {
+        const val = (it[type] || "");
+        const xArr = mapping[type];
+        if (val === "REGULAR") ctx.fillText("X", xArr[0] * scale, pageH - (y * scale));
+        else if (val === "BIEN") ctx.fillText("X", xArr[1] * scale, pageH - (y * scale));
+        else if (val === "MUYBIEN") ctx.fillText("X", xArr[2] * scale, pageH - (y * scale));
+      });
+    });
+  } else if (pageNum === 2) {
+    const baseTopY = 552;
+    const blockStep = 130;
+    const startRowOffset = v.trabajaActualmente ? 0 : 1;
+    const list = (v.experiencias || []).slice(0, Math.max(0, 4 - startRowOffset));
+    list.forEach((e, idx) => {
+      const topY = baseTopY - (idx + startRowOffset) * blockStep;
+      ctx.fillText(s(e.empresa).substring(0, 30), 65 * scale, pageH - (topY * scale));
+      if (e.tipoEmpresa === "PUBLICA") ctx.fillText("X", 345 * scale, pageH - (topY * scale));
+      else if (e.tipoEmpresa === "PRIVADA") ctx.fillText("X", 390 * scale, pageH - (topY * scale));
+      ctx.fillText(s(e.pais).substring(0, 20), 425 * scale, pageH - (topY * scale));
+
+      const y2 = topY - 30;
+      ctx.fillText(s(e.depto).substring(0, 20), 65 * scale, pageH - (y2 * scale));
+      ctx.fillText(s(e.municipio).substring(0, 20), 242 * scale, pageH - (y2 * scale));
+      const oldF = ctx.font;
+      ctx.font = `bold ${Math.round(6 * scale)}px Helvetica, Arial, sans-serif`;
+      ctx.fillText(s(e.correo).substring(0, 25), 412 * scale, pageH - (y2 * scale));
+      ctx.font = oldF;
+
+      const y3 = topY - 60;
+      ctx.fillText(s(e.telefono).substring(0, 15), 65 * scale, pageH - (y3 * scale));
+      const drawF = (fechaS, xD, xM, xA) => {
+        if (!fechaS) return;
+        const f = new Date(fechaS);
+        if (isNaN(f)) return;
+        ctx.fillText(String(f.getUTCDate()).padStart(2, "0"), xD * scale, pageH - (y3 * scale));
+        ctx.fillText(String(f.getUTCMonth() + 1).padStart(2, "0"), xM * scale, pageH - (y3 * scale));
+        ctx.fillText(String(f.getUTCFullYear()), xA * scale, pageH - (y3 * scale));
+      };
+      drawF(e.fechaIngreso, 263, 312, 362);
+      drawF(e.fechaRetiro, 430, 479, 529);
+
+      const y4 = topY - 90;
+      ctx.fillText(s(e.cargo).substring(0, 25), 65 * scale, pageH - (y4 * scale));
+      ctx.fillText(s(e.dependencia).substring(0, 20), 243 * scale, pageH - (y4 * scale));
+      ctx.fillText(s(e.direccion).substring(0, 25), 410 * scale, pageH - (y4 * scale));
+    });
+  } else if (pageNum === 3) {
+    const d3 = v.hoja3 || {};
+    ctx.fillText(s(d3.servidorPublicoAnios), 390 * scale, pageH - (595 * scale));
+    ctx.fillText(s(d3.servidorPublicoMeses), 460 * scale, pageH - (595 * scale));
+    ctx.fillText(s(d3.servidorPrivadoAnios), 390 * scale, pageH - (570 * scale));
+    ctx.fillText(s(d3.servidorPrivadoMeses), 460 * scale, pageH - (570 * scale));
+    ctx.fillText(s(d3.trabajadorIndependienteAnios), 390 * scale, pageH - (545 * scale));
+    ctx.fillText(s(d3.trabajadorIndependienteMeses), 460 * scale, pageH - (545 * scale));
+
+    const totalMeses = Number(d3.trabajadorIndependienteMeses || 0) + Number(d3.servidorPublicoMeses || 0) + Number(d3.servidorPrivadoMeses || 0);
+    const totalAnios = Number(d3.trabajadorIndependienteAnios || 0) + Number(d3.servidorPublicoAnios || 0) + Number(d3.servidorPrivadoAnios || 0);
+    ctx.fillText(String(totalAnios), 390 * scale, pageH - (516 * scale));
+    ctx.fillText(String(totalMeses), 460 * scale, pageH - (516 * scale));
+
+    if (d3.Noinhabilidad === "SI") ctx.fillText("X", 270 * scale, pageH - (420 * scale));
+    else if (d3.Noinhabilidad === "NO") ctx.fillText("X", 302 * scale, pageH - (420 * scale));
+
+    const fechaObj = d3.fechaFirma ? new Date(d3.fechaFirma) : new Date();
+    const fS = `${String(fechaObj.getUTCDate()).padStart(2, "0")}/${String(fechaObj.getUTCMonth() + 1).padStart(2, "0")}/${fechaObj.getUTCFullYear()}`;
+    ctx.fillText((s(d3.lugarFirma).substring(0, 25) + ", " + fS), 220 * scale, pageH - (338 * scale));
+  }
+}
+
+async function updateDesktopPreview() {
+  if (window.matchMedia("(max-width: 768px)").matches) return; // solo escritorio
+
+  const canvas = document.getElementById("pdfCanvasDesktop");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+
+  // Si no hay cache, inicializar (solo la primera vez)
+  if (!isPdfBaseLoaded) {
+    await initBasePdfCache();
+  }
+
+  const pageCache = basePagesCache[_currentPreviewPage - 1];
+  if (!pageCache) return;
+
+  // 1. Restaurar capa base (PDF)
+  // Ajustar dimensiones si es necesario (el canvasDesktop puede cambiar de tamaño por el container)
+  const container = document.getElementById("previewDesktopContainer") || canvas.parentElement;
+  const availableH = container.clientHeight * window.devicePixelRatio;
+  const availableW = container.clientWidth * window.devicePixelRatio;
+
+  const scaleByH = availableH / (pageCache.height / CACHE_SCALE);
+  const scaleByW = availableW / (pageCache.width / CACHE_SCALE);
+  const currentScale = Math.min(scaleByH, scaleByW, 1.5);
+
+  const finalW = Math.round((pageCache.width / CACHE_SCALE) * currentScale);
+  const finalH = Math.round((pageCache.height / CACHE_SCALE) * currentScale);
+
+  if (canvas.width !== finalW || canvas.height !== finalH) {
+    canvas.width = finalW;
+    canvas.height = finalH;
+    canvas.style.width = Math.round(finalW / window.devicePixelRatio) + "px";
+    canvas.style.height = Math.round(finalH / window.devicePixelRatio) + "px";
+  }
+
+  ctx.drawImage(pageCache.canvas, 0, 0, canvas.width, canvas.height);
+
+  // 2. Capa dinámica: Dibujar texto directamente
+  const formData = getFormData(); // Función para obtener datos actuales
+  drawCanvasOverlay(ctx, formData, _currentPreviewPage, canvas.width, canvas.height);
+
+  // 3. Marca de agua
+  drawWatermark(canvas);
+}
+
+function getFormData() {
+  const v = {};
+  document.querySelectorAll("#formulario input, #formulario select, #formulario textarea").forEach((el) => {
+    if (el.id) {
+      if (el.type === "checkbox" || el.type === "radio") {
+        v[el.id] = el.checked;
+      } else {
+        v[el.id] = el.value;
+      }
+    }
+  });
+
+  // Educación superior dinámica
+  v.educacionSuperior = [];
+  const eduContainer = document.getElementById("eduContainer");
+  if (eduContainer) {
+    eduContainer.querySelectorAll(".edu-block").forEach((block) => {
+      v.educacionSuperior.push({
+        modalidad: block.querySelector(".modalidad")?.value || "",
+        semestres: block.querySelector(".semestres")?.value || "",
+        graduado: block.querySelector(".graduado")?.value || "",
+        titulo: block.querySelector(".titulo")?.value || "",
+        fecha: block.querySelector(".fecha")?.value || "",
+        tarjeta: block.querySelector(".tarjeta")?.value || "",
+      });
+    });
+  }
+
+  // Idiomas dinámicos
+  v.idiomas = [];
+  const idiomasContainer = document.getElementById("idiomasContainer");
+  if (idiomasContainer) {
+    idiomasContainer.querySelectorAll(".idioma-block").forEach((block) => {
+      v.idiomas.push({
+        idioma: block.querySelector(".idioma")?.value || "",
+        habla: block.querySelector(".habla")?.value || "",
+        lee: block.querySelector(".lee")?.value || "",
+        escribe: block.querySelector(".escribe")?.value || "",
+      });
+    });
+  }
+
+  // Experiencias dinámicas
+  v.experiencias = [];
+  const expContainer = document.getElementById("experienciasContainer");
+  if (expContainer) {
+    expContainer.querySelectorAll(".exp-block").forEach((block) => {
+      v.experiencias.push({
+        empresa: block.querySelector(".empresa")?.value || "",
+        tipoEmpresa: block.querySelector(".tipoEmpresa")?.value || "",
+        pais: block.querySelector(".pais")?.value || "",
+        depto: block.querySelector(".depto")?.value || "",
+        municipio: block.querySelector(".muni")?.value || "",
+        correo: block.querySelector(".correo")?.value || "",
+        telefono: block.querySelector(".telefono")?.value || "",
+        fechaIngreso: block.querySelector(".fechaIngreso")?.value || "",
+        fechaRetiro: block.querySelector(".fechaRetiro")?.value || "",
+        cargo: block.querySelector(".cargo")?.value || "",
+        dependencia: block.querySelector(".dependencia")?.value || "",
+        direccion: block.querySelector(".direccion")?.value || "",
+      });
+    });
+  }
+
+  // Página 3 data (servidores)
+  v.hoja3 = {
+    servidorPublicoAnios: document.getElementById("servidorPublicoAnios")?.value || "0",
+    servidorPublicoMeses: document.getElementById("servidorPublicoMeses")?.value || "0",
+    servidorPrivadoAnios: document.getElementById("servidorPrivadoAnios")?.value || "0",
+    servidorPrivadoMeses: document.getElementById("servidorPrivadoMeses")?.value || "0",
+    trabajadorIndependienteAnios: document.getElementById("trabajadorIndependienteAnios")?.value || "0",
+    trabajadorIndependienteMeses: document.getElementById("trabajadorIndependienteMeses")?.value || "0",
+    Noinhabilidad: document.getElementById("Noinhabilidad")?.value || "",
+    lugarFirma: document.getElementById("lugarFirma")?.value || "",
+    fechaFirma: document.getElementById("fechaFirma")?.value || "",
+  };
+
+  return v;
+}
+const debouncedUpdate = debounce(updateDesktopPreview, 50);
+
+// Navegación de páginas en el preview de escritorio
+function updatePageInfo() {
+  const info = document.getElementById("pageInfo");
+  if (info) info.textContent = `Página ${_currentPreviewPage} / 3`;
+}
+
+document.getElementById("prevPageBtn")?.addEventListener("click", () => {
+  if (_currentPreviewPage > 1) {
+    _currentPreviewPage--;
+    updateDesktopPreview();
+    updatePageInfo();
+  }
+});
+
+document.getElementById("nextPageBtn")?.addEventListener("click", () => {
+  if (_currentPreviewPage < 3) { // Asumimos 3 páginas según buildPdfBytes
+    _currentPreviewPage++;
+    updateDesktopPreview();
+    updatePageInfo();
+  }
+});
 
 // Adjuntar listeners a inputs
 document
@@ -1887,6 +2229,9 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
 // Preload PDF.js en segundo plano poco después de que la página cargue
 // para reducir la latencia en la primera previsualización (descarga con baja prioridad)
 window.addEventListener("load", () => {
+  // Preload PDF basico para optimizar preview escritorio
+  initBasePdfCache();
+
   // pequeño retardo para no interferir con recursos críticos iniciales
   setTimeout(() => {
     ensurePdfJs()
@@ -1896,7 +2241,7 @@ window.addEventListener("load", () => {
       .catch(() => {
         /* ignorar fallo de precarga */
       });
-  }, 2000);
+  }, 1000);
 });
 
 // --- H2 -> dropdown colapsable dentro del formulario ---
