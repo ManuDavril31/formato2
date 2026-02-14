@@ -1038,49 +1038,77 @@ document.addEventListener('DOMContentLoaded', async () => {
     overlay.id = 'canvas-preview-overlay'
     overlay.style.position = 'fixed'
     overlay.style.inset = '0'
-    overlay.style.background = 'rgba(0,0,0,0.75)'
+    overlay.style.background = 'rgba(0,0,0,0.85)'
     overlay.style.display = 'flex'
-    overlay.style.alignItems = 'center'
+    overlay.style.alignItems = 'flex-start' // Alinear arriba para el scroll
     overlay.style.justifyContent = 'center'
     overlay.style.zIndex = '3000'
+    overlay.style.overflow = 'auto' // Permitir scroll si la imagen crece
+    overlay.style.padding = '40px'
+    overlay.style.cursor = 'zoom-in'
 
-    // contenedor para la imagen escalada
-    const box = document.createElement('div')
-    box.style.maxWidth = '98vw'
-    box.style.maxHeight = '98vh'
-    box.style.boxSizing = 'border-box'
-    box.style.padding = '4px'
+    // contenedor interno para centrado flexible
+    const container = document.createElement('div')
+    container.style.margin = 'auto'
+    container.style.display = 'flex'
+    container.style.flexDirection = 'column'
+    container.style.alignItems = 'center'
+    container.style.justifyContent = 'center'
+    container.style.minHeight = 'min-content'
 
-    // crear canvas temporal para copiar la imagen y escalar preservando ratio
+    // crear canvas temporal para copiar la imagen
     const temp = document.createElement('canvas')
     const ctx = temp.getContext('2d')
     const srcW = mainCanvas.width
     const srcH = mainCanvas.height
 
-    // calcular escala para que no supere 99vw/99vh y permitir un aumento mayor (hasta 1.6x)
-    const maxW = Math.floor(window.innerWidth * 0.99)
-    const maxH = Math.floor(window.innerHeight * 0.99)
-    let scale = Math.min(maxW / srcW, maxH / srcH, 1.6)
-    const destW = Math.floor(srcW * scale)
-    const destH = Math.floor(srcH * scale)
-
-    temp.width = destW
-    temp.height = destH
-    // Evitar menú contextual sobre la vista previa temporal
-    temp.addEventListener('contextmenu', (ev) => ev.preventDefault())
-    ctx.drawImage(mainCanvas, 0, 0, srcW, srcH, 0, 0, destW, destH)
-    temp.style.width = destW + 'px'
-    temp.style.height = destH + 'px'
+    temp.width = srcW
+    temp.height = srcH
     temp.style.display = 'block'
-    temp.style.boxShadow = '0 8px 30px rgba(0,0,0,0.6)'
+    temp.style.boxShadow = '0 12px 40px rgba(0,0,0,0.6)'
     temp.style.background = '#fff'
+    temp.style.transition = 'width 0.15s ease-out, height 0.15s ease-out'
+    temp.style.cursor = 'grab'
 
-    // cerrar al hacer click fuera del canvas o presionar ESC
+    // Evitar menú contextual
+    temp.addEventListener('contextmenu', (ev) => ev.preventDefault())
+    ctx.drawImage(mainCanvas, 0, 0)
+
+    // Escala inicial: ajustar a la pantalla
+    const padding = 80
+    const availableW = window.innerWidth - padding
+    const availableH = window.innerHeight - padding
+    let currentScale = Math.min(availableW / srcW, availableH / srcH, 1.0)
+
+    function applyZoom() {
+      temp.style.width = (srcW * currentScale) + 'px'
+      temp.style.height = (srcH * currentScale) + 'px'
+    }
+
+    applyZoom()
+
+    // Manejar Zoom con la rueda del ratón
+    overlay.addEventListener('wheel', (e) => {
+      e.preventDefault()
+      const zoomStep = 0.1
+      if (e.deltaY < 0) {
+        currentScale += zoomStep
+      } else {
+        currentScale -= zoomStep
+      }
+      // Limites de zoom
+      currentScale = Math.max(0.2, Math.min(4.0, currentScale))
+      applyZoom()
+    }, { passive: false })
+
+    // Cerrar al hacer click en el fondo (overlay)
     overlay.addEventListener('click', (ev) => {
-      if (ev.target === overlay) {
+      if (ev.target === overlay || ev.target === container) {
         document.body.removeChild(overlay)
       }
     })
+
+    // Soporte para cerrar con ESC
     const onKey = (ev) => {
       if (ev.key === 'Escape') {
         if (document.body.contains(overlay)) document.body.removeChild(overlay)
@@ -1089,8 +1117,50 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     document.addEventListener('keydown', onKey)
 
-    box.appendChild(temp)
-    overlay.appendChild(box)
+    container.appendChild(temp)
+
+    // Soporte para arrastrar (panning)
+    let isDragging = false
+    let startX, startY, scrollLeft, scrollTop
+
+    temp.addEventListener('mousedown', (e) => {
+      isDragging = true
+      temp.style.cursor = 'grabbing'
+      startX = e.pageX - overlay.offsetLeft
+      startY = e.pageY - overlay.offsetTop
+      scrollLeft = overlay.scrollLeft
+      scrollTop = overlay.scrollTop
+    })
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return
+      e.preventDefault()
+      const x = e.pageX - overlay.offsetLeft
+      const y = e.pageY - overlay.offsetTop
+      const walkX = (x - startX)
+      const walkY = (y - startY)
+      overlay.scrollLeft = scrollLeft - walkX
+      overlay.scrollTop = scrollTop - walkY
+    })
+
+    window.addEventListener('mouseup', () => {
+      isDragging = false
+      temp.style.cursor = 'grab'
+    })
+
+    // Indicador visual de zoom (opcional, ayuda al usuario)
+    const hint = document.createElement('div')
+    hint.textContent = 'Usa la rueda del ratón para hacer zoom'
+    hint.style.color = '#fff'
+    hint.style.marginTop = '15px'
+    hint.style.fontSize = '14px'
+    hint.style.background = 'rgba(0,0,0,0.5)'
+    hint.style.padding = '5px 15px'
+    hint.style.borderRadius = '20px'
+    hint.style.pointerEvents = 'none'
+    container.appendChild(hint)
+
+    overlay.appendChild(container)
     document.body.appendChild(overlay)
   }
 
