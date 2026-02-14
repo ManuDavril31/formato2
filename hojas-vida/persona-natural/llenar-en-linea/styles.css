@@ -596,6 +596,39 @@ section[role="tabpanel"] {
   border-radius: 8px;
   font-size: 14px;
   color: #4a5568;
+  position: relative;
+}
+
+/* Botón para eliminar página completa */
+.remove-page {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #fee2e2;
+  color: #dc2626 !important;
+  border: 1px solid #fecaca;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  z-index: 10;
+  margin-top: 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.remove-page:hover {
+  background: #fecaca;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(220, 38, 38, 0.1);
+}
+
+.remove-page:active {
+  transform: scale(0.98);
 }
 
 h1 {

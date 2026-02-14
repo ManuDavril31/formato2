@@ -2497,6 +2497,9 @@ function addExtraPage2() {
 
   newPanel.innerHTML = `
     <div class="panel-placeholder">
+      <button type="button" class="remove-page" data-panel-id="${panelId}">
+        <span>🗑️</span> Eliminar esta página
+      </button>
       <h2>EXPERIENCIA LABORAL (ADICIONAL)</h2>
       <details class="section" open>
         <summary>Experiencia Laboral (Página 2.${count})</summary>
@@ -2528,12 +2531,87 @@ function addExtraPage2() {
   saveFormDataToStorage();
 }
 
+function removeExtraPage2(panelId) {
+  if (!confirm("¿Estás seguro de que deseas eliminar esta página adicional y toda su experiencia laboral?")) return;
+
+  const panel = document.getElementById(panelId);
+  if (panel) panel.remove();
+
+  // Obtener todos los paneles extras que quedaron
+  const extraPanels = Array.from(document.getElementById("extraPagePanels").children);
+  const tablist = document.querySelector(".tablist");
+
+  // Eliminar todos los tabs de páginas extras actuales para reconstruirlos
+  _extraPage2Ids.forEach((id, i) => {
+    const tab = document.getElementById(`tab-p2-ext-${i}`);
+    if (tab) tab.remove();
+  });
+
+  _extraPage2Ids = [];
+
+  // Re-indexar paneles y re-crear tabs
+  const lastTab = document.getElementById("tab-p3");
+  extraPanels.forEach((p, i) => {
+    const newIdx = i;
+    const newCount = i + 1;
+    const newPanelId = `panel-p2-ext-${newIdx}`;
+    const newTabId = `tab-p2-ext-${newIdx}`;
+
+    // Actualizar Panel
+    p.id = newPanelId;
+    p.setAttribute("aria-labelledby", newTabId);
+
+    // Actualizar resumen y IDs internos
+    const summary = p.querySelector("summary");
+    if (summary) summary.textContent = `Experiencia Laboral (Página 2.${newCount})`;
+
+    const container = p.querySelector(".exp-container");
+    if (container) container.id = `expContainer-ext-${newIdx}`;
+
+    const addBtn = p.querySelector(".add-exp");
+    if (addBtn) addBtn.id = `addExpBtn-ext-${newIdx}`;
+
+    const delBtn = p.querySelector(".remove-page");
+    if (delBtn) delBtn.setAttribute("data-panel-id", newPanelId);
+
+    // Re-crear Tab
+    const newTab = document.createElement("button");
+    newTab.type = "button";
+    newTab.id = newTabId;
+    newTab.className = "tab";
+    newTab.setAttribute("role", "tab");
+    newTab.setAttribute("aria-selected", "false");
+    newTab.textContent = `Página 2.${newCount}`;
+    tablist.insertBefore(newTab, lastTab);
+
+    _extraPage2Ids.push(newPanelId);
+  });
+
+  // Re-inicializar sistema de pestañas
+  setupTopTabs.init();
+  setupTopTabs.activate(1); // Volver a la Página 2 original (o podrías activar la 0)
+
+  saveFormDataToStorage();
+  debouncedUpdate();
+}
+
 (function setupDynamicPage2() {
   document.addEventListener("click", (e) => {
-    const btn = e.target.closest("#addExtraPageBtn");
-    if (btn) {
+    // Manejar botón de añadir
+    const addBtn = e.target.closest("#addExtraPageBtn");
+    if (addBtn) {
       e.preventDefault();
       addExtraPage2();
+      return;
+    }
+
+    // Manejar botón de eliminar
+    const delBtn = e.target.closest(".remove-page");
+    if (delBtn) {
+      e.preventDefault();
+      const panelId = delBtn.getAttribute("data-panel-id");
+      removeExtraPage2(panelId);
+      return;
     }
   });
 })();
