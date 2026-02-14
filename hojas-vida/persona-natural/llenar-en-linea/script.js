@@ -2008,35 +2008,15 @@ function getFormData() {
 }
 const debouncedUpdate = debounce(updateDesktopPreview, 50);
 
-// Navegación de páginas en el preview de escritorio
-function updatePageInfo() {
-  const info = document.getElementById("pageInfo");
-  if (info) info.textContent = `Página ${_currentPreviewPage} / 3`;
-}
+// La navegación manual ha sido eliminada a petición del usuario.
+// Se mantiene la lógica de cambio automático de página.
 
 function goToPreviewPage(page) {
   if (page < 1 || page > 3) return;
   if (_currentPreviewPage === page) return;
   _currentPreviewPage = page;
   updateDesktopPreview();
-  updatePageInfo();
 }
-
-document.getElementById("prevPageBtn")?.addEventListener("click", (e) => {
-  e.preventDefault();
-  e.stopPropagation();
-  if (_currentPreviewPage > 1) {
-    goToPreviewPage(_currentPreviewPage - 1);
-  }
-});
-
-document.getElementById("nextPageBtn")?.addEventListener("click", (e) => {
-  e.preventDefault();
-  e.stopPropagation();
-  if (_currentPreviewPage < 3) {
-    goToPreviewPage(_currentPreviewPage + 1);
-  }
-});
 
 // Auto-switch page based on focus
 document.getElementById("formulario")?.addEventListener("focusin", (e) => {
