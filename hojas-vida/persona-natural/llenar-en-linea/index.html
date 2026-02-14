@@ -88,10 +88,13 @@
         <!-- Tabs navegación superior (3 páginas) -->
         <nav class="tabs" aria-label="Páginas del formulario">
           <div role="tablist" aria-orientation="horizontal" class="tablist">
-            <button id="tab-p1" role="tab" aria-selected="true" aria-controls="panel-p1" class="tab active">Página
+            <button id="tab-p1" type="button" role="tab" aria-selected="true" aria-controls="panel-p1"
+              class="tab active">Página
               1</button>
-            <button id="tab-p2" role="tab" aria-selected="false" aria-controls="panel-p2" class="tab">Página 2</button>
-            <button id="tab-p3" role="tab" aria-selected="false" aria-controls="panel-p3" class="tab">Página 3</button>
+            <button id="tab-p2" type="button" role="tab" aria-selected="false" aria-controls="panel-p2"
+              class="tab">Página 2</button>
+            <button id="tab-p3" type="button" role="tab" aria-selected="false" aria-controls="panel-p3"
+              class="tab">Página 3</button>
             <button id="clearFormBtn" type="button" class="btn-clear-form"
               title="Borrar todos los datos del formulario">🗑️ Limpiar formulario</button>
           </div>
@@ -315,12 +318,20 @@
                 <div id="expContainer" class="exp-container"></div>
                 <button type="button" id="addExpBtn" class="add-exp" aria-label="Agregar experiencia"
                   title="Agregar experiencia">➕ Añadir experiencia</button>
-                <p class="hint" style="font-size: 12px; color: #555; margin-top: 8px">Puedes agregar hasta 4
-                  experiencias laborales. Usa el botón ➕ para añadir y la ✕ dentro de cada bloque para eliminar. Las
-                  filas se dibujan en la página 2 del PDF automáticamente.</p>
+                <p class="hint">Estas filas se dibujan en la página 2 del PDF automáticamente.</p>
               </details>
+
+              <!-- Botón Prominente para agregar más páginas -->
+              <div class="extra-page-action">
+                <button type="button" id="addExtraPageBtn" class="btn-primary-action">
+                  <span>📄</span> + Agregar otra Página 2 (Más Experiencias)
+                </button>
+                <p class="hint">Si tienes más de 4 experiencias, usa este botón para añadir una página nueva al PDF.</p>
+              </div>
             </div>
           </section>
+          <!-- Contenedor para páginas 2 adicionales -->
+          <div id="extraPagePanels"></div>
 
           <section id="panel-p3" role="tabpanel" aria-labelledby="tab-p3" hidden>
             <div class="panel-placeholder">

@@ -40,6 +40,10 @@
 let _lastPdfUrl = null;
 // Página activa (1..3) para vista previa y overlay
 let _currentPreviewPage = 1;
+// Índice de la página 2 actual (0 para la original, 1+ para extras)
+let _currentPage2Index = 0;
+// Lista de IDs de paneles de página 2 adicionales
+let _extraPage2Ids = [];
 
 // --- OPTIMIZACIÓN: CACHE DE PDF ---
 let basePagesCache = []; // Array de { canvas, width, height }
@@ -159,6 +163,29 @@ async function saveFormDataToStorage(formData = null) {
       if (expBlocks.length > 0) {
         formData._expBlocks = expBlocks;
       }
+    }
+
+    // Guardar paneles de Página 2 adicionales
+    if (_extraPage2Ids.length > 0) {
+      formData._extraPage2Ids = _extraPage2Ids;
+      formData._extraExpBlocks = [];
+      _extraPage2Ids.forEach((panelId, idx) => {
+        const container = document.getElementById(`expContainer-ext-${idx}`);
+        if (container) {
+          const blocks = [];
+          container.querySelectorAll(".exp-block").forEach((block) => {
+            const blockData = {};
+            block.querySelectorAll("input, select").forEach((el) => {
+              const key = el.name || el.id;
+              if (key) {
+                blockData[key] = el.value;
+              }
+            });
+            blocks.push(blockData);
+          });
+          formData._extraExpBlocks.push(blocks);
+        }
+      });
     }
 
     const record = {
@@ -574,6 +601,40 @@ async function restoreFormDataFromStorage() {
       }, 150);
     }
 
+    // Restaurar páginas 2 adicionales
+    if (formData._extraPage2Ids && Array.isArray(formData._extraPage2Ids)) {
+      formData._extraPage2Ids.forEach((panelId, idx) => {
+        if (!document.getElementById(panelId)) {
+          addExtraPage2();
+        }
+        // Llenar datos en los bloques de esa página
+        if (formData._extraExpBlocks && formData._extraExpBlocks[idx]) {
+          const blocksData = formData._extraExpBlocks[idx];
+          const container = document.getElementById(`expContainer-ext-${idx}`);
+          if (container) {
+            // Limpiar iniciales si hay
+            container.innerHTML = "";
+            blocksData.forEach((bData, bIdx) => {
+              // Simular clic en "Añadir experiencia" para este panel
+              const addBtn = document.getElementById(`addExpBtn-ext-${idx}`);
+              if (addBtn) addBtn.click();
+
+              // Los bloques se añaden asíncronamente o síncronamente?
+              // En setupExperienciaLogic, addExp es síncrona.
+              const allBlocks = container.querySelectorAll(".exp-block");
+              const currentBlock = allBlocks[allBlocks.length - 1];
+              if (currentBlock) {
+                Object.entries(bData).forEach(([k, v]) => {
+                  const input = currentBlock.querySelector(`[name$="-${k}"]`) || currentBlock.querySelector(`.${k}`);
+                  if (input) input.value = v;
+                });
+              }
+            });
+          }
+        }
+      });
+    }
+
     // Disparar evento change en trabajaActualmente para actualizar validaciones
     setTimeout(() => {
       const trabajaSel = document.getElementById("trabajaActualmente");
@@ -581,6 +642,8 @@ async function restoreFormDataFromStorage() {
         const event = new Event("change", { bubbles: true });
         trabajaSel.dispatchEvent(event);
       }
+      setupTopTabs.init(); // Asegurar que los tabs se inicialicen después de restaurar todo
+      setupTopTabs.activate(0); // Empezar en la P1
     }, 300);
   } catch (e) {
     console.warn("No se pudo restaurar datos:", e);
@@ -878,178 +941,7 @@ nivelEducativo?.addEventListener("change", updateFechaGradoVisibility);
 
 // Recolectar valores del formulario (en una función para reutilizar)
 function collectFormValues() {
-  return {
-    // DATOS PERSONALES
-    apellido1: document.getElementById("apellido1").value.toUpperCase(),
-    apellido2: document.getElementById("apellido2").value.toUpperCase(),
-    nombres: document.getElementById("nombres").value.toUpperCase(),
-    documento: document.getElementById("documento").value.toUpperCase(),
-    tipoDocumento: (
-      document.getElementById("tipoDocumento")?.value || ""
-    ).toUpperCase(),
-    sexo: (document.getElementById("sexo")?.value || "").toUpperCase(),
-    paisExtranjero: (paisInput?.value || "").toUpperCase(),
-    libretaMilitar: (
-      document.getElementById("libretaMilitar")?.value || ""
-    ).toUpperCase(),
-    numeroLibretaMilitar: (
-      document.getElementById("numeroLibretaMilitar")?.value || ""
-    ).toUpperCase(),
-    distritoMilitar: (
-      document.getElementById("distritoMilitar")?.value || ""
-    ).toUpperCase(),
-    fechaNacimiento: document.getElementById("fechaNacimiento").value,
-    paisNacimiento: (
-      document.getElementById("paisNacimiento")?.value || ""
-    ).toUpperCase(),
-    deptoNacimiento: (
-      document.getElementById("deptoNacimiento")?.value || ""
-    ).toUpperCase(),
-    muniNacimiento: (
-      document.getElementById("muniNacimiento")?.value || ""
-    ).toUpperCase(),
-    dirCorrespondecia: (
-      document.getElementById("dirCorrespondecia")?.value || ""
-    ).toUpperCase(),
-    paisCorrespondecia: (
-      document.getElementById("paisCorrespondecia")?.value || ""
-    ).toUpperCase(),
-    deptoCorrespondecia: (
-      document.getElementById("deptoCorrespondecia")?.value || ""
-    ).toUpperCase(),
-    muniCorrespondecia: (
-      document.getElementById("muniCorrespondecia")?.value || ""
-    ).toUpperCase(),
-    telCorrespondecia: (
-      document.getElementById("telCorrespondecia")?.value || ""
-    ).toUpperCase(),
-    emailCorrespondecia: (
-      document.getElementById("emailCorrespondecia")?.value || ""
-    ).toLowerCase(),
-    nacionalidadValor: (nacionalidad?.value || "").toUpperCase(),
-    hostEmail: (
-      document.getElementById("hostEmail")?.value || ""
-    ).toLowerCase(),
-    //FORMACION ACADEMICA Y OTROS CAMPOS SE AGREGAN AQUI
-    nivelEducativo: (
-      document.getElementById("nivelEducativo")?.value || ""
-    ).toUpperCase(),
-    tituloObtenidoBachiller: (
-      document.getElementById("tituloObtenidoBachiller")?.value || ""
-    ).toUpperCase(),
-    fechaGradoBachiller: (
-      document.getElementById("fechaGradoBachiller")?.value || ""
-    ).toUpperCase(),
-    // EDUCACION SUPERIOR
-    //1er BLOQUE
-    modalidadAcademica: (
-      document.getElementById("modalidadAcademica")?.value || ""
-    ).toUpperCase(),
-    semestresAprobados: (
-      document.getElementById("semestresAprobados")?.value || ""
-    ).toUpperCase(),
-    graduado: (document.getElementById("graduado")?.value || "").toUpperCase(),
-    tituloObtenidoSuperior: (
-      document.getElementById("tituloObtenidoSuperior")?.value || ""
-    ).toUpperCase(),
-    fechaGradoSuperior: (
-      document.getElementById("fechaGradoSuperior")?.value || ""
-    ).toUpperCase(),
-    tarjetaProfesional: (
-      document.getElementById("tarjetaProfesional")?.value || ""
-    ).toUpperCase(),
-    //2do BLOQUE
-    modalidadAcademica2: (
-      document.getElementById("modalidadAcademica2")?.value || ""
-    ).toUpperCase(),
-    semestresAprobados2: (
-      document.getElementById("semestresAprobados2")?.value || ""
-    ).toUpperCase(),
-    graduado2: (
-      document.getElementById("graduado2")?.value || ""
-    ).toUpperCase(),
-    tituloObtenidoSuperior2: (
-      document.getElementById("tituloObtenidoSuperior2")?.value || ""
-    ).toUpperCase(),
-    fechaGradoSuperior2: (
-      document.getElementById("fechaGradoSuperior2")?.value || ""
-    ).toUpperCase(),
-    tarjetaProfesional2: (
-      document.getElementById("tarjetaProfesional2")?.value || ""
-    ).toUpperCase(),
-    //3er BLOQUE
-    modalidadAcademica3: (
-      document.getElementById("modalidadAcademica3")?.value || ""
-    ).toUpperCase(),
-    semestresAprobados3: (
-      document.getElementById("semestresAprobados3")?.value || ""
-    ).toUpperCase(),
-    graduado3: (
-      document.getElementById("graduado3")?.value || ""
-    ).toUpperCase(),
-    tituloObtenidoSuperior3: (
-      document.getElementById("tituloObtenidoSuperior3")?.value || ""
-    ).toUpperCase(),
-    fechaGradoSuperior3: (
-      document.getElementById("fechaGradoSuperior3")?.value || ""
-    ).toUpperCase(),
-    tarjetaProfesional3: (
-      document.getElementById("tarjetaProfesional3")?.value || ""
-    ).toUpperCase(),
-    //4to BLOQUE
-    modalidadAcademica4: (
-      document.getElementById("modalidadAcademica4")?.value || ""
-    ).toUpperCase(),
-    semestresAprobados4: (
-      document.getElementById("semestresAprobados4")?.value || ""
-    ).toUpperCase(),
-    graduado4: (
-      document.getElementById("graduado4")?.value || ""
-    ).toUpperCase(),
-    tituloObtenidoSuperior4: (
-      document.getElementById("tituloObtenidoSuperior4")?.value || ""
-    ).toUpperCase(),
-    fechaGradoSuperior4: (
-      document.getElementById("fechaGradoSuperior4")?.value || ""
-    ).toUpperCase(),
-    tarjetaProfesional4: (
-      document.getElementById("tarjetaProfesional4")?.value || ""
-    ).toUpperCase(),
-    // 5to BLOQUE
-    modalidadAcademica5: (
-      document.getElementById("modalidadAcademica5")?.value || ""
-    ).toUpperCase(),
-    semestresAprobados5: (
-      document.getElementById("semestresAprobados5")?.value || ""
-    ).toUpperCase(),
-    graduado5: (
-      document.getElementById("graduado5")?.value || ""
-    ).toUpperCase(),
-    tituloObtenidoSuperior5: (
-      document.getElementById("tituloObtenidoSuperior5")?.value || ""
-    ).toUpperCase(),
-    fechaGradoSuperior5: (
-      document.getElementById("fechaGradoSuperior5")?.value || ""
-    ).toUpperCase(),
-    tarjetaProfesional5: (
-      document.getElementById("tarjetaProfesional5")?.value || ""
-    ).toUpperCase(),
-    //Idiomas
-    // idioma1
-    idioma1: (document.getElementById("idioma1")?.value || "").toUpperCase(),
-    loHabla1: (document.getElementById("loHabla1")?.value || "").toUpperCase(),
-    loLee1: (document.getElementById("loLee1")?.value || "").toUpperCase(),
-    loEscribe1: (
-      document.getElementById("loEscribe1")?.value || ""
-    ).toUpperCase(),
-    // idioma2
-    idioma2: (document.getElementById("idioma2")?.value || "").toUpperCase(),
-    loHabla2: (document.getElementById("loHabla2")?.value || "").toUpperCase(),
-    loLee2: (document.getElementById("loLee2")?.value || "").toUpperCase(),
-    loEscribe2: (
-      document.getElementById("loEscribe2")?.value || ""
-    ).toUpperCase(),
-  };
+  return getFormData();
 }
 
 // Construye el PDF y devuelve ArrayBuffer de bytes
@@ -1061,513 +953,196 @@ async function buildPdfBytes() {
 
 // Función interna que construye el PDF a partir de datos específicos
 async function buildPdfBytesFromData(v) {
-  const { PDFDocument, rgb } = PDFLib;
-  // Resolver ruta del PDF base de forma robusta
-  // 1) Meta explícita en la página de la herramienta
-  const metaPdf = document.querySelector('meta[name="pdf-base"]')?.content;
-  let pdfUrlCandidates = [];
-  if (metaPdf) {
-    try { pdfUrlCandidates.push(new URL(metaPdf, window.location.href).href); } catch { }
-  }
-  // 2) Candidatos comunes por compatibilidad
-  try {
-    pdfUrlCandidates.push(new URL("./formatounico.pdf", window.location.href).href);
-  } catch { }
-  try {
-    // prefer root PDF (kept for compatibility)
-    pdfUrlCandidates.push(new URL("./formatounico.pdf", window.location.href).href);
-  } catch { }
-  try {
-    const scripts = Array.from(document.getElementsByTagName("script"));
-    const self = scripts.find((s) => (s.src || "").includes("script.js")) || document.currentScript;
-    if (self?.src) {
-      // allow candidate relative to script location as last resort
-      pdfUrlCandidates.push(new URL("formatounico.pdf", self.src).href);
-    }
-  } catch { }
-  // De-duplicar manteniendo orden
-  pdfUrlCandidates = Array.from(new Set(pdfUrlCandidates));
-  let existingPdfBytes = null;
-  let lastErr = null;
-  for (const url of pdfUrlCandidates) {
-    try {
-      const res = await fetch(url);
-      if (res.ok) { existingPdfBytes = await res.arrayBuffer(); break; }
-      lastErr = new Error("No se pudo cargar: " + url + " (" + res.status + ")");
-    } catch (e) { lastErr = e; }
-  }
-  if (!existingPdfBytes) {
-    throw lastErr || new Error("No se pudo localizar el PDF base");
-  }
+  const { PDFDocument, rgb, StandardFonts } = PDFLib;
+  const s = (val) => (val == null ? "" : String(val));
+  const pdfUrl = new URL("./formatounico.pdf", window.location.href).href;
+  const existingPdfBytes = await fetch(pdfUrl).then((res) => res.arrayBuffer());
+
   const pdfDoc = await PDFDocument.load(existingPdfBytes);
-  const pages = pdfDoc.getPages();
-  const page = pages[0];
-  const font = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+  const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const color = rgb(0, 0, 0);
 
-  page.drawText(s(v.apellido1).substring(0, 20), { x: 65, y: 605, size: 10, font, color });
-  page.drawText(s(v.apellido2).substring(0, 20), { x: 230, y: 605, size: 10, font, color });
-  page.drawText(s(v.nombres).substring(0, 30), { x: 400, y: 605, size: 10, font, color });
+  const pages = pdfDoc.getPages();
+  const page1 = pages[0];
+  const page2Original = pages[1];
 
-  if (v.tipoDocumento === "CC")
-    page.drawText("X", { x: 83, y: 574, size: 10, font, color });
-  else if (v.tipoDocumento === "CE")
-    page.drawText("X", { x: 113, y: 574, size: 10, font, color });
-  else if (v.tipoDocumento === "PA")
-    page.drawText("X", { x: 148, y: 574, size: 10, font, color });
-  page.drawText(s(v.documento).substring(0, 15), { x: 185, y: 575, size: 10, font, color });
+  const drawPage1OnPdf = (page, v) => {
+    page.drawText(s(v.apellido1).substring(0, 20), { x: 65, y: 605, size: 10, font, color });
+    page.drawText(s(v.apellido2).substring(0, 20), { x: 230, y: 605, size: 10, font, color });
+    page.drawText(s(v.nombres).substring(0, 30), { x: 400, y: 605, size: 10, font, color });
 
-  if (v.sexo === "M")
-    page.drawText("X", { x: 340, y: 575, size: 10, font, color });
-  else if (v.sexo === "F")
-    page.drawText("X", { x: 318, y: 575, size: 10, font, color });
+    if (v.tipoDocumento === "CC") page.drawText("X", { x: 83, y: 574, size: 10, font, color });
+    else if (v.tipoDocumento === "CE") page.drawText("X", { x: 113, y: 574, size: 10, font, color });
+    else if (v.tipoDocumento === "PA") page.drawText("X", { x: 148, y: 574, size: 10, font, color });
+    page.drawText(s(v.documento).substring(0, 15), { x: 185, y: 575, size: 10, font, color });
 
-  if (v.nacionalidadValor === "COLOMBIANA")
-    page.drawText("X", { x: 383, y: 575, size: 10, font, color });
-  else if (v.nacionalidadValor === "EXTRANJERA")
-    page.drawText("X", { x: 457, y: 575, size: 10, font, color });
-  if (v.nacionalidadValor === "EXTRANJERA" && v.paisExtranjero) {
-    page.drawText(s(v.paisExtranjero).substring(0, 25), { x: 474, y: 575, size: 9, font, color });
-  }
+    if (v.sexo === "M") page.drawText("X", { x: 340, y: 575, size: 10, font, color });
+    else if (v.sexo === "F") page.drawText("X", { x: 318, y: 575, size: 10, font, color });
 
-  if (v.libretaMilitar === "PRIMERA")
-    page.drawText("X", { x: 146, y: 544, size: 10, font, color });
-  else if (v.libretaMilitar === "SEGUNDA")
-    page.drawText("X", { x: 262, y: 544, size: 10, font, color });
-  page.drawText(s(v.numeroLibretaMilitar).substring(0, 12), {
-    x: 338,
-    y: 545,
-    size: 10,
-    font,
-    color,
-  });
-  page.drawText(s(v.distritoMilitar).substring(0, 15), { x: 495, y: 545, size: 9, font, color });
+    if (v.nacionalidad === "COLOMBIANA") page.drawText("X", { x: 383, y: 575, size: 10, font, color });
+    else if (v.nacionalidad === "EXTRANJERA") {
+      page.drawText("X", { x: 457, y: 575, size: 10, font, color });
+      page.drawText(s(v.pais).substring(0, 25), { x: 474, y: 575, size: 10, font, color });
+    }
 
-  if (v.fechaNacimiento) {
-    const fecha = new Date(v.fechaNacimiento);
-    const dia = String(fecha.getUTCDate()).padStart(2, "0");
-    const mes = String(fecha.getMonth() + 1).padStart(2, "0");
-    const anio = fecha.getFullYear();
-    page.drawText(dia, { x: 139, y: 508, size: 10, font, color });
-    page.drawText(mes, { x: 188, y: 508, size: 10, font, color });
-    page.drawText(anio.toString(), { x: 240, y: 508, size: 10, font, color });
-  }
+    if (v.libretaMilitar === "PRIMERA") page.drawText("X", { x: 146, y: 544, size: 10, font, color });
+    else if (v.libretaMilitar === "SEGUNDA") page.drawText("X", { x: 262, y: 544, size: 10, font, color });
+    page.drawText(s(v.numeroLibretaMilitar).substring(0, 12), { x: 338, y: 545, size: 10, font, color });
+    page.drawText(s(v.distritoMilitar).substring(0, 15), { x: 495, y: 545, size: 10, font, color });
 
-  // if (v.hostEmail && v.emailCorrespondecia) {
-  //   v.emailCorrespondecia = v.emailCorrespondecia + v.hostEmail;
-  // }
+    if (v.fechaNacimiento) {
+      const f = new Date(v.fechaNacimiento);
+      page.drawText(String(f.getUTCDate()).padStart(2, "0"), { x: 139, y: 508, size: 10, font, color });
+      page.drawText(String(f.getUTCMonth() + 1).padStart(2, "0"), { x: 188, y: 508, size: 10, font, color });
+      page.drawText(f.getUTCFullYear().toString(), { x: 240, y: 508, size: 10, font, color });
+    }
 
-  page.drawText(s(v.paisNacimiento).substring(0, 20), { x: 118, y: 490, size: 9, font, color });
-  page.drawText(s(v.deptoNacimiento).substring(0, 20), { x: 118, y: 472, size: 9, font, color });
-  page.drawText(s(v.muniNacimiento).substring(0, 20), { x: 118, y: 455, size: 9, font, color });
+    page.drawText(s(v.paisNacimiento).substring(0, 20), { x: 118, y: 490, size: 10, font, color });
+    page.drawText(s(v.deptoNacimiento).substring(0, 20), { x: 118, y: 472, size: 10, font, color });
+    page.drawText(s(v.muniNacimiento).substring(0, 20), { x: 118, y: 455, size: 10, font, color });
 
-  // Truncar dirección si es muy larga (máximo 50 caracteres)
-  const dirTruncada = s(v.dirCorrespondecia).substring(0, 50);
-  page.drawText(dirTruncada, { x: 292, y: 508, size: 9, font, color });
+    page.drawText(s(v.dirCorrespondecia).substring(0, 50), { x: 292, y: 508, size: 10, font, color });
+    page.drawText(s(v.paisCorrespondecia).substring(0, 30), { x: 317, y: 490, size: 10, font, color });
+    page.drawText(s(v.deptoCorrespondecia).substring(0, 20), { x: 473, y: 490, size: 10, font, color });
+    page.drawText(s(v.muniCorrespondecia).substring(0, 20), { x: 344, y: 473, size: 10, font, color });
+    page.drawText(s(v.telCorrespondecia).substring(0, 20), { x: 344, y: 455, size: 10, font, color });
 
-  page.drawText(s(v.paisCorrespondecia).substring(0, 30), {
-    x: 317,
-    y: 490,
-    size: 9,
-    font,
-    color,
-  });
-  page.drawText(s(v.deptoCorrespondecia).substring(0, 20), {
-    x: 473,
-    y: 490,
-    size: 9,
-    font,
-    color,
-  });
-  page.drawText(s(v.muniCorrespondecia).substring(0, 20), {
-    x: 344,
-    y: 473,
-    size: 9,
-    font,
-    color,
-  });
-  page.drawText(s(v.telCorrespondecia).substring(0, 20), { x: 344, y: 455, size: 9, font, color });
+    page.drawText(s(v.emailCorrespondecia).substring(0, 35), { x: 473, y: 470, size: 7, font, color });
+    page.drawText(s(v.hostEmail).substring(0, 20), { x: 473, y: 455, size: 7, font, color });
 
-  // Email: truncar si es muy largo
-  const emailTruncada = s(v.emailCorrespondecia).substring(0, 35);
-  page.drawText(emailTruncada, {
-    x: 473,
-    y: 470,
-    size: 7,
-    font,
-    color,
-  });
-
-  // Host email (dominio)
-  const hostTruncado = s(v.hostEmail).substring(0, 20);
-  page.drawText(hostTruncado, { x: 473, y: 455, size: 7, font, color });
-
-  //FORMACION ACADEMICA Y OTROS CAMPOS SE DIBUJAN AQUI
-  // Nivel educativo (marcado de check en línea de opciones y datos de bachillerato)
-  switch (v.nivelEducativo) {
-    case "1":
-      page.drawText("X", { x: 103, y: 320, size: 10, font, color });
-      break;
-    case "2":
-      page.drawText("X", { x: 120, y: 320, size: 10, font, color });
-      break;
-    case "3":
-      page.drawText("X", { x: 137, y: 320, size: 10, font, color });
-      break;
-    case "4":
-      page.drawText("X", { x: 154, y: 320, size: 10, font, color });
-      break;
-    case "5":
-      page.drawText("X", { x: 171, y: 320, size: 10, font, color });
-      break;
-    case "6":
-      page.drawText("X", { x: 188, y: 320, size: 10, font, color });
-      break;
-    case "7":
-      page.drawText("X", { x: 205, y: 320, size: 10, font, color });
-      break;
-    case "8":
-      page.drawText("X", { x: 223, y: 320, size: 10, font, color });
-      break;
-    case "9":
-      page.drawText("X", { x: 240, y: 320, size: 10, font, color });
-      break;
-    case "10":
-      page.drawText("X", { x: 257, y: 320, size: 10, font, color });
-      break;
-    case "11":
-      page.drawText("X", { x: 274, y: 320, size: 10, font, color });
-      // Truncar título si es muy largo para que quepa en el PDF
-      const tituloBachillerTruncado = s(v.tituloObtenidoBachiller).substring(0, 40);
-      page.drawText(tituloBachillerTruncado, {
-        x: 361,
-        y: 350,
-        size: 8,
-        font,
-        color,
-      });
-      const fechaBach = v.fechaGradoBachiller
-        ? new Date(v.fechaGradoBachiller)
-        : null;
-      const anioBach = fechaBach ? fechaBach.getFullYear().toString() : "";
-      page.drawText(anioBach, { x: 418, y: 320, size: 10, font, color });
-      const mesBach = fechaBach
-        ? String(fechaBach.getMonth() + 1).padStart(2, "0")
-        : "";
-      page.drawText(mesBach, { x: 353, y: 320, size: 10, font, color });
-      break;
-    default:
-      break;
-  }
-  // Educación superior dinámica (hasta 5 filas)
-  // baseY/step controlan la separación vertical por fila; ajusta x de columnas en cada drawText si cambias diseño.
-  // Columnas (x): modalidad 70 | semestres 130 | graduado SI 183 / NO 208 | título 225 | mes 430 | año 460 | tarjeta 505
-  const items = (v.educacionSuperior || []).slice(0, 5);
-  let baseY = 200; // primera fila
-  const step = 16; // separación vertical por fila
-  items.forEach((it, idx) => {
-    const y = baseY - idx * step;
-    page.drawText(s(it.modalidad).substring(0, 25), { x: 70, y, size: 9, font, color });
-    page.drawText(s(it.semestres).substring(0, 10), { x: 130, y, size: 9, font, color });
-    if ((it.graduado || "") === "SI")
-      page.drawText("X", { x: 183, y, size: 10, font, color });
-    else if ((it.graduado || "") === "NO")
-      page.drawText("X", { x: 208, y, size: 10, font, color });
-    // Nota: tamaño 7 para el título y truncado a 35 caracteres para que quepa en la celda
-    const tituloTruncado = s(it.titulo).substring(0, 35);
-    page.drawText(tituloTruncado, {
-      x: 225,
-      y: y + 1.5,
-      size: 7,
-      font,
-      color,
-    });
-    if (it.fecha) {
-      const f = new Date(it.fecha);
-      if (!isNaN(f)) {
-        const anio = String(f.getFullYear());
-        const mes = String(f.getMonth() + 1).padStart(2, "0");
-        page.drawText(mes, { x: 430, y, size: 10, font, color });
-        page.drawText(anio, { x: 460, y, size: 10, font, color });
+    // Nivel educativo
+    const mapping = { "1": 103, "2": 120, "3": 137, "4": 154, "5": 171, "6": 188, "7": 205, "8": 223, "9": 240, "10": 257, "11": 274 };
+    if (mapping[v.nivelEducativo]) {
+      page.drawText("X", { x: mapping[v.nivelEducativo], y: 320, size: 10, font, color });
+      if (v.nivelEducativo === "11") {
+        page.drawText(s(v.tituloObtenidoBachiller).substring(0, 40), { x: 361, y: 350, size: 9, font, color });
+        const f = v.fechaGradoBachiller ? new Date(v.fechaGradoBachiller) : null;
+        if (f && !isNaN(f)) {
+          page.drawText(String(f.getUTCFullYear()), { x: 418, y: 320, size: 10, font, color });
+          page.drawText(String(f.getUTCMonth() + 1).padStart(2, "0"), { x: 353, y: 320, size: 10, font, color });
+        }
       }
     }
-    // Tarjeta profesional truncada a 15 caracteres
-    const tarjetaTruncada = s(it.tarjeta).substring(0, 15);
-    page.drawText(tarjetaTruncada, { x: 505, y, size: 8, font, color });
-  });
-  // IDIOMAS dinámicos (máx 2 filas en el PDF)
-  // baseYIdiomas/stepIdiomas controlan la separación de filas; ver cabecera del archivo para mapeo de columnas.
-  const idiomas = (v.idiomas || []).slice(0, 2);
-  const baseYIdiomas = 72; // primera fila
-  const stepIdiomas = 17; // separación vertical (coincide con 72 -> 55)
-  idiomas.forEach((it, idx) => {
-    const y = baseYIdiomas - idx * stepIdiomas;
-    // Truncar nombre de idioma a 20 caracteres
-    const idiomaTruncado = s(it.idioma).substring(0, 20);
-    page.drawText(idiomaTruncado, { x: 160, y, size: 9, font, color });
-    // habla
-    switch (it.habla) {
-      case "REGULAR":
-        page.drawText("X", { x: 305, y, size: 10, font, color });
-        break;
-      case "BIEN":
-        page.drawText("X", { x: 320, y, size: 10, font, color });
-        break;
-      case "MUYBIEN":
-        page.drawText("X", { x: 338, y, size: 10, font, color });
-        break;
-      default:
-        break;
-    }
-    // lee
-    switch (it.lee) {
-      case "REGULAR":
-        page.drawText("X", { x: 355, y, size: 10, font, color });
-        break;
-      case "BIEN":
-        page.drawText("X", { x: 370, y, size: 10, font, color });
-        break;
-      case "MUYBIEN":
-        page.drawText("X", { x: 388, y, size: 10, font, color });
-        break;
-      default:
-        break;
-    }
-    // escribe
-    switch (it.escribe) {
-      case "REGULAR":
-        page.drawText("X", { x: 405, y, size: 10, font, color });
-        break;
-      case "BIEN":
-        page.drawText("X", { x: 422, y, size: 10, font, color });
-        break;
-      case "MUYBIEN":
-        page.drawText("X", { x: 440, y, size: 10, font, color });
-        break;
-      default:
-        break;
-    }
-  });
 
-  // --- Página 2 y 3: Preparación y dibujo inicial (coordenadas a ajustar) ---
-  // Si el PDF base no trae 3 páginas, creamos páginas en blanco para evitar errores.
-  let page2 = pages[1];
-  let page3 = pages[2];
-  if (!page2) page2 = pdfDoc.addPage();
-  if (!page3) page3 = pdfDoc.addPage();
+    // Educación superior
+    const edu = (v.educacionSuperior || []).slice(0, 5);
+    edu.forEach((it, idx) => {
+      const y = 200 - idx * 16;
+      page.drawText(s(it.modalidad).substring(0, 25), { x: 70, y, size: 9, font, color });
+      page.drawText(s(it.semestres).substring(0, 10), { x: 130, y, size: 9, font, color });
+      if (it.graduado === "SI") page.drawText("X", { x: 183, y, size: 10, font, color });
+      else if (it.graduado === "NO") page.drawText("X", { x: 208, y, size: 10, font, color });
+      page.drawText(s(it.titulo).substring(0, 35), { x: 225, y: y + 1.5, size: 7, font, color });
+      if (it.fecha) {
+        const f = new Date(it.fecha);
+        if (!isNaN(f)) {
+          page.drawText(String(f.getUTCMonth() + 1).padStart(2, "0"), { x: 430, y, size: 9, font, color });
+          page.drawText(String(f.getUTCFullYear()), { x: 460, y, size: 9, font, color });
+        }
+      }
+      page.drawText(s(it.tarjeta).substring(0, 15), { x: 505, y, size: 9, font, color });
+    });
 
-  // PÁGINA 2: Experiencia laboral dinámica (hasta 4 bloques)
-  if (page2) {
-    const baseTopY = 552; // línea empresa/entidad de la primera experiencia
-    const blockStep = 130; // distancia vertical entre experiencias
-    const offsets = { empresa: 0, linea2: -30, fechas: -60, linea4: -90 };
+    // Idiomas
+    const idiomas = (v.idiomas || []).slice(0, 2);
+    idiomas.forEach((it, idx) => {
+      const y = 72 - idx * 17;
+      page.drawText(s(it.idioma).substring(0, 20), { x: 160, y, size: 9, font, color });
+      const map = { habla: [305, 320, 338], lee: [355, 370, 388], escribe: [405, 422, 440] };
+      ["habla", "lee", "escribe"].forEach(type => {
+        const val = (it[type] || "");
+        const xArr = map[type];
+        if (val === "REGULAR") page.drawText("X", { x: xArr[0], y, size: 10, font, color });
+        else if (val === "BIEN") page.drawText("X", { x: xArr[1], y, size: 10, font, color });
+        else if (val === "MUYBIEN") page.drawText("X", { x: xArr[2], y, size: 10, font, color });
+      });
+    });
+  };
 
-    function drawFecha(y, fechaStr, xD, xM, xA) {
-      if (!fechaStr) return;
-      const fecha = new Date(fechaStr);
-      if (isNaN(fecha)) return;
-      const dia = String(fecha.getUTCDate()).padStart(2, "0");
-      const mes = String(fecha.getUTCMonth() + 1).padStart(2, "0");
-      const anio = String(fecha.getUTCFullYear());
-      page2.drawText(dia, { x: xD, y, size: 10, font, color });
-      page2.drawText(mes, { x: xM, y, size: 10, font, color });
-      // Mostrar también el año (antes no se estaba dibujando)
-      page2.drawText(anio, { x: xA, y, size: 10, font, color });
-    }
+  const drawPage2OnPdf = (page, v, page2Index = 0, experienceOffset = 0) => {
+    const baseTopY = 552;
+    const blockStep = 130;
+    const isWorking = v.trabajaActualmente === "SI";
+    const startRowOffset = (page2Index === 0 && !isWorking) ? 1 : 0;
+    const list = (v.experiencias || []).slice(experienceOffset, experienceOffset + Math.max(0, 4 - startRowOffset));
 
-    const startRowOffset = v.trabajaActualmente ? 0 : 1;
-    const list = (v.experiencias || []).slice(
-      0,
-      Math.max(0, 4 - startRowOffset)
-    );
     list.forEach((e, idx) => {
       const topY = baseTopY - (idx + startRowOffset) * blockStep;
-      // Línea 1: Empresa, tipo, país
-      // Truncar empresa a 30 caracteres
-      page2.drawText(s(e.empresa).substring(0, 30), { x: 65, y: topY, size: 9, font, color });
-      if (e.tipoEmpresa === "PUBLICA")
-        page2.drawText("X", { x: 345, y: topY, size: 10, font, color });
-      else if (e.tipoEmpresa === "PRIVADA")
-        page2.drawText("X", { x: 390, y: topY, size: 10, font, color });
-      // Truncar país a 20 caracteres
-      page2.drawText(s(e.pais).substring(0, 20), { x: 425, y: topY, size: 9, font, color });
+      page.drawText(s(e.empresa).substring(0, 30), { x: 65, y: topY, size: 9, font, color });
+      if (e.tipoEmpresa === "PUBLICA") page.drawText("X", { x: 345, y: topY, size: 10, font, color });
+      else if (e.tipoEmpresa === "PRIVADA") page.drawText("X", { x: 390, y: topY, size: 10, font, color });
+      page.drawText(s(e.pais).substring(0, 20), { x: 425, y: topY, size: 9, font, color });
 
-      // Línea 2: Depto, municipio, correo
-      const y2 = topY + offsets.linea2;
-      // Truncar depto a 20 caracteres
-      page2.drawText(s(e.depto).substring(0, 20), { x: 65, y: y2, size: 9, font, color });
-      // Truncar municipio a 20 caracteres
-      page2.drawText(s(e.municipio).substring(0, 20), { x: 242, y: y2, size: 9, font, color });
-      // Truncar correo a 25 caracteres
-      page2.drawText(s(e.correo).substring(0, 25), { x: 412, y: y2, size: 6, font, color });
+      const y2 = topY - 30;
+      page.drawText(s(e.depto).substring(0, 20), { x: 65, y: y2, size: 9, font, color });
+      page.drawText(s(e.municipio).substring(0, 20), { x: 242, y: y2, size: 9, font, color });
+      page.drawText(s(e.correo).substring(0, 25), { x: 412, y: y2, size: 6, font, color });
 
-      // Línea 3: Teléfono, fechas ingreso/retiro
-      const y3 = topY + offsets.fechas;
-      // Truncar teléfono a 15 caracteres
-      page2.drawText(s(e.telefono).substring(0, 15), { x: 65, y: y3, size: 9, font, color });
-      drawFecha(y3, e.fechaIngreso, 263, 312, 362);
-      drawFecha(y3, e.fechaRetiro, 430, 479, 529);
+      const y3 = topY - 60;
+      page.drawText(s(e.telefono).substring(0, 15), { x: 65, y: y3, size: 9, font, color });
+      const drawF = (fechaS, xD, xM, xA) => {
+        if (!fechaS) return;
+        const f = new Date(fechaS);
+        if (isNaN(f)) return;
+        page.drawText(String(f.getUTCDate()).padStart(2, "0"), { x: xD, y: y3, size: 9, font, color });
+        page.drawText(String(f.getUTCMonth() + 1).padStart(2, "0"), { x: xM, y: y3, size: 9, font, color });
+        page.drawText(String(f.getUTCFullYear()), { x: xA, y: y3, size: 9, font, color });
+      };
+      drawF(e.fechaIngreso, 263, 312, 362);
+      drawF(e.fechaRetiro, 430, 479, 529);
 
-      // Línea 4: Cargo, dependencia, dirección
-      const y4 = topY + offsets.linea4;
-      // Truncar cargo a 25 caracteres
-      page2.drawText(s(e.cargo).substring(0, 25), { x: 65, y: y4, size: 9, font, color });
-      // Truncar dependencia a 20 caracteres
-      page2.drawText(s(e.dependencia).substring(0, 20), {
-        x: 243,
-        y: y4,
-        size: 9,
-        font,
-        color,
-      });
-      // Truncar dirección a 25 caracteres
-      page2.drawText(s(e.direccion).substring(0, 25), { x: 410, y: y4, size: 9, font, color });
+      const y4 = topY - 90;
+      page.drawText(s(e.cargo).substring(0, 25), { x: 65, y: y4, size: 9, font, color });
+      page.drawText(s(e.dependencia).substring(0, 20), { x: 243, y: y4, size: 9, font, color });
+      page.drawText(s(e.direccion).substring(0, 25), { x: 410, y: y4, size: 9, font, color });
     });
-  }
+  };
 
-  // PÁGINA 3: Campos de firma/no inhabilidad
-  if (page3) {
-    const data3 = v.hoja3 || {};
-    page3.drawText(data3.servidorPublicoAnios, {
-      x: 390,
-      y: 595,
-      size: 10,
-      font,
-      color,
-    });
+  const drawPage3OnPdf = (page, v) => {
+    const d3 = v.hoja3 || {};
+    page.drawText(s(d3.servidorPublicoAnios || "0"), { x: 390, y: 595, size: 10, font, color });
+    page.drawText(s(d3.servidorPublicoMeses || "0"), { x: 460, y: 595, size: 10, font, color });
+    page.drawText(s(d3.servidorPrivadoAnios || "0"), { x: 390, y: 570, size: 10, font, color });
+    page.drawText(s(d3.servidorPrivadoMeses || "0"), { x: 460, y: 570, size: 10, font, color });
+    page.drawText(s(d3.trabajadorIndependienteAnios || "0"), { x: 390, y: 545, size: 10, font, color });
+    page.drawText(s(d3.trabajadorIndependienteMeses || "0"), { x: 460, y: 545, size: 10, font, color });
 
-    page3.drawText(data3.servidorPublicoMeses, {
-      x: 460,
-      y: 595,
-      size: 10,
-      font,
-      color,
-    });
+    const tm = Number(d3.trabajadorIndependienteMeses || 0) + Number(d3.servidorPublicoMeses || 0) + Number(d3.servidorPrivadoMeses || 0);
+    const ta = Number(d3.trabajadorIndependienteAnios || 0) + Number(d3.servidorPublicoAnios || 0) + Number(d3.servidorPrivadoAnios || 0);
+    page.drawText(String(ta), { x: 390, y: 516, size: 10, font, color });
+    page.drawText(String(tm), { x: 460, y: 516, size: 10, font, color });
 
-    page3.drawText(data3.servidorPrivadoAnios, {
-      x: 390,
-      y: 570,
-      size: 10,
-      font,
-      color,
-    });
+    if (d3.Noinhabilidad === "SI") page.drawText("X", { x: 270, y: 420, size: 10, font, color });
+    else if (d3.Noinhabilidad === "NO") page.drawText("X", { x: 302, y: 420, size: 10, font, color });
 
-    page3.drawText(data3.servidorPrivadoMeses, {
-      x: 460,
-      y: 570,
-      size: 10,
-      font,
-      color,
-    });
+    const fObj = d3.fechaFirma ? new Date(d3.fechaFirma) : new Date();
+    const fS = `${String(fObj.getUTCDate()).padStart(2, "0")}/${String(fObj.getUTCMonth() + 1).padStart(2, "0")}/${fObj.getUTCFullYear()}`;
+    page.drawText((s(d3.lugarFirma).substring(0, 25) + ", " + fS), { x: 220, y: 338, size: 10, font, color });
+  };
 
-    page3.drawText(data3.trabajadorIndependienteAnios, {
-      x: 390,
-      y: 545,
-      size: 10,
-      font,
-      color,
-    });
+  drawPage1OnPdf(page1, v);
+  drawPage2OnPdf(page2Original, v, 0, 0);
 
-    page3.drawText(data3.trabajadorIndependienteMeses, {
-      x: 460,
-      y: 545,
-      size: 10,
-      font,
-      color,
-    });
+  const totalExp = (v.experiencias || []).length;
+  const isWorking = v.trabajaActualmente === "SI";
+  const firstCap = isWorking ? 4 : 3;
 
-    const totalMeses =
-      Number(data3?.trabajadorIndependienteMeses) +
-      Number(data3?.servidorPublicoMeses) +
-      Number(data3?.servidorPrivadoMeses);
-
-    page3.drawText(`${totalMeses}`, {
-      x: 460,
-      y: 516,
-      size: 10,
-      font,
-      color,
-    });
-
-    const totalAnios =
-      Number(data3?.trabajadorIndependienteAnios) +
-      Number(data3?.servidorPublicoAnios) +
-      Number(data3?.servidorPrivadoAnios);
-
-    page3.drawText(`${totalAnios}`, {
-      x: 390,
-      y: 516,
-      size: 10,
-      font,
-      color,
-    });
-
-    if (data3.Noinhabilidad === "SI") {
-      page3.drawText("X", { x: 270, y: 420, size: 10, font, color });
-    }
-    if (data3.Noinhabilidad === "NO") {
-      page3.drawText("X", { x: 302, y: 420, size: 10, font, color });
-    }
-
-    let fecha;
-    if (data3.fechaFirma) {
-      // Si el usuario ingresó una fecha personalizada (YYYY-MM-DD)
-      fecha = new Date(data3.fechaFirma);
-    } else {
-      // Si no, usar la fecha actual
-      fecha = new Date();
-    }
-    const dia = String(fecha.getUTCDate()).padStart(2, "0");
-    const mes = String(fecha.getUTCMonth() + 1).padStart(2, "0");
-    const anio = fecha.getUTCFullYear();
-    const fechaFinal = `${dia}/${mes}/${anio}`;
-    // Truncar lugar a 25 caracteres para que quepa en el PDF
-    const lugarTruncado = s(data3.lugarFirma).substring(0, 25);
-    page3.drawText(lugarTruncado + ", " + fechaFinal, {
-      x: 220,
-      y: 338,
-      size: 9,
-      font,
-      color,
-    });
-
-    if (data3.imgFirma) {
-      try {
-        let embeddedImg = null;
-        // Caso 1: es un File del input[type=file]
-        if (typeof data3.imgFirma !== 'string' && data3.imgFirma.arrayBuffer) {
-          const ab = await data3.imgFirma.arrayBuffer();
-          const mime = (data3.imgFirma.type || '').toLowerCase();
-          if (mime.includes('png')) embeddedImg = await pdfDoc.embedPng(ab);
-          else embeddedImg = await pdfDoc.embedJpg(ab);
-        } else if (typeof data3.imgFirma === 'string') {
-          // Caso 2: podría ser una data URL o URL remota
-          try {
-            const resp = await fetch(data3.imgFirma);
-            const ab = await resp.arrayBuffer();
-            const mime = (resp.headers.get('content-type') || '').toLowerCase();
-            if (mime.includes('png')) embeddedImg = await pdfDoc.embedPng(ab);
-            else embeddedImg = await pdfDoc.embedJpg(ab);
-          } catch (_) { /* ignorar si no se pudo fetchear */ }
-        }
-        if (embeddedImg) {
-          // Escalado manteniendo proporción a un cuadro máximo
-          // const maxW = 140, maxH = 50;
-          // const scale = Math.min(maxW / embeddedImg.width, maxH / embeddedImg.height, 1);
-          // const drawW = embeddedImg.width * scale;
-          // const drawH = embeddedImg.height * scale;
-          page3.drawImage(embeddedImg, {
-            x: 250,
-            y: 300,
-            width: 120,
-            height: 30,
-          });
-        }
-      } catch (imgErr) {
-        console.warn('No se pudo insertar la firma:', imgErr);
-      }
+  if (totalExp > firstCap) {
+    let rem = totalExp - firstCap;
+    let p2Idx = 1;
+    let currentExpOffset = firstCap;
+    while (rem > 0) {
+      const [clone] = await pdfDoc.copyPages(pdfDoc, [1]);
+      pdfDoc.insertPage(1 + p2Idx, clone);
+      drawPage2OnPdf(clone, v, p2Idx, currentExpOffset);
+      rem -= 4;
+      currentExpOffset += 4;
+      p2Idx++;
     }
   }
+
+  const finalP3 = pdfDoc.getPages()[pdfDoc.getPageCount() - 1];
+  drawPage3OnPdf(finalP3, v);
 
   return await pdfDoc.save();
 }
@@ -1824,10 +1399,23 @@ function drawCanvasOverlay(ctx, formData, pageNum, canvasW, canvasH) {
   } else if (pageNum === 2) {
     const baseTopY = 552;
     const blockStep = 130;
-    const startRowOffset = v.trabajaActualmente ? 0 : 1;
-    const list = (v.experiencias || []).slice(0, Math.max(0, 4 - startRowOffset));
+    const page2Idx = arguments[5] || 0;
+    const isWorking = v.trabajaActualmente === "SI";
+    const firstCap = isWorking ? 4 : 3;
+
+    let experienceOffset = 0;
+    if (page2Idx > 0) {
+      experienceOffset = firstCap + (page2Idx - 1) * 4;
+    }
+    const effectiveStartRowOffset = (page2Idx === 0 && !isWorking) ? 1 : 0;
+
+    const list = (v.experiencias || []).slice(
+      experienceOffset,
+      experienceOffset + Math.max(0, 4 - effectiveStartRowOffset)
+    );
+
     list.forEach((e, idx) => {
-      const topY = baseTopY - (idx + startRowOffset) * blockStep;
+      const topY = baseTopY - (idx + effectiveStartRowOffset) * blockStep;
       ctx.fillText(s(e.empresa).substring(0, 30), 65 * scale, pageH - (topY * scale));
       if (e.tipoEmpresa === "PUBLICA") ctx.fillText("X", 345 * scale, pageH - (topY * scale));
       else if (e.tipoEmpresa === "PRIVADA") ctx.fillText("X", 390 * scale, pageH - (topY * scale));
@@ -1921,7 +1509,7 @@ async function updateDesktopPreview() {
 
   // 2. Capa dinámica: Dibujar texto directamente
   const formData = getFormData(); // Función para obtener datos actuales
-  drawCanvasOverlay(ctx, formData, _currentPreviewPage, canvas.width, canvas.height);
+  drawCanvasOverlay(ctx, formData, _currentPreviewPage, canvas.width, canvas.height, _currentPage2Index);
 
   // 3. Marca de agua
   drawWatermark(canvas);
@@ -1969,27 +1557,27 @@ function getFormData() {
     });
   }
 
-  // Experiencias dinámicas
+  // Experiencias dinámicas (de todos los paneles de Página 2)
   v.experiencias = [];
-  const expContainer = document.getElementById("expContainer");
-  if (expContainer) {
-    expContainer.querySelectorAll(".exp-block").forEach((block) => {
+  const allExpContainers = document.querySelectorAll(".exp-container");
+  allExpContainers.forEach((container) => {
+    container.querySelectorAll(".exp-block").forEach((block) => {
       v.experiencias.push({
-        empresa: block.querySelector(".empresa")?.value || "",
-        tipoEmpresa: block.querySelector(".tipoEmpresa")?.value || "",
-        pais: block.querySelector(".pais")?.value || "",
-        depto: block.querySelector(".depto")?.value || "",
-        municipio: block.querySelector(".municipio")?.value || "",
-        correo: block.querySelector(".correo")?.value || "",
-        telefono: block.querySelector(".telefono")?.value || "",
+        empresa: (block.querySelector(".empresa")?.value || "").toUpperCase(),
+        tipoEmpresa: (block.querySelector(".tipoEmpresa")?.value || "").toUpperCase(),
+        pais: (block.querySelector(".pais")?.value || "").toUpperCase(),
+        depto: (block.querySelector(".depto")?.value || "").toUpperCase(),
+        municipio: (block.querySelector(".municipio")?.value || "").toUpperCase(),
+        correo: (block.querySelector(".correo")?.value || "").toLowerCase(),
+        telefono: (block.querySelector(".telefono")?.value || "").toUpperCase(),
         fechaIngreso: block.querySelector(".fechaIngreso")?.value || "",
         fechaRetiro: block.querySelector(".fechaRetiro")?.value || "",
-        cargo: block.querySelector(".cargo")?.value || "",
-        dependencia: block.querySelector(".dependencia")?.value || "",
-        direccion: block.querySelector(".direccion")?.value || "",
+        cargo: (block.querySelector(".cargo")?.value || "").toUpperCase(),
+        dependencia: (block.querySelector(".dependencia")?.value || "").toUpperCase(),
+        direccion: (block.querySelector(".direccion")?.value || "").toUpperCase(),
       });
     });
-  }
+  });
 
   // Página 3 data (servidores)
   v.hoja3 = {
@@ -2011,17 +1599,16 @@ const debouncedUpdate = debounce(updateDesktopPreview, 50);
 // La navegación manual ha sido eliminada a petición del usuario.
 // Se mantiene la lógica de cambio automático de página.
 
-function goToPreviewPage(page) {
+function goToPreviewPage(page, page2Index = 0) {
   if (page < 1 || page > 3) return;
-  if (_currentPreviewPage === page) return;
   _currentPreviewPage = page;
+  _currentPage2Index = page2Index;
   updateDesktopPreview();
 }
 
 // Auto-switch page based on focus
 document.getElementById("formulario")?.addEventListener("focusin", (e) => {
   const target = e.target;
-  // Encontrar en qué panel está el input
   const panel = target.closest("section[role='tabpanel']");
   if (!panel) return;
 
@@ -2029,7 +1616,10 @@ document.getElementById("formulario")?.addEventListener("focusin", (e) => {
   if (panelId === "panel-p1") {
     goToPreviewPage(1);
   } else if (panelId === "panel-p2") {
-    goToPreviewPage(2);
+    goToPreviewPage(2, 0);
+  } else if (panelId.startsWith("panel-p2-ext-")) {
+    const idx = parseInt(panelId.replace("panel-p2-ext-", ""));
+    goToPreviewPage(2, idx);
   } else if (panelId === "panel-p3") {
     goToPreviewPage(3);
   }
@@ -2094,6 +1684,8 @@ window.addEventListener("load", () => {
   // Actualizar visibilidad de campos dependientes
   updatePaisVisibility();
   updateFechaGradoVisibility();
+  setupTopTabs.init(); // Inicializar pestañas superiores
+  setupTopTabs.activate(0); // Activar primera pestaña
   setTimeout(updateDesktopPreview, 800);
   // Bloqueo estricto de menú contextual sobre los canvas de preview
   (function blockCanvasContextMenu() {
@@ -2491,194 +2083,7 @@ window.addEventListener("load", () => {
   updateAddBtn();
 })();
 
-// Leer educación superior dinámica en collectFormValues
-const _oldCollect = collectFormValues;
-collectFormValues = function () {
-  const v = _oldCollect();
-  const container = document.getElementById("eduContainer");
-  v.educacionSuperior = [];
-  if (container) {
-    container.querySelectorAll(".edu-block").forEach((block) => {
-      v.educacionSuperior.push({
-        modalidad: (
-          block.querySelector(".modalidad")?.value || ""
-        ).toUpperCase(),
-        semestres: (
-          block.querySelector(".semestres")?.value || ""
-        ).toUpperCase(),
-        graduado: (block.querySelector(".graduado")?.value || "").toUpperCase(),
-        titulo: (block.querySelector(".titulo")?.value || "").toUpperCase(),
-        fecha: block.querySelector(".fecha")?.value || "",
-        tarjeta: (block.querySelector(".tarjeta")?.value || "").toUpperCase(),
-      });
-    });
-  }
-  // Idiomas dinámicos
-  v.idiomas = [];
-  const idiomasContainer = document.getElementById("idiomasContainer");
-  if (idiomasContainer) {
-    idiomasContainer.querySelectorAll(".idioma-block").forEach((block) => {
-      v.idiomas.push({
-        idioma: (
-          block.querySelector(".idioma-nombre")?.value || ""
-        ).toUpperCase(),
-        habla: (
-          block.querySelector(".idioma-habla")?.value || ""
-        ).toUpperCase(),
-        lee: (block.querySelector(".idioma-lee")?.value || "").toUpperCase(),
-        escribe: (
-          block.querySelector(".idioma-escribe")?.value || ""
-        ).toUpperCase(),
-      });
-    });
-  }
-  // Experiencia laboral página 2 (bloque estático inicial)
-  v.experiencias = [];
-  const exp1 = {
-    empresa: (document.getElementById("empresa1")?.value || "").toUpperCase(),
-    tipoEmpresa: (
-      document.getElementById("tipoEmpresa1")?.value || ""
-    ).toUpperCase(),
-    pais: (document.getElementById("pais1")?.value || "").toUpperCase(),
-    depto: (document.getElementById("deptoExpe1")?.value || "").toUpperCase(),
-    municipio: (
-      document.getElementById("municiExpe1")?.value || ""
-    ).toUpperCase(),
-    correo: (document.getElementById("correoExpe1")?.value || "").toLowerCase(),
-    telefono: (
-      document.getElementById("telefExpe1")?.value || ""
-    ).toUpperCase(),
-    fechaIngreso: document.getElementById("fechaIngreso1")?.value || "",
-    fechaRetiro: document.getElementById("fechaRetiro1")?.value || "",
-    cargo: (document.getElementById("cargo1")?.value || "").toUpperCase(),
-    dependencia: (
-      document.getElementById("dependencia1")?.value || ""
-    ).toUpperCase(),
-    direccion: (
-      document.getElementById("direccion1")?.value || ""
-    ).toUpperCase(),
-  };
-  if (exp1.empresa || exp1.cargo || exp1.fechaIngreso)
-    v.experiencias.push(exp1);
-
-  const exp2 = {
-    empresa: (document.getElementById("empresa2")?.value || "").toUpperCase(),
-    tipoEmpresa: (
-      document.getElementById("tipoEmpresa2")?.value || ""
-    ).toUpperCase(),
-    pais: (document.getElementById("pais2")?.value || "").toUpperCase(),
-    depto: (document.getElementById("deptoExpe2")?.value || "").toUpperCase(),
-    municipio: (
-      document.getElementById("municiExpe2")?.value || ""
-    ).toUpperCase(),
-    correo: (document.getElementById("correoExpe2")?.value || "").toLowerCase(),
-    telefono: (
-      document.getElementById("telefExpe2")?.value || ""
-    ).toUpperCase(),
-    fechaIngreso: document.getElementById("fechaIngreso2")?.value || "",
-    fechaRetiro: document.getElementById("fechaRetiro2")?.value || "",
-    cargo: (document.getElementById("cargo2")?.value || "").toUpperCase(),
-    dependencia: (
-      document.getElementById("dependencia2")?.value || ""
-    ).toUpperCase(),
-    direccion: (
-      document.getElementById("direccion2")?.value || ""
-    ).toUpperCase(),
-  };
-  if (exp2.empresa || exp2.cargo || exp2.fechaIngreso)
-    v.experiencias.push(exp2);
-
-  const exp3 = {
-    empresa: (document.getElementById("empresa3")?.value || "").toUpperCase(),
-    tipoEmpresa: (
-      document.getElementById("tipoEmpresa3")?.value || ""
-    ).toUpperCase(),
-    pais: (document.getElementById("pais3")?.value || "").toUpperCase(),
-    depto: (document.getElementById("deptoExpe3")?.value || "").toUpperCase(),
-    municipio: (
-      document.getElementById("municiExpe3")?.value || ""
-    ).toUpperCase(),
-    correo: (document.getElementById("correoExpe3")?.value || "").toLowerCase(),
-    telefono: (
-      document.getElementById("telefExpe3")?.value || ""
-    ).toUpperCase(),
-    fechaIngreso: document.getElementById("fechaIngreso3")?.value || "",
-    fechaRetiro: document.getElementById("fechaRetiro3")?.value || "",
-    cargo: (document.getElementById("cargo3")?.value || "").toUpperCase(),
-    dependencia: (
-      document.getElementById("dependencia3")?.value || ""
-    ).toUpperCase(),
-    direccion: (
-      document.getElementById("direccion3")?.value || ""
-    ).toUpperCase(),
-  };
-  if (exp3.empresa || exp3.cargo || exp3.fechaIngreso)
-    v.experiencias.push(exp3);
-
-  const exp4 = {
-    empresa: (document.getElementById("empresa4")?.value || "").toUpperCase(),
-    tipoEmpresa: (
-      document.getElementById("tipoEmpresa4")?.value || ""
-    ).toUpperCase(),
-    pais: (document.getElementById("pais4")?.value || "").toUpperCase(),
-    depto: (document.getElementById("deptoExpe4")?.value || "").toUpperCase(),
-    municipio: (
-      document.getElementById("municiExpe4")?.value || ""
-    ).toUpperCase(),
-    correo: (document.getElementById("correoExpe4")?.value || "").toLowerCase(),
-    telefono: (
-      document.getElementById("telefExpe4")?.value || ""
-    ).toUpperCase(),
-    fechaIngreso: document.getElementById("fechaIngreso4")?.value || "",
-    fechaRetiro: document.getElementById("fechaRetiro4")?.value || "",
-    cargo: (document.getElementById("cargo4")?.value || "").toUpperCase(),
-    dependencia: (
-      document.getElementById("dependencia4")?.value || ""
-    ).toUpperCase(),
-    direccion: (
-      document.getElementById("direccion4")?.value || ""
-    ).toUpperCase(),
-  };
-  if (exp4.empresa || exp4.cargo || exp4.fechaIngreso)
-    v.experiencias.push(exp4);
-
-  // Hoja 3 (firma/no inhabilidad): usar un único objeto en v.hoja3
-  v.hoja3 = {
-    servidorPublicoAnios: (
-      document.getElementById("servidorPublicoAnios")?.value || ""
-    ).toUpperCase(),
-    servidorPublicoMeses: (
-      document.getElementById("servidorPublicoMeses")?.value || ""
-    ).toUpperCase(),
-    servidorPrivadoAnios: (
-      document.getElementById("servidorPrivadoAnios")?.value || ""
-    ).toUpperCase(),
-    servidorPrivadoMeses: (
-      document.getElementById("servidorPrivadoMeses")?.value || ""
-    ).toUpperCase(),
-    trabajadorIndependienteAnios: (
-      document.getElementById("trabajadorIndependienteAnios")?.value || ""
-    ).toUpperCase(),
-    trabajadorIndependienteMeses: (
-      document.getElementById("trabajadorIndependienteMeses")?.value || ""
-    ).toUpperCase(),
-    Noinhabilidad: (
-      document.getElementById("Noinhabilidad")?.value || ""
-    ).toUpperCase(),
-    lugarFirma: (
-      document.getElementById("lugarFirma")?.value || ""
-    ).toUpperCase(),
-    fechaFirma: document.getElementById("fechaFirma")?.value || "",
-    imgFirma: (document.getElementById("imgFirma") && document.getElementById("imgFirma").files && document.getElementById("imgFirma").files[0]) ? document.getElementById("imgFirma").files[0] : "",
-  };
-
-  return v;
-};
-
-// (Eliminado override de buildPdfBytes: ahora el dibujo dinámico está integrado
-// directamente en la función buildPdfBytes original más arriba.)
-
-// -----------------------
+// (Código legado eliminado por redundancia con getFormData y setupExperienciaLogic)
 // Idiomas dinámicos (hasta 2) similar a educación superior
 // -----------------------
 (function setupIdiomas() {
@@ -2797,86 +2202,76 @@ collectFormValues = function () {
 // -----------------------
 // Tabs de 3 páginas (Página 1, 2, 3)
 // -----------------------
-(function setupTopTabs() {
-  const tab1 = document.getElementById("tab-p1");
-  const tab2 = document.getElementById("tab-p2");
-  const tab3 = document.getElementById("tab-p3");
-  const panel1 = document.getElementById("panel-p1");
-  const panel2 = document.getElementById("panel-p2");
-  const panel3 = document.getElementById("panel-p3");
-  if (!tab1 || !tab2 || !tab3 || !panel1 || !panel2 || !panel3) return;
-
-  const tabs = [tab1, tab2, tab3];
-  const panels = [panel1, panel2, panel3];
+const setupTopTabs = (function () {
+  let tabs = [];
+  let panels = [];
 
   function activate(index) {
     tabs.forEach((t, i) => {
       const selected = i === index;
       t.classList.toggle("active", selected);
       t.setAttribute("aria-selected", selected ? "true" : "false");
-      panels[i].hidden = !selected;
+      if (panels[i]) panels[i].hidden = !selected;
     });
-    // Sincronizar con la vista previa optimizada
-    goToPreviewPage(index + 1);
+
+    // Mapear el índice del tab a la página del PDF y el índice de página 2 extra
+    let pdfPage = 1;
+    let page2Idx = 0;
+
+    if (index === 0) {
+      pdfPage = 1;
+    } else if (index === tabs.length - 1) {
+      pdfPage = 3;
+    } else {
+      pdfPage = 2;
+      page2Idx = index - 1; // 1 -> 0, 2 -> 1, etc.
+    }
+
+    goToPreviewPage(pdfPage, page2Idx);
 
     const dlBtn = document.getElementById("downloadPdfBtn");
-    if (dlBtn) dlBtn.style.display = index === 2 ? "inline-block" : "none";
+    if (dlBtn) dlBtn.style.display = (index === tabs.length - 1) ? "inline-block" : "none";
   }
 
-  tabs.forEach((t, i) => {
-    t.addEventListener("click", (e) => {
-      e.preventDefault();
-      activate(i);
-    });
-    t.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
-        const dir = e.key === "ArrowRight" ? 1 : -1;
-        const next = (i + dir + tabs.length) % tabs.length;
-        tabs[next].focus();
-        activate(next);
-      }
-    });
-  });
+  function init() {
+    tabs = Array.from(document.querySelectorAll(".tablist .tab"));
+    const p1 = document.getElementById("panel-p1");
+    const p2 = document.getElementById("panel-p2");
+    const p2Extras = Array.from(document.getElementById("extraPagePanels").children);
+    const p3 = document.getElementById("panel-p3");
+    panels = [p1, p2, ...p2Extras, p3].filter(Boolean);
 
-  // Estado inicial
-  activate(0);
-})();
+    tabs.forEach((t, i) => {
+      t.replaceWith(t.cloneNode(true)); // Limpiar listeners previos
+    });
+    tabs = Array.from(document.querySelectorAll(".tablist .tab"));
 
-// -----------------------
-// Experiencia laboral dinámica (hasta 4) Página 2
-// -----------------------
-(function showEmpleoError(msg) {
-  // helper to show/hide inline error for 'trabajaActualmente'
-  // Declared as an IIFE that returns a callable function to avoid polluting global scope
+    tabs.forEach((t, i) => {
+      t.addEventListener("click", (e) => {
+        e.preventDefault();
+        activate(i);
+      });
+      t.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+          const dir = e.key === "ArrowRight" ? 1 : -1;
+          const next = (i + dir + tabs.length) % tabs.length;
+          tabs[next].focus();
+          activate(next);
+        }
+      });
+    });
+  }
+
+  return { init, activate };
 })();
-(function globalShowEmpleoError() {
-  window.showEmpleoError = function (msg) {
-    const sel = document.getElementById("trabajaActualmente");
-    const err = document.getElementById("trabajaError");
-    if (!err) return;
-    if (msg) {
-      err.textContent = msg;
-      err.style.display = "block";
-      sel?.classList?.add("invalid");
-      sel?.setAttribute("aria-invalid", "true");
-    } else {
-      err.textContent = "";
-      err.style.display = "none";
-      sel?.classList?.remove("invalid");
-      sel?.removeAttribute("aria-invalid");
-    }
-  };
-})();
-(function setupExperienciasLaborales() {
+window.setupTopTabs = setupTopTabs;
+
+function setupExperienciaLogic(container, addBtn, isExtra = false) {
   const MAX_EXP = 4;
-  const section = document.getElementById("experienciaLaboralSection");
-  const container = document.getElementById("expContainer");
-  const addBtn = document.getElementById("addExpBtn");
-  if (!section || !container || !addBtn) return;
   const trabajaSel = document.getElementById("trabajaActualmente");
 
   function updateCurrentJobUI() {
-    if (!trabajaSel) return;
+    if (isExtra || !trabajaSel) return;
     const val = (trabajaSel.value || "").toUpperCase();
     const first = container.querySelector('.exp-block[data-index="0"]');
     if (first) {
@@ -2899,131 +2294,106 @@ collectFormValues = function () {
     }
   }
 
-  if (trabajaSel) {
-    trabajaSel.addEventListener("change", () => {
-      updateCurrentJobUI();
-      updateAddBtn();
-      // clear any previous inline error when user changes selection
-      showEmpleoError(null);
-      debouncedUpdate();
-    });
-    // clear error when user focuses the select
-    trabajaSel.addEventListener("focus", () => showEmpleoError(null));
-  }
-
-  // Helper: focus + scroll + brief animation to draw atención al control
-  function flashAndFocus(el) {
-    if (!el) return;
-    try {
-      el.focus({ preventScroll: true });
-    } catch (_) {
-      try { el.focus(); } catch (_) { }
-    }
-    try {
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    } catch (_) { }
-    el.classList.add('attention');
-    setTimeout(() => el.classList.remove('attention'), 900);
+  function updateAddBtn() {
+    const count = container.querySelectorAll(".exp-block").length;
+    // Para páginas extra no dependemos de "Empleo Actual" para habilitar el botón
+    const selectionMissing = !isExtra && !(trabajaSel && (trabajaSel.value || "").trim());
+    const sel = (trabajaSel?.value || "").toUpperCase();
+    const maxAllowed = (!isExtra && sel === "NO") ? 3 : MAX_EXP;
+    addBtn.disabled = count >= maxAllowed || selectionMissing;
   }
 
   function createExpBlock(index) {
-    const idPrefix = `exp-${index}`;
+    const uniqueId = `exp-p${isExtra ? _extraPage2Ids.length + 1 : 0}-${index}`;
     const wrap = document.createElement("details");
     wrap.className = "exp-block";
     wrap.open = true;
     wrap.dataset.index = String(index);
-    wrap.id = `${idPrefix}-block`;
+    wrap.id = `${uniqueId}-block`;
     wrap.innerHTML = `
       <summary class="exp-header" style="display:flex; align-items:center; gap:8px; margin:6px 0; cursor:pointer;">
         <span class="chev" aria-hidden="true">▸</span>
-        <strong id="${idPrefix}-title">Experiencia ${index + 1}</strong>
+        <strong id="${uniqueId}-title">Experiencia ${index + 1}</strong>
       </summary>
       <div class="exp-actions" style="display:flex; justify-content:flex-end; margin:4px 0;">
-        <button type="button" class="remove-exp" aria-label="Eliminar experiencia" title="Eliminar" aria-describedby="${idPrefix}-title">✕</button>
+        <button type="button" class="remove-exp" aria-label="Eliminar experiencia" title="Eliminar" aria-describedby="${uniqueId}-title">✕</button>
       </div>
-      <div class="form-grid exp-content" id="${idPrefix}-content" aria-labelledby="${idPrefix}-title">
+      <div class="form-grid exp-content" id="${uniqueId}-content" aria-labelledby="${uniqueId}-title">
         <div>
-          <label for="${idPrefix}-empresa">Empresa o Entidad:</label>
-          <input type="text" class="empresa" id="${idPrefix}-empresa" name="${idPrefix}-empresa" />
+          <label for="${uniqueId}-empresa">Empresa o Entidad:</label>
+          <input type="text" class="empresa" id="${uniqueId}-empresa" name="${uniqueId}-empresa" />
         </div>
         <div>
-          <label for="${idPrefix}-tipo">Tipo de Empresa:</label>
-          <select class="tipoEmpresa" id="${idPrefix}-tipo" name="${idPrefix}-tipo">
+          <label for="${uniqueId}-tipo">Tipo de Empresa:</label>
+          <select class="tipoEmpresa" id="${uniqueId}-tipo" name="${uniqueId}-tipo">
             <option value="">Seleccionar...</option>
             <option value="PUBLICA">Pública</option>
             <option value="PRIVADA">Privada</option>
           </select>
         </div>
         <div>
-          <label for="${idPrefix}-pais">País:</label>
-          <input type="text" class="pais" id="${idPrefix}-pais" name="${idPrefix}-pais" />
+          <label for="${uniqueId}-pais">País:</label>
+          <input type="text" class="pais" id="${uniqueId}-pais" name="${uniqueId}-pais" />
         </div>
         <div>
-          <label for="${idPrefix}-depto">Departamento:</label>
-          <input type="text" class="depto" id="${idPrefix}-depto" name="${idPrefix}-depto" />
+          <label for="${uniqueId}-depto">Departamento:</label>
+          <input type="text" class="depto" id="${uniqueId}-depto" name="${uniqueId}-depto" />
         </div>
         <div>
-          <label for="${idPrefix}-municipio">Municipio:</label>
-          <input type="text" class="municipio" id="${idPrefix}-municipio" name="${idPrefix}-municipio" />
+          <label for="${uniqueId}-municipio">Municipio:</label>
+          <input type="text" class="municipio" id="${uniqueId}-municipio" name="${uniqueId}-municipio" />
         </div>
         <div>
-          <label for="${idPrefix}-correo">Correo:</label>
-          <input type="email" class="correo" id="${idPrefix}-correo" name="${idPrefix}-correo" />
+          <label for="${uniqueId}-correo">Correo:</label>
+          <input type="email" class="correo" id="${uniqueId}-correo" name="${uniqueId}-correo" />
         </div>
         <div>
-          <label for="${idPrefix}-telefono">Teléfono:</label>
-          <input type="text" class="telefono" id="${idPrefix}-telefono" name="${idPrefix}-telefono" />
+          <label for="${uniqueId}-telefono">Teléfono:</label>
+          <input type="text" class="telefono" id="${uniqueId}-telefono" name="${uniqueId}-telefono" />
         </div>
         <div>
-          <label for="${idPrefix}-fechaIngreso">Fecha de Ingreso:</label>
-          <input type="date" class="fechaIngreso" id="${idPrefix}-fechaIngreso" name="${idPrefix}-fechaIngreso" />
+          <label for="${uniqueId}-fechaIngreso">Fecha de Ingreso:</label>
+          <input type="date" class="fechaIngreso" id="${uniqueId}-fechaIngreso" name="${uniqueId}-fechaIngreso" />
         </div>
         <div>
-          <label for="${idPrefix}-fechaRetiro">Fecha de Retiro:</label>
-          <input type="date" class="fechaRetiro" id="${idPrefix}-fechaRetiro" name="${idPrefix}-fechaRetiro" />
+          <label for="${uniqueId}-fechaRetiro">Fecha de Retiro:</label>
+          <input type="date" class="fechaRetiro" id="${uniqueId}-fechaRetiro" name="${uniqueId}-fechaRetiro" />
         </div>
         <div>
-          <label for="${idPrefix}-cargo">Cargo:</label>
-          <input type="text" class="cargo" id="${idPrefix}-cargo" name="${idPrefix}-cargo" />
+          <label for="${uniqueId}-cargo">Cargo:</label>
+          <input type="text" class="cargo" id="${uniqueId}-cargo" name="${uniqueId}-cargo" />
         </div>
         <div>
-          <label for="${idPrefix}-dependencia">Dependencia:</label>
-          <input type="text" class="dependencia" id="${idPrefix}-dependencia" name="${idPrefix}-dependencia" />
+          <label for="${uniqueId}-dependencia">Dependencia:</label>
+          <input type="text" class="dependencia" id="${uniqueId}-dependencia" name="${uniqueId}-dependencia" />
         </div>
         <div>
-          <label for="${idPrefix}-direccion">Dirección:</label>
-          <input type="text" class="direccion" id="${idPrefix}-direccion" name="${idPrefix}-direccion" />
+          <label for="${uniqueId}-direccion">Dirección:</label>
+          <input type="text" class="direccion" id="${uniqueId}-direccion" name="${uniqueId}-direccion" />
         </div>
       </div>
     `;
     return wrap;
   }
 
-  function updateAddBtn() {
-    const count = container.querySelectorAll(".exp-block").length;
-    const selectionMissing = !(trabajaSel && (trabajaSel.value || "").trim());
-    const sel = (trabajaSel?.value || "").toUpperCase();
-    const maxAllowed = sel === "NO" ? 3 : MAX_EXP;
-    addBtn.disabled = count >= maxAllowed || selectionMissing;
-  }
   function addExp() {
     const count = container.querySelectorAll(".exp-block").length;
-    if (!(trabajaSel && (trabajaSel.value || "").trim())) {
+    if (!isExtra && !(trabajaSel && (trabajaSel.value || "").trim())) {
       showEmpleoError("Seleccione 'Sí' o 'No' para 'Empleo Actual' antes de añadir experiencias.");
-      // Más visible: hacer focus, desplazar a la vista y animar brevemente el control
       flashAndFocus(trabajaSel);
       return;
     }
     const sel = (trabajaSel?.value || "").toUpperCase();
-    const maxAllowed = sel === "NO" ? 3 : MAX_EXP;
+    const maxAllowed = (!isExtra && sel === "NO") ? 3 : MAX_EXP;
     if (count >= maxAllowed) {
-      showEmpleoError(`No puede agregar más de ${maxAllowed} experiencia(s) para la opción seleccionada.`);
-      flashAndFocus(trabajaSel);
+      if (!isExtra) {
+        showEmpleoError(`No puede agregar más de ${maxAllowed} experiencia(s) para la opción seleccionada.`);
+        flashAndFocus(trabajaSel);
+      }
       return;
     }
     const block = createExpBlock(count);
     container.appendChild(block);
-    // Envolver inputs de texto con botones de limpiar
     setupClearButtonsForDynamicInputs(block);
     block.querySelectorAll("input, select").forEach((el) => {
       el.addEventListener("input", (e) => {
@@ -3048,10 +2418,14 @@ collectFormValues = function () {
     Array.from(container.querySelectorAll(".exp-block")).forEach((b, i) => {
       b.dataset.index = String(i);
       const title = b.querySelector(".exp-header strong");
-      const currently = (trabajaSel?.value || "").toUpperCase() === "SI";
-      if (title)
-        title.textContent =
-          i === 0 && currently ? "Experiencia actual" : `Experiencia ${i + 1}`;
+      const currently = !isExtra && (trabajaSel?.value || "").toUpperCase() === "SI";
+      if (title) {
+        if (!isExtra && i === 0 && currently) {
+          title.textContent = "Experiencia actual";
+        } else {
+          title.textContent = `Experiencia ${i + 1}`;
+        }
+      }
     });
     updateAddBtn();
     updateCurrentJobUI();
@@ -3063,6 +2437,7 @@ collectFormValues = function () {
     e.preventDefault();
     addExp();
   });
+
   container.addEventListener("click", (e) => {
     const t = e.target;
     if (t && t.classList && t.classList.contains("remove-exp")) {
@@ -3072,51 +2447,97 @@ collectFormValues = function () {
     }
   });
 
+  if (!isExtra && trabajaSel) {
+    trabajaSel.addEventListener("change", () => {
+      updateCurrentJobUI();
+      updateAddBtn();
+      showEmpleoError(null);
+      debouncedUpdate();
+    });
+    trabajaSel.addEventListener("focus", () => showEmpleoError(null));
+  }
+
   updateAddBtn();
   updateCurrentJobUI();
+}
+
+function flashAndFocus(el) {
+  if (!el) return;
+  try { el.focus({ preventScroll: true }); } catch (_) { try { el.focus(); } catch (_) { } }
+  try { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (_) { }
+  el.classList.add('attention');
+  setTimeout(() => el.classList.remove('attention'), 900);
+}
+
+function addExtraPage2() {
+  const count = _extraPage2Ids.length + 1;
+  const newIdx = _extraPage2Ids.length;
+  const panelId = `panel-p2-ext-${newIdx}`;
+  const tabId = `tab-p2-ext-${newIdx}`;
+
+  // 1. Crear el Tab
+  const tablist = document.querySelector(".tablist");
+  const lastTab = document.getElementById("tab-p3");
+  const newTab = document.createElement("button");
+  newTab.type = "button";
+  newTab.id = tabId;
+  newTab.className = "tab";
+  newTab.setAttribute("role", "tab");
+  newTab.setAttribute("aria-selected", "false");
+  newTab.textContent = `Página 2.${count}`;
+  tablist.insertBefore(newTab, lastTab);
+
+  // 2. Crear el Panel (clonando estructura de P2)
+  const extraContainer = document.getElementById("extraPagePanels");
+  const newPanel = document.createElement("section");
+  newPanel.id = panelId;
+  newPanel.setAttribute("role", "tabpanel");
+  newPanel.setAttribute("aria-labelledby", tabId);
+  newPanel.hidden = true;
+
+  newPanel.innerHTML = `
+    <div class="panel-placeholder">
+      <h2>EXPERIENCIA LABORAL (ADICIONAL)</h2>
+      <details class="section" open>
+        <summary>Experiencia Laboral (Página 2.${count})</summary>
+        <div id="expContainer-ext-${newIdx}" class="exp-container"></div>
+        <button type="button" id="addExpBtn-ext-${newIdx}" class="add-exp">➕ Añadir experiencia</button>
+        <p class="hint" style="font-size: 12px; color: #555; margin-top: 8px">
+          Esta página adicional permite agregar hasta 4 experiencias laborales más. 
+          Se insertará automáticamente después de la Página 2 original en el PDF.
+        </p>
+      </details>
+    </div>
+  `;
+  extraContainer.appendChild(newPanel);
+
+  _extraPage2Ids.push(panelId);
+
+  // 3. Inicializar lógica para el nuevo panel
+  const newExpContainer = document.getElementById(`expContainer-ext-${newIdx}`);
+  const newAddExpBtn = document.getElementById(`addExpBtn-ext-${newIdx}`);
+  setupExperienciaLogic(newExpContainer, newAddExpBtn, true);
+
+  // 4. Re-inicializar Tabs para incluir el nuevo
+  setupTopTabs.init();
+
+  // 5. Activar el nuevo tab
+  const allTabs = Array.from(document.querySelectorAll(".tablist .tab"));
+  setupTopTabs.activate(allTabs.length - 2); // el penúltimo antes de P3
+
+  saveFormDataToStorage();
+}
+
+(function setupDynamicPage2() {
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest("#addExtraPageBtn");
+    if (btn) {
+      e.preventDefault();
+      addExtraPage2();
+    }
+  });
 })();
-
-// Extender collectFormValues para leer experiencias dinámicas
-const _oldCollect2 = collectFormValues;
-collectFormValues = function () {
-  const v = _oldCollect2();
-  // Reemplazar lectura estática de experiencias por dinámica SOLO si hay bloques dinámicos
-  const trabaja = (
-    document.getElementById("trabajaActualmente")?.value || ""
-  ).toUpperCase();
-  v.trabajaActualmente = trabaja === "SI";
-
-  // Si hay bloques de experiencias dinámicas, usar esos; si no, mantener los estáticos
-  const expContainer = document.getElementById("expContainer");
-  if (expContainer && expContainer.querySelectorAll(".exp-block").length > 0) {
-    v.experiencias = [];
-    expContainer.querySelectorAll(".exp-block").forEach((block) => {
-      v.experiencias.push({
-        empresa: (block.querySelector(".empresa")?.value || "").toUpperCase(),
-        tipoEmpresa: (
-          block.querySelector(".tipoEmpresa")?.value || ""
-        ).toUpperCase(),
-        pais: (block.querySelector(".pais")?.value || "").toUpperCase(),
-        depto: (block.querySelector(".depto")?.value || "").toUpperCase(),
-        municipio: (
-          block.querySelector(".municipio")?.value || ""
-        ).toUpperCase(),
-        correo: (block.querySelector(".correo")?.value || "").toLowerCase(),
-        telefono: (block.querySelector(".telefono")?.value || "").toUpperCase(),
-        fechaIngreso: block.querySelector(".fechaIngreso")?.value || "",
-        fechaRetiro: block.querySelector(".fechaRetiro")?.value || "",
-        cargo: (block.querySelector(".cargo")?.value || "").toUpperCase(),
-        dependencia: (
-          block.querySelector(".dependencia")?.value || ""
-        ).toUpperCase(),
-        direccion: (
-          block.querySelector(".direccion")?.value || ""
-        ).toUpperCase(),
-      });
-    });
-  }
-  return v;
-};
+// La recolección de experiencias dinámicas ahora se maneja en getFormData.
 
 // -----------------------
 // Navegación del sitio (header/footer)

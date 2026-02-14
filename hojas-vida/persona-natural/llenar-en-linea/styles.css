@@ -523,6 +523,48 @@ button:hover {
   transform: scale(0.98);
 }
 
+/* Botón prominente para nueva Página 2 */
+.extra-page-action {
+  margin: 24px 0;
+  padding: 20px;
+  background: #f0fdf4;
+  border: 2px dashed #10b981;
+  border-radius: 12px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.extra-page-action:hover {
+  background: #dcfce7;
+  border-style: solid;
+  transform: translateY(-2px);
+}
+
+.btn-primary-action {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white !important;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: transform 0.2s;
+  margin-top: 0;
+}
+
+.btn-primary-action:active {
+  transform: scale(0.98);
+}
+
+.btn-primary-action span {
+  font-size: 20px;
+}
+
 #tab-panels {
   border: 1px solid rgba(226, 232, 240, 0.6);
   border-radius: 0 12px 12px 12px;
