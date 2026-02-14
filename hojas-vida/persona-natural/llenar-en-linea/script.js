@@ -92,7 +92,7 @@ async function saveFormDataToStorage(formData = null) {
         }
       });
     }
-    
+
     // Guardar bloques dinámicos de educación
     const eduContainer = document.getElementById("eduContainer");
     if (eduContainer) {
@@ -113,7 +113,7 @@ async function saveFormDataToStorage(formData = null) {
         formData._eduBlocks = eduBlocks;
       }
     }
-    
+
     // Guardar bloques dinámicos de idiomas
     const idiomasContainer = document.getElementById("idiomasContainer");
     if (idiomasContainer) {
@@ -134,7 +134,7 @@ async function saveFormDataToStorage(formData = null) {
         formData._idiomaBlocks = idiomaBlocks;
       }
     }
-    
+
     // Guardar bloques dinámicos de experiencia laboral
     const expContainer = document.getElementById("expContainer");
     if (expContainer) {
@@ -155,12 +155,12 @@ async function saveFormDataToStorage(formData = null) {
         formData._expBlocks = expBlocks;
       }
     }
-    
+
     const record = {
       timestamp: Date.now(),
       data: formData,
     };
-    
+
     // Intentar guardar en IndexedDB
     try {
       const db = await initDb();
@@ -190,26 +190,26 @@ async function saveFormDataToStorage(formData = null) {
 async function restoreFormDataFromStorage() {
   try {
     let formData = null;
-    
+
     // Intentar recuperar de IndexedDB
     try {
       const db = await initDb();
       const tx = db.transaction(FORMS_STORE, "readonly");
       const store = tx.objectStore(FORMS_STORE);
       const req = store.getAll();
-      
+
       await new Promise((res, rej) => {
         req.onsuccess = res;
         req.onerror = () => rej(req.error);
       });
-      
+
       if (req.result && req.result.length > 0) {
         formData = req.result[0].data;
       }
     } catch (e) {
       console.warn("No se pudo leer de IndexedDB, intentando localStorage:", e);
     }
-    
+
     // Fallback a localStorage
     if (!formData) {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -217,9 +217,9 @@ async function restoreFormDataFromStorage() {
         formData = JSON.parse(saved);
       }
     }
-    
+
     if (!formData) return;
-    
+
     // Restaurar valores en el formulario
     Object.entries(formData).forEach(([id, value]) => {
       if (id.startsWith("_")) return; // Ignorar datos de bloques dinámicos por ahora
@@ -231,7 +231,7 @@ async function restoreFormDataFromStorage() {
         el.value = value;
       }
     });
-    
+
     // Restaurar bloques de educación
     if (formData._eduBlocks && Array.isArray(formData._eduBlocks) && formData._eduBlocks.length > 0) {
       setTimeout(() => {
@@ -240,7 +240,7 @@ async function restoreFormDataFromStorage() {
           // Acceder a la función createEduBlock si está disponible
           // Primero limpiar bloques existentes
           eduContainer.querySelectorAll(".edu-block").forEach(b => b.remove());
-          
+
           // Restaurar usando el mismo mecanismo que addEdu pero sin animar
           formData._eduBlocks.forEach((blockData, idx) => {
             // Crear el bloque manualmente con los datos
@@ -250,7 +250,7 @@ async function restoreFormDataFromStorage() {
             wrap.open = true;
             wrap.dataset.index = String(idx);
             wrap.id = `${idPrefix}-block`;
-            
+
             wrap.innerHTML = `
               <summary class="edu-header" style="display:flex; align-items:center; gap:8px; margin:6px 0; cursor:pointer;">
                 <span class="chev" aria-hidden="true">▸</span>
@@ -299,12 +299,12 @@ async function restoreFormDataFromStorage() {
                 </div>
               </div>
             `;
-            
+
             eduContainer.appendChild(wrap);
-            
+
             // Envolver inputs de texto con botones de limpiar
             setupClearButtonsForDynamicInputs(wrap);
-            
+
             // Restaurar valores
             Object.entries(blockData).forEach(([key, val]) => {
               const input = wrap.querySelector(`[name="${key}"]`) || wrap.querySelector(`#${key}`);
@@ -312,7 +312,7 @@ async function restoreFormDataFromStorage() {
                 input.value = val;
               }
             });
-            
+
             // Agregar listeners
             wrap.querySelectorAll("input, select").forEach((el) => {
               el.addEventListener("input", (e) => {
@@ -324,9 +324,9 @@ async function restoreFormDataFromStorage() {
                 saveFormDataToStorage();
               });
             });
-            
+
             // Agregar listener al botón de eliminar
-            wrap.querySelector(".remove-edu")?.addEventListener("click", function(e) {
+            wrap.querySelector(".remove-edu")?.addEventListener("click", function (e) {
               e.preventDefault();
               wrap.remove();
               Array.from(eduContainer.querySelectorAll(".edu-block")).forEach((b, i) => {
@@ -342,7 +342,7 @@ async function restoreFormDataFromStorage() {
         }
       }, 150);
     }
-    
+
     // Restaurar bloques de idiomas
     if (formData._idiomaBlocks && Array.isArray(formData._idiomaBlocks) && formData._idiomaBlocks.length > 0) {
       setTimeout(() => {
@@ -350,7 +350,7 @@ async function restoreFormDataFromStorage() {
         if (idiomasContainer) {
           // Limpiar bloques existentes
           idiomasContainer.querySelectorAll(".idioma-block").forEach(b => b.remove());
-          
+
           // Restaurar bloques
           formData._idiomaBlocks.forEach((blockData, idx) => {
             const idPrefix = `idioma-${idx}`;
@@ -359,7 +359,7 @@ async function restoreFormDataFromStorage() {
             wrap.open = true;
             wrap.dataset.index = String(idx);
             wrap.id = `${idPrefix}-block`;
-            
+
             wrap.innerHTML = `
               <summary class="idioma-header" style="display:flex; align-items:center; gap:8px; margin:6px 0; cursor:pointer;">
                 <span class="chev" aria-hidden="true">▸</span>
@@ -402,12 +402,12 @@ async function restoreFormDataFromStorage() {
                 </div>
               </div>
             `;
-            
+
             idiomasContainer.appendChild(wrap);
-            
+
             // Envolver inputs de texto con botones de limpiar
             setupClearButtonsForDynamicInputs(wrap);
-            
+
             // Restaurar valores
             Object.entries(blockData).forEach(([key, val]) => {
               const input = wrap.querySelector(`[name="${key}"]`) || wrap.querySelector(`#${key}`);
@@ -415,7 +415,7 @@ async function restoreFormDataFromStorage() {
                 input.value = val;
               }
             });
-            
+
             // Agregar listeners
             wrap.querySelectorAll("input, select").forEach((el) => {
               el.addEventListener("input", (e) => {
@@ -427,9 +427,9 @@ async function restoreFormDataFromStorage() {
                 saveFormDataToStorage();
               });
             });
-            
+
             // Agregar listener al botón de eliminar
-            wrap.querySelector(".remove-idioma")?.addEventListener("click", function(e) {
+            wrap.querySelector(".remove-idioma")?.addEventListener("click", function (e) {
               e.preventDefault();
               wrap.remove();
               Array.from(idiomasContainer.querySelectorAll(".idioma-block")).forEach((b, i) => {
@@ -445,7 +445,7 @@ async function restoreFormDataFromStorage() {
         }
       }, 150);
     }
-    
+
     // Restaurar bloques de experiencia laboral
     if (formData._expBlocks && Array.isArray(formData._expBlocks) && formData._expBlocks.length > 0) {
       setTimeout(() => {
@@ -453,7 +453,7 @@ async function restoreFormDataFromStorage() {
         if (expContainer) {
           // Limpiar bloques existentes
           expContainer.querySelectorAll(".exp-block").forEach(b => b.remove());
-          
+
           // Restaurar bloques
           formData._expBlocks.forEach((blockData, idx) => {
             const idPrefix = `exp-${idx}`;
@@ -462,7 +462,7 @@ async function restoreFormDataFromStorage() {
             wrap.open = true;
             wrap.dataset.index = String(idx);
             wrap.id = `${idPrefix}-block`;
-            
+
             wrap.innerHTML = `
               <summary class="exp-header" style="display:flex; align-items:center; gap:8px; margin:6px 0; cursor:pointer;">
                 <span class="chev" aria-hidden="true">▸</span>
@@ -526,12 +526,12 @@ async function restoreFormDataFromStorage() {
                 </div>
               </div>
             `;
-            
+
             expContainer.appendChild(wrap);
-            
+
             // Envolver inputs de texto con botones de limpiar
             setupClearButtonsForDynamicInputs(wrap);
-            
+
             // Restaurar valores
             Object.entries(blockData).forEach(([key, val]) => {
               const input = wrap.querySelector(`[name="${key}"]`) || wrap.querySelector(`#${key}`);
@@ -539,7 +539,7 @@ async function restoreFormDataFromStorage() {
                 input.value = val;
               }
             });
-            
+
             // Agregar listeners
             wrap.querySelectorAll("input, select").forEach((el) => {
               el.addEventListener("input", (e) => {
@@ -551,9 +551,9 @@ async function restoreFormDataFromStorage() {
                 saveFormDataToStorage();
               });
             });
-            
+
             // Agregar listener al botón de eliminar
-            wrap.querySelector(".remove-exp")?.addEventListener("click", function(e) {
+            wrap.querySelector(".remove-exp")?.addEventListener("click", function (e) {
               e.preventDefault();
               wrap.remove();
               Array.from(expContainer.querySelectorAll(".exp-block")).forEach((b, i) => {
@@ -568,7 +568,7 @@ async function restoreFormDataFromStorage() {
         }
       }, 150);
     }
-    
+
     // Disparar evento change en trabajaActualmente para actualizar validaciones
     setTimeout(() => {
       const trabajaSel = document.getElementById("trabajaActualmente");
@@ -592,14 +592,14 @@ async function savePdfToStorage(pdfBytes, reference) {
       binary += String.fromCharCode(uint8[i]);
     }
     const base64 = btoa(binary);
-    
+
     const record = {
       reference: reference || "default-" + Date.now(),
       base64: base64,
       timestamp: Date.now(),
       size: pdfBytes.byteLength,
     };
-    
+
     // Guardar en IndexedDB
     try {
       const db = await initDb();
@@ -613,14 +613,14 @@ async function savePdfToStorage(pdfBytes, reference) {
     } catch (e) {
       console.warn("IndexedDB no disponible para guardar PDF, usando localStorage:", e);
     }
-    
+
     // También guardar en localStorage como respaldo con base64
     try {
       localStorage.setItem("pdf_" + record.reference, "data:application/pdf;base64," + base64);
     } catch (e) {
       console.warn("No se pudo guardar PDF en localStorage (posible cuota llena):", e);
     }
-    
+
     return record.reference;
   } catch (e) {
     console.warn("Error guardando PDF:", e);
@@ -637,19 +637,19 @@ async function getPdfFromStorage(reference) {
       const tx = db.transaction(PDFS_STORE, "readonly");
       const store = tx.objectStore(PDFS_STORE);
       const req = store.get(reference);
-      
+
       await new Promise((res, rej) => {
         req.onsuccess = res;
         req.onerror = () => rej(req.error);
       });
-      
+
       if (req.result) {
         return req.result;
       }
     } catch (e) {
       console.warn("No se pudo leer PDF de IndexedDB, intentando localStorage:", e);
     }
-    
+
     // Fallback a localStorage
     const stored = localStorage.getItem("pdf_" + reference);
     if (stored) {
@@ -659,7 +659,7 @@ async function getPdfFromStorage(reference) {
         timestamp: Date.now(),
       };
     }
-    
+
     return null;
   } catch (e) {
     console.warn("Error recuperando PDF:", e);
@@ -671,32 +671,32 @@ async function getPdfFromStorage(reference) {
 async function getFormDataForRegeneration() {
   try {
     let formData = null;
-    
+
     try {
       const db = await initDb();
       const tx = db.transaction(FORMS_STORE, "readonly");
       const store = tx.objectStore(FORMS_STORE);
       const req = store.getAll();
-      
+
       await new Promise((res, rej) => {
         req.onsuccess = res;
         req.onerror = () => rej(req.error);
       });
-      
+
       if (req.result && req.result.length > 0) {
         formData = req.result[0].data;
       }
     } catch (e) {
       console.warn("No se pudo leer de IndexedDB:", e);
     }
-    
+
     if (!formData) {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         formData = JSON.parse(saved);
       }
     }
-    
+
     return formData;
   } catch (e) {
     console.warn("Error recuperando datos del formulario:", e);
@@ -731,7 +731,7 @@ async function clearFormData() {
 function clearAllFormData() {
   const confirmed = confirm("¿Estás seguro de que deseas borrar todos los datos del formulario?");
   if (!confirmed) return;
-  
+
   // Limpiar todos los inputs, selects y textareas
   document.querySelectorAll("#formulario input, #formulario select, #formulario textarea").forEach((el) => {
     if (el.type === "checkbox" || el.type === "radio") {
@@ -741,12 +741,12 @@ function clearAllFormData() {
     }
     el.dispatchEvent(new Event("change", { bubbles: true }));
   });
-  
+
   // Borrar todos los bloques dinámicos
   document.querySelectorAll(".edu-block").forEach(block => block.remove());
   document.querySelectorAll(".idioma-block").forEach(block => block.remove());
   document.querySelectorAll(".exp-block").forEach(block => block.remove());
-  
+
   // Limpiar almacenamiento IndexedDB
   if (window.db) {
     try {
@@ -757,17 +757,17 @@ function clearAllFormData() {
       console.warn("No se pudo limpiar IndexedDB:", err);
     }
   }
-  
+
   // Limpiar localStorage
   try {
     localStorage.removeItem("formData");
   } catch (err) {
     console.warn("No se pudo limpiar localStorage:", err);
   }
-  
+
   // Limpiar sessionStorage
   clearFormData();
-  
+
   // Actualizar preview
   updateDesktopPreview();
 }
@@ -775,7 +775,7 @@ function clearAllFormData() {
 function clearSingleInput(inputId) {
   const input = document.getElementById(inputId);
   if (!input) return;
-  
+
   if (input.type === "checkbox" || input.type === "radio") {
     input.checked = false;
   } else {
@@ -805,7 +805,7 @@ function drawWatermark(canvas, text = WATERMARK_TEXT) {
   const fontSize = Math.max(32, Math.round(base / 8));
   ctx.globalAlpha = WATERMARK_ALPHA;
   ctx.fillStyle = "#000";
-  ctx.textAlign = "center"; 
+  ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.translate(w / 2, h / 2);
   ctx.rotate(-Math.PI / 4);
@@ -1062,16 +1062,16 @@ async function buildPdfBytesFromData(v) {
   const metaPdf = document.querySelector('meta[name="pdf-base"]')?.content;
   let pdfUrlCandidates = [];
   if (metaPdf) {
-    try { pdfUrlCandidates.push(new URL(metaPdf, window.location.href).href); } catch {}
+    try { pdfUrlCandidates.push(new URL(metaPdf, window.location.href).href); } catch { }
   }
   // 2) Candidatos comunes por compatibilidad
   try {
     pdfUrlCandidates.push(new URL("./formatounico.pdf", window.location.href).href);
-  } catch {}
+  } catch { }
   try {
     // prefer root PDF (kept for compatibility)
     pdfUrlCandidates.push(new URL("./formatounico.pdf", window.location.href).href);
-  } catch {}
+  } catch { }
   try {
     const scripts = Array.from(document.getElementsByTagName("script"));
     const self = scripts.find((s) => (s.src || "").includes("script.js")) || document.currentScript;
@@ -1079,7 +1079,7 @@ async function buildPdfBytesFromData(v) {
       // allow candidate relative to script location as last resort
       pdfUrlCandidates.push(new URL("formatounico.pdf", self.src).href);
     }
-  } catch {}
+  } catch { }
   // De-duplicar manteniendo orden
   pdfUrlCandidates = Array.from(new Set(pdfUrlCandidates));
   let existingPdfBytes = null;
@@ -1159,7 +1159,7 @@ async function buildPdfBytesFromData(v) {
   // Truncar dirección si es muy larga (máximo 50 caracteres)
   const dirTruncada = s(v.dirCorrespondecia).substring(0, 50);
   page.drawText(dirTruncada, { x: 292, y: 508, size: 9, font, color });
-  
+
   page.drawText(s(v.paisCorrespondecia).substring(0, 30), {
     x: 317,
     y: 490,
@@ -1182,7 +1182,7 @@ async function buildPdfBytesFromData(v) {
     color,
   });
   page.drawText(s(v.telCorrespondecia).substring(0, 20), { x: 344, y: 455, size: 9, font, color });
-  
+
   // Email: truncar si es muy largo
   const emailTruncada = s(v.emailCorrespondecia).substring(0, 35);
   page.drawText(emailTruncada, {
@@ -1573,21 +1573,21 @@ let isRenderingDesktop = false;
 async function renderDesktop(pdfBytes, pageNum = 1) {
   const canvasDesktop = document.getElementById("pdfCanvasDesktop");
   if (!canvasDesktop) return;
-  
+
   // Evitar renders simultáneos en el mismo canvas
   if (isRenderingDesktop) {
     if (window._desktopRenderTask && typeof window._desktopRenderTask.cancel === 'function') {
-      try { window._desktopRenderTask.cancel(); } catch(_){}
+      try { window._desktopRenderTask.cancel(); } catch (_) { }
     }
     return;
   }
-  
+
   isRenderingDesktop = true;
-  
+
   const ctxD = canvasDesktop.getContext("2d");
   // Cancelar render anterior si sigue activo para evitar sobreposición/artefactos
   if (window._desktopRenderTask && typeof window._desktopRenderTask.cancel === 'function') {
-    try { window._desktopRenderTask.cancel(); } catch(_){}
+    try { window._desktopRenderTask.cancel(); } catch (_) { }
   }
   let pdfLibDesk;
   try {
@@ -1620,7 +1620,7 @@ async function renderDesktop(pdfBytes, pageNum = 1) {
       ctxD.resetTransform();
       ctxD.clearRect(0, 0, canvasDesktop.width, canvasDesktop.height);
       ctxD.restore();
-    } catch {}
+    } catch { }
     // Asignar dimensiones reales (escala * puntos) y CSS en puntos lógicos
     canvasDesktop.width = Math.round(scaledViewport.width);
     canvasDesktop.height = Math.round(scaledViewport.height);
@@ -1629,12 +1629,12 @@ async function renderDesktop(pdfBytes, pageNum = 1) {
     // Resetear nuevamente antes de renderizar
     try {
       ctxD.setTransform(1, 0, 0, 1, 0, 0);
-    } catch {}
+    } catch { }
     const task = page1.render({ canvasContext: ctxD, viewport: scaledViewport });
     window._desktopRenderTask = task;
-    
+
     await task.promise;
-    
+
     // Dibujar marca de agua sobre el render
     drawWatermark(canvasDesktop);
   } catch (e) {
@@ -1698,7 +1698,7 @@ if (clearFormBtn) {
 window.addEventListener("load", () => {
   // Restaurar datos guardados en IndexedDB/localStorage
   restoreFormDataFromStorage();
-  
+
   // Asegurar que todos los selects sin valor mostren "Seleccionar..." (opción vacía)
   setTimeout(() => {
     document.querySelectorAll("#formulario select").forEach((select) => {
@@ -1708,21 +1708,21 @@ window.addEventListener("load", () => {
       }
     });
   }, 300);
-  
+
   // Actualizar visibilidad de campos dependientes
   updatePaisVisibility();
   updateFechaGradoVisibility();
   setTimeout(updateDesktopPreview, 800);
   // Bloqueo estricto de menú contextual sobre los canvas de preview
-  (function blockCanvasContextMenu(){
+  (function blockCanvasContextMenu() {
     const desktopCanvas = document.getElementById("pdfCanvasDesktop");
     const mobileCanvas = document.getElementById("pdfCanvas");
     const zoomCanvas = document.getElementById("zoomCanvas");
     const canvases = [desktopCanvas, mobileCanvas, zoomCanvas].filter(Boolean);
     const prevent = (e) => { e.preventDefault(); e.stopPropagation(); return false; };
     canvases.forEach(c => {
-      c.setAttribute("oncontextmenu","return false");
-      c.setAttribute("draggable","false");
+      c.setAttribute("oncontextmenu", "return false");
+      c.setAttribute("draggable", "false");
       c.style.userSelect = "none";
       c.addEventListener("contextmenu", prevent);
       c.addEventListener("mousedown", e => { if (e.button === 2) prevent(e); });
@@ -1741,7 +1741,7 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
   const isMobile = window.matchMedia("(max-width: 768px)").matches;
   try {
     const pdfBytes = await buildPdfBytes();
-    
+
     // En desktop: abrir zoom (mismo que al hacer clic en canvas)
     if (!isMobile) {
       const zoomOverlay = document.getElementById("zoomOverlay");
@@ -1751,7 +1751,7 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
       const pdf = await loadingTask.promise;
       const safePage = Math.min(Math.max(1, _currentPreviewPage), pdf.numPages || 1);
       const zoomPdfPage = await pdf.getPage(safePage);
-      
+
       // Renderizar zoom
       const viewport = zoomPdfPage.getViewport({ scale: 1.5, rotation: 0, dontFlip: false });
       zoomCanvas.width = Math.round(viewport.width);
@@ -1761,17 +1761,17 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
       task.promise.then(() => {
         drawWatermark(zoomCanvas);
       });
-      
+
       zoomOverlay.removeAttribute("hidden");
       zoomOverlay.setAttribute("role", "dialog");
       zoomOverlay.setAttribute("aria-modal", "true");
       document.documentElement.classList.add("lock-scroll");
       const closeZoomBtn = document.getElementById("closeZoomBtn");
       if (closeZoomBtn) closeZoomBtn.focus();
-      
+
       return;
     }
-    
+
     // Móvil: overlay accesible (dialog)
     const overlay = document.getElementById("previewOverlay");
     const closeBtn = document.getElementById("closePreview");
@@ -1786,7 +1786,7 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
     let pdfLib;
     try {
       pdfLib = await ensurePdfJs();
-    } catch {}
+    } catch { }
     try {
       const loadingTask = pdfLib.getDocument({ data: pdfBytes });
       const mobilePdf = await loadingTask.promise;
@@ -1795,7 +1795,7 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
         mobilePdf.numPages || 1
       );
       const page1 = await mobilePdf.getPage(safePage);
-  const viewport = page1.getViewport({ scale: 1, rotation: 0, dontFlip: false });
+      const viewport = page1.getViewport({ scale: 1, rotation: 0, dontFlip: false });
       const maxW = container.clientWidth * window.devicePixelRatio;
       const maxH = container.clientHeight * window.devicePixelRatio;
       const scale = Math.min(
@@ -1803,7 +1803,7 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
         maxH / viewport.height,
         1.6
       );
-  const scaledViewport = page1.getViewport({ scale, rotation: 0, dontFlip: false });
+      const scaledViewport = page1.getViewport({ scale, rotation: 0, dontFlip: false });
       // Resetear posibles transformaciones sobrantes
       try {
         ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -1811,14 +1811,14 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
         ctx.resetTransform();
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.restore();
-      } catch {}
+      } catch { }
       // Resetear nuevamente antes de renderizar
       try {
         ctx.setTransform(1, 0, 0, 1, 0, 0);
-      } catch {}
+      } catch { }
       // Cancelar render móvil anterior
       if (window._mobileRenderTask && typeof window._mobileRenderTask.cancel === 'function') {
-        try { window._mobileRenderTask.cancel(); } catch(_){}
+        try { window._mobileRenderTask.cancel(); } catch (_) { }
       }
       canvas.width = Math.round(scaledViewport.width);
       canvas.height = Math.round(scaledViewport.height);
@@ -1841,7 +1841,7 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
         setTimeout(() => {
           try {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-          } catch {}
+          } catch { }
         }, 300);
         closeBtn.removeEventListener("click", closeHandler);
       };
@@ -1880,8 +1880,8 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
             overlay.removeAttribute("aria-modal");
             overlay.removeAttribute("role");
             document.documentElement.classList.remove("lock-scroll");
-            try { iframe.remove(); } catch (_) {}
-            try { note.remove(); } catch (_) {}
+            try { iframe.remove(); } catch (_) { }
+            try { note.remove(); } catch (_) { }
             closeBtn.removeEventListener("click", closeHandlerFallback);
           };
           closeBtn.addEventListener('click', closeHandlerFallback);
@@ -2306,8 +2306,8 @@ collectFormValues = function () {
     lugarFirma: (
       document.getElementById("lugarFirma")?.value || ""
     ).toUpperCase(),
-  fechaFirma: document.getElementById("fechaFirma")?.value || "",
-  imgFirma: (document.getElementById("imgFirma") && document.getElementById("imgFirma").files && document.getElementById("imgFirma").files[0]) ? document.getElementById("imgFirma").files[0] : "",
+    fechaFirma: document.getElementById("fechaFirma")?.value || "",
+    imgFirma: (document.getElementById("imgFirma") && document.getElementById("imgFirma").files && document.getElementById("imgFirma").files[0]) ? document.getElementById("imgFirma").files[0] : "",
   };
 
   return v;
@@ -2486,8 +2486,8 @@ collectFormValues = function () {
   // helper to show/hide inline error for 'trabajaActualmente'
   // Declared as an IIFE that returns a callable function to avoid polluting global scope
 })();
-(function globalShowEmpleoError(){
-  window.showEmpleoError = function(msg) {
+(function globalShowEmpleoError() {
+  window.showEmpleoError = function (msg) {
     const sel = document.getElementById("trabajaActualmente");
     const err = document.getElementById("trabajaError");
     if (!err) return;
@@ -2554,11 +2554,11 @@ collectFormValues = function () {
     try {
       el.focus({ preventScroll: true });
     } catch (_) {
-      try { el.focus(); } catch (_) {}
+      try { el.focus(); } catch (_) { }
     }
     try {
       el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    } catch (_) {}
+    } catch (_) { }
     el.classList.add('attention');
     setTimeout(() => el.classList.remove('attention'), 900);
   }
@@ -2722,7 +2722,7 @@ collectFormValues = function () {
     document.getElementById("trabajaActualmente")?.value || ""
   ).toUpperCase();
   v.trabajaActualmente = trabaja === "SI";
-  
+
   // Si hay bloques de experiencias dinámicas, usar esos; si no, mantener los estáticos
   const expContainer = document.getElementById("expContainer");
   if (expContainer && expContainer.querySelectorAll(".exp-block").length > 0) {
@@ -2758,13 +2758,13 @@ collectFormValues = function () {
 // -----------------------
 // Navegación del sitio (header/footer)
 // -----------------------
-(function setupSiteNav(){
+(function setupSiteNav() {
   // Soportar tanto el header antiguo (.site-*) como el nuevo unificado (.home-*)
   const candidates = [
     { toggle: '.nav-toggle', nav: '.site-nav' },
     { toggle: '.home-navToggle', nav: '.home-nav' },
   ];
-  candidates.forEach(({toggle: tSel, nav: nSel}) => {
+  candidates.forEach(({ toggle: tSel, nav: nSel }) => {
     const toggle = document.querySelector(tSel);
     const nav = document.querySelector(nSel);
     if (!toggle || !nav) return;
@@ -2776,7 +2776,7 @@ collectFormValues = function () {
     // Cerrar al navegar por tabs
     const closeMenu = () => {
       nav.classList.remove('open');
-      toggle.setAttribute('aria-expanded','false');
+      toggle.setAttribute('aria-expanded', 'false');
     };
     document.querySelectorAll(`${nSel} a[data-tab], .footer-nav a[data-tab], .home-footerNav a[data-tab]`).forEach((a) => {
       a.addEventListener('click', (e) => {
@@ -2814,14 +2814,14 @@ collectFormValues = function () {
     btn.disabled = true;
     try {
       const bytes = await buildPdfBytes();
-      
+
       // Guardar PDF en IndexedDB para que esté disponible después del pago
       const reference = "default-" + Date.now();
       await savePdfToStorage(bytes, reference);
-      
+
       // También guardar datos del formulario para poder regenerar el PDF si es necesario
       await saveFormDataToStorage();
-      
+
       const blob = new Blob([bytes], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -2844,17 +2844,17 @@ collectFormValues = function () {
   document.querySelectorAll("#formulario input[type='text'], #formulario input[type='email'], #formulario input[type='tel'], #formulario input[type='date']").forEach((input) => {
     // Saltar inputs que ya estén envueltos
     if (input.parentElement && input.parentElement.classList.contains("input-wrapper")) return;
-    
+
     // Crear wrapper
     const wrapper = document.createElement("div");
     wrapper.className = "input-wrapper";
-    
+
     // Insertar wrapper antes del input
     input.parentNode.insertBefore(wrapper, input);
-    
+
     // Mover input adentro del wrapper
     wrapper.appendChild(input);
-    
+
     // Crear botón de limpiar
     const clearBtn = document.createElement("button");
     clearBtn.type = "button";
@@ -2866,7 +2866,7 @@ collectFormValues = function () {
       e.stopPropagation();
       clearSingleInput(input.id);
     });
-    
+
     // Agregar botón al wrapper
     wrapper.appendChild(clearBtn);
   });
@@ -2878,17 +2878,17 @@ function setupClearButtonsForDynamicInputs(container) {
   container.querySelectorAll("input[type='text'], input[type='email'], input[type='tel'], input[type='date']").forEach((input) => {
     // Saltar inputs que ya estén envueltos
     if (input.parentElement && input.parentElement.classList.contains("input-wrapper")) return;
-    
+
     // Crear wrapper
     const wrapper = document.createElement("div");
     wrapper.className = "input-wrapper";
-    
+
     // Insertar wrapper antes del input
     input.parentNode.insertBefore(wrapper, input);
-    
+
     // Mover input adentro del wrapper
     wrapper.appendChild(input);
-    
+
     // Crear botón de limpiar
     const clearBtn = document.createElement("button");
     clearBtn.type = "button";
@@ -2904,7 +2904,7 @@ function setupClearButtonsForDynamicInputs(container) {
       debouncedUpdate();
       saveFormDataToStorage();
     });
-    
+
     // Agregar botón al wrapper
     wrapper.appendChild(clearBtn);
   });
@@ -2918,9 +2918,9 @@ if (testDownloadBtn) {
     try {
       testDownloadBtn.disabled = true;
       testDownloadBtn.textContent = "⏳ Generando...";
-      
+
       const pdfBytes = await buildPdfBytes();
-      
+
       // Crear blob y descargar
       const blob = new Blob([pdfBytes], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
@@ -2931,7 +2931,7 @@ if (testDownloadBtn) {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
-      
+
       testDownloadBtn.textContent = "✅ ¡Descargado!";
       setTimeout(() => {
         testDownloadBtn.textContent = "📥 Descargar PDF (Prueba)";
@@ -2948,3 +2948,194 @@ if (testDownloadBtn) {
     }
   });
 }
+
+// --- FUNCIONALIDAD ZOOM ESCRITORIO (Portado de Persona Jurídica) ---
+function openDesktopCanvasPreview() {
+  if (document.getElementById("canvas-preview-overlay")) return;
+  const mainCanvas = document.getElementById("pdfCanvasDesktop");
+  if (!mainCanvas || !mainCanvas.width || !mainCanvas.height) return;
+
+  // crear overlay
+  const overlay = document.createElement("div");
+  overlay.id = "canvas-preview-overlay";
+  overlay.style.position = "fixed";
+  overlay.style.inset = "0";
+  overlay.style.background = "rgba(0,0,0,0.85)";
+  overlay.style.display = "flex";
+  overlay.style.alignItems = "flex-start"; // Alinear arriba para el scroll
+  overlay.style.justifyContent = "center";
+  overlay.style.zIndex = "3000";
+  overlay.style.overflow = "auto"; // Permitir scroll si la imagen crece
+  overlay.style.padding = "40px";
+  overlay.style.cursor = "zoom-in";
+
+  // contenedor interno para centrado flexible
+  const container = document.createElement("div");
+  container.style.margin = "auto";
+  container.style.display = "flex";
+  container.style.flexDirection = "column";
+  container.style.alignItems = "center";
+  container.style.justifyContent = "center";
+  container.style.minHeight = "min-content";
+
+  // crear canvas temporal para copiar la imagen
+  const temp = document.createElement("canvas");
+  const ctx = temp.getContext("2d");
+  const srcW = mainCanvas.width;
+  const srcH = mainCanvas.height;
+
+  temp.width = srcW;
+  temp.height = srcH;
+  temp.style.display = "block";
+  temp.style.boxShadow = "0 12px 40px rgba(0,0,0,0.6)";
+  temp.style.background = "#fff";
+  temp.style.transition = "width 0.1s ease-out, height 0.1s ease-out";
+  temp.style.cursor = "grab";
+
+  // Evitar menú contextual
+  temp.addEventListener("contextmenu", (ev) => ev.preventDefault());
+  ctx.drawImage(mainCanvas, 0, 0);
+
+  // Escala inicial: ajustar a la pantalla
+  const padding = 80;
+  const availableW = window.innerWidth - padding;
+  const availableH = window.innerHeight - padding;
+  let currentScale = Math.min(availableW / srcW, availableH / srcH, 1.0);
+
+  function applyZoom() {
+    temp.style.width = srcW * currentScale + "px";
+    temp.style.height = srcH * currentScale + "px";
+  }
+
+  applyZoom();
+
+  // Manejar Zoom con la rueda del ratón
+  overlay.addEventListener(
+    "wheel",
+    (e) => {
+      e.preventDefault();
+      const zoomStep = 0.1;
+      if (e.deltaY < 0) {
+        currentScale += zoomStep;
+      } else {
+        currentScale -= zoomStep;
+      }
+      // Limites de zoom
+      currentScale = Math.max(0.2, Math.min(4.0, currentScale));
+      applyZoom();
+    },
+    { passive: false }
+  );
+
+  // Cerrar al hacer click en el fondo (overlay)
+  overlay.addEventListener("click", (ev) => {
+    if (ev.target === overlay || ev.target === container) {
+      if (document.body.contains(overlay)) {
+        document.body.removeChild(overlay);
+        document.body.classList.remove("lock-scroll");
+      }
+    }
+  });
+
+  // Soporte para cerrar con ESC
+  const onKey = (ev) => {
+    if (ev.key === "Escape") {
+      if (document.body.contains(overlay)) {
+        document.body.removeChild(overlay);
+        document.body.classList.remove("lock-scroll");
+      }
+      document.removeEventListener("keydown", onKey);
+    }
+  };
+  document.addEventListener("keydown", onKey);
+
+  // Soporte para arrastrar (panning)
+  let isDragging = false;
+  let startX, startY, scrollLeft, scrollTop;
+
+  temp.addEventListener("mousedown", (e) => {
+    isDragging = true;
+    temp.style.cursor = "grabbing";
+    startX = e.pageX - overlay.offsetLeft;
+    startY = e.pageY - overlay.offsetTop;
+    scrollLeft = overlay.scrollLeft;
+    scrollTop = overlay.scrollTop;
+  });
+
+  window.addEventListener("mousemove", (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - overlay.offsetLeft;
+    const y = e.pageY - overlay.offsetTop;
+    const walkX = x - startX;
+    const walkY = y - startY;
+    overlay.scrollLeft = scrollLeft - walkX;
+    overlay.scrollTop = scrollTop - walkY;
+  });
+
+  window.addEventListener("mouseup", () => {
+    isDragging = false;
+    temp.style.cursor = "grab";
+  });
+
+  // Indicador visual de zoom
+  const hint = document.createElement("div");
+  hint.textContent = "Rueda: Zoom | Arrastrar: Mover | ESC: Cerrar";
+  hint.style.color = "#fff";
+  hint.style.marginTop = "15px";
+  hint.style.fontSize = "14px";
+  hint.style.background = "rgba(0,0,0,0.5)";
+  hint.style.padding = "6px 16px";
+  hint.style.borderRadius = "20px";
+  hint.style.pointerEvents = "none";
+
+  container.appendChild(temp);
+  container.appendChild(hint);
+
+  overlay.appendChild(container);
+  document.body.appendChild(overlay);
+  document.body.classList.add("lock-scroll");
+}
+
+// Inicializar listener de click en el canvas desktop
+window.addEventListener("load", () => {
+  // Reintentar adjuntar, por si acaso el elemento se recrea
+  const attachZoom = () => {
+    const canvasDesktop = document.getElementById("pdfCanvasDesktop");
+    if (canvasDesktop && canvasDesktop.parentElement) {
+      if (canvasDesktop.parentElement.getAttribute("data-zoom-attached")) return;
+      canvasDesktop.parentElement.setAttribute("data-zoom-attached", "true");
+
+      canvasDesktop.parentElement.addEventListener("click", (e) => {
+        // Si el click fue en el overlay (el div con texto Zoom) o el canvas
+        if (
+          e.target === canvasDesktop ||
+          e.target.closest(".canvas-overlay") ||
+          e.target.closest(".canvas-zoom-wrapper")
+        ) {
+          openDesktopCanvasPreview();
+        }
+      });
+    }
+  };
+  // Adjuntar inmediatamente
+  attachZoom();
+  // Y reintentar brevemente después por si había render pendiente
+  setTimeout(attachZoom, 1000);
+
+  // --- SAFEGUARD: Limpieza de duplicados y visibilidad ---
+  // Eliminar posibles contenedores duplicados si existen
+  const containers = document.querySelectorAll("#previewDesktopContainer");
+  if (containers.length > 1) {
+    console.warn("Detectados contenedores de vista previa duplicados. Eliminando extras...");
+    for (let i = 1; i < containers.length; i++) {
+      containers[i].remove();
+    }
+  }
+  // Asegurar que el overlay móvil no se muestre en desktop por error
+  const mobileOverlay = document.getElementById("previewOverlay");
+  if (mobileOverlay && window.innerWidth > 768) {
+    mobileOverlay.style.display = 'none';
+    mobileOverlay.hidden = true;
+  }
+});

@@ -794,11 +794,58 @@ button {
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
+
 button:hover {
   background: linear-gradient(135deg, var(--brand-600), #6a3f8e);
   box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
   transform: translateY(-1px);
 }
+
+/* =====================================================
+   EFECTO ZOOM EN CANVAS (DESKTOP)
+   ===================================================== */
+@media (min-width: 769px) {
+  .canvas-zoom-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .canvas-zoom-wrapper:hover canvas {
+    filter: blur(3px) brightness(0.98);
+    transition: filter 0.3s ease;
+  }
+
+  .canvas-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .canvas-zoom-wrapper:hover .canvas-overlay {
+    opacity: 1;
+  }
+
+  .canvas-overlay span {
+    background: rgba(0, 0, 0, 0.75);
+    color: white;
+    padding: 16px 32px;
+    border-radius: 12px;
+    /* var(--radius-lg) replaced with 12px */
+    font-weight: 700;
+    font-size: 16px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15);
+    /* var(--shadow-xl) replaced */
+    letter-spacing: 1px;
+    backdrop-filter: blur(4px);
+  }
+}
+
 
 /* Alineación del botón dentro de la rejilla (ocupa ambas columnas) */
 .form-actions {

@@ -407,10 +407,15 @@
       </form>
 
       <!-- VISTA PREVIA: canvas inline para escritorio -->
-      <div id="previewDesktopContainer" style="width: 100%; position: relative;">
-        <canvas id="pdfCanvasDesktop" aria-label="Vista previa PDF escritorio"
-          style="width: 100%; height: 750px; display: block; background: #fff; border-radius: 10px;"></canvas>
-        <div id="zoomLabel" class="zoom-label">Zoom</div>
+      <div id="previewDesktopContainer" class="canvas-wrapper" style="width: 100%; position: relative;">
+        <div class="canvas-zoom-wrapper">
+          <canvas id="pdfCanvasDesktop" aria-label="Vista previa PDF escritorio"
+            style="width: 100%; height: auto; display: block; background: #fff; border-radius: 10px;"></canvas>
+          <div class="canvas-overlay"><span>Zoom</span></div>
+        </div>
+        <div style="font-size: 13px; color: #333; margin-top: 8px">
+          Vista previa del documento
+        </div>
       </div>
 
       <!-- VISTA PREVIA (overlay para móvil) -->
@@ -423,20 +428,7 @@
         </div>
       </div>
 
-      <!-- VISTA PREVIA CON ZOOM (desktop only) -->
-      <div id="zoomOverlay" class="zoom-overlay" hidden>
-        <div class="zoom-header">
-          <span class="zoom-info">Zoom: <span id="zoomLevel">100</span>%</span>
-          <button id="closeZoom" class="close-btn" aria-label="Cerrar zoom">✕</button>
-        </div>
-        <div id="zoomContainer" class="zoom-container">
-          <canvas id="zoomCanvas" aria-label="Vista previa con zoom"></canvas>
-        </div>
-        <p class="zoom-hint"
-          style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); color: #999; font-size: 12px; text-align: center;">
-          Rueda del ratón para zoom | ESC para cerrar | Clic fuera para cerrar
-        </p>
-      </div>
+
     </div>
     </div>
 
@@ -491,89 +483,9 @@
   <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
 
   <script src="./script.js"></script>
+
+
   <script>
-    // --- VISTA PREVIA CON ZOOM (Desktop only) ---
-    (function setupZoomPreview() {
-      const isMobile = window.matchMedia("(max-width: 768px)").matches;
-      if (isMobile) return; // Solo en desktop
-
-      const canvasDesktop = document.getElementById("pdfCanvasDesktop");
-      const zoomOverlay = document.getElementById("zoomOverlay");
-      const zoomCanvas = document.getElementById("zoomCanvas");
-      const zoomContainer = document.getElementById("zoomContainer");
-      const closeZoomBtn = document.getElementById("closeZoom");
-      const zoomLevelSpan = document.getElementById("zoomLevel");
-      const zoomCtx = zoomCanvas.getContext("2d");
-
-      let currentZoom = 1;
-      let zoomPdfBytes = null;
-      let zoomPdfPage = null;
-
-      // Abrir zoom al hacer clic en el canvas
-      canvasDesktop.addEventListener("click", async () => {
-        try {
-          const pdfBytes = await buildPdfBytes();
-          zoomPdfBytes = pdfBytes;
-          const pdfLib = await ensurePdfJs();
-          const loadingTask = pdfLib.getDocument({ data: pdfBytes });
-          const pdf = await loadingTask.promise;
-          const safePage = Math.min(Math.max(1, _currentPreviewPage), pdf.numPages || 1);
-          zoomPdfPage = await pdf.getPage(safePage);
-          currentZoom = 1;
-          renderZoomCanvas();
-          zoomOverlay.removeAttribute("hidden");
-          zoomOverlay.setAttribute("role", "dialog");
-          zoomOverlay.setAttribute("aria-modal", "true");
-          document.documentElement.classList.add("lock-scroll");
-          closeZoomBtn.focus();
-        } catch (e) {
-          console.error("Error al abrir zoom:", e);
-        }
-      });
-
-      // Renderizar canvas con zoom
-      function renderZoomCanvas() {
-        if (!zoomPdfPage) return;
-        const viewport = zoomPdfPage.getViewport({ scale: 1.5 * currentZoom, rotation: 0, dontFlip: false });
-        zoomCanvas.width = Math.round(viewport.width);
-        zoomCanvas.height = Math.round(viewport.height);
-        const task = zoomPdfPage.render({ canvasContext: zoomCtx, viewport: viewport });
-        task.promise.then(() => {
-          drawWatermark(zoomCanvas);
-        });
-        zoomLevelSpan.textContent = Math.round(currentZoom * 100);
-      }
-
-      // Cerrar zoom
-      const closeZoom = () => {
-        zoomOverlay.setAttribute("hidden", "");
-        zoomOverlay.removeAttribute("role");
-        zoomOverlay.removeAttribute("aria-modal");
-        document.documentElement.classList.remove("lock-scroll");
-        zoomCtx.clearRect(0, 0, zoomCanvas.width, zoomCanvas.height);
-        const firstInput = document.getElementById("apellido1");
-        if (firstInput) firstInput.focus();
-      };
-
-      closeZoomBtn.addEventListener("click", closeZoom);
-
-      // Cerrar con ESC
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && !zoomOverlay.hasAttribute("hidden")) {
-          closeZoom();
-        }
-      });
-
-      // Cerrar al hacer clic fuera del canvas
-      zoomOverlay.addEventListener("click", (e) => {
-        // Cierra si haces clic en el overlay oscuro, pero no en el canvas
-        if (e.target === zoomOverlay || e.target === zoomContainer) {
-          closeZoom();
-        }
-      });
-    })();
-
-    // --- INTEGRACIÓN WOMPI CHECKOUT ---
     // --- INTEGRACIÓN WOMPI CHECKOUT ---
     (function setupWompiCheckout() {
       const tab3 = document.getElementById("tab-p3");
