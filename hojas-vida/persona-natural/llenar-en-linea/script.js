@@ -4106,3 +4106,17 @@ window.setupDynamicExpLogic = function (container, btn, isExtra) {
   updateBtnState();
 };
 
+
+// Fix for URL clutter: Prevent default form submission
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("formulario");
+  if (form) {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      // Optional: Trigger preview update if that's a global function
+      if (typeof debouncedUpdate === 'function') {
+        debouncedUpdate();
+      }
+    });
+  }
+});
