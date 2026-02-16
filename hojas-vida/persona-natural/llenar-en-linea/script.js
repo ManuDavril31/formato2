@@ -1584,20 +1584,31 @@ async function buildPdfBytesFromData(v) {
   // PÁGINA 2 (Principal e instancias extra)
   // v.experiencias es Array de Arrays
   if (v.experiencias && v.experiencias.length > 0) {
-    // 1. Dibujar en la P2 original (Main)
+    // 1. Crear páginas extra si existen (COPIAR ANTES DE DIBUJAR EN LA ORIGINAL para evitar duplicidad de datos)
+    const extraPages = [];
+    if (v.experiencias.length > 1) {
+      for (let i = 1; i < v.experiencias.length; i++) {
+        // Copiar la página 2 original (índice 1 en el PDF original "limpio" en este momento)
+        const [newPage] = await pdfDoc.copyPages(pdfDoc, [1]);
+        extraPages.push(newPage);
+      }
+    }
+
+    // 2. Insertar páginas extra en el documento (después de la P2 original)
+    extraPages.forEach((p, i) => {
+      // Original P2 es index 1. La primera extra va en index 2, la segunda en 3...
+      pdfDoc.insertPage(2 + i, p);
+    });
+
+    // 3. Dibujar en la P2 original (Main) - AHORA SÍ es seguro dibujar
     drawExperiencesOnPage(page2, v.experiencias[0], true);
 
-    // 2. Crear e insertar páginas extra si existen
-    for (let i = 1; i < v.experiencias.length; i++) {
-      // Copiar la página 2 original (índice 1 en el PDF original)
-      // copyPages es asíncrono y devuelve array
-      const [newPage] = await pdfDoc.copyPages(pdfDoc, [1]);
-      // Insertar después de la última página 2 procesada
-      // Original P2 es index 1. La primera extra (i=1) va en index 2.
-      pdfDoc.insertPage(1 + i, newPage);
+    // 4. Dibujar en las páginas extra
+    extraPages.forEach((p, i) => {
+      // i=0 corresponde a v.experiencias[1]
+      drawExperiencesOnPage(p, v.experiencias[i + 1], false);
+    });
 
-      drawExperiencesOnPage(newPage, v.experiencias[i], false);
-    }
   } else {
     // Si no hay datos (raro), dejar la P2 original en blanco o dibujar vacío
     // No hacemos nada, queda la P2 original limpia.
