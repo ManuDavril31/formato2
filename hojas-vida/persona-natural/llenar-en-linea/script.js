@@ -3313,34 +3313,70 @@ collectFormValues = function () {
   ).toUpperCase();
   v.trabajaActualmente = trabaja === "SI";
 
-  // Si hay bloques de experiencias dinámicas, usar esos; si no, mantener los estáticos
-  const expContainer = document.getElementById("expContainer");
-  if (expContainer && expContainer.querySelectorAll(".exp-block").length > 0) {
+  // Nueva lógica basada en _page2State (soporte multipágina)
+  if (window._page2State && Array.isArray(window._page2State) && window._page2State.length > 0) {
     v.experiencias = [];
-    expContainer.querySelectorAll(".exp-block").forEach((block) => {
-      v.experiencias.push({
-        empresa: (block.querySelector(".empresa")?.value || "").toUpperCase(),
-        tipoEmpresa: (
-          block.querySelector(".tipoEmpresa")?.value || ""
-        ).toUpperCase(),
-        pais: (block.querySelector(".pais")?.value || "").toUpperCase(),
-        depto: (block.querySelector(".depto")?.value || "").toUpperCase(),
-        municipio: (
-          block.querySelector(".municipio")?.value || ""
-        ).toUpperCase(),
-        correo: (block.querySelector(".correo")?.value || "").toLowerCase(),
-        telefono: (block.querySelector(".telefono")?.value || "").toUpperCase(),
-        fechaIngreso: block.querySelector(".fechaIngreso")?.value || "",
-        fechaRetiro: block.querySelector(".fechaRetiro")?.value || "",
-        cargo: (block.querySelector(".cargo")?.value || "").toUpperCase(),
-        dependencia: (
-          block.querySelector(".dependencia")?.value || ""
-        ).toUpperCase(),
-        direccion: (
-          block.querySelector(".direccion")?.value || ""
-        ).toUpperCase(),
+    window._page2State.forEach((pageState, idx) => {
+      const container = document.getElementById(pageState.containerId);
+      if (!container) {
+        // Si no hay contenedor (raro), pushear array vacío para mantener índice
+        v.experiencias.push([]);
+        return;
+      }
+
+      const pageExps = [];
+      container.querySelectorAll(".exp-block").forEach((block) => {
+        pageExps.push({
+          empresa: (block.querySelector(".empresa")?.value || "").toUpperCase(),
+          tipoEmpresa: (block.querySelector(".tipoEmpresa")?.value || "").toUpperCase(),
+          pais: (block.querySelector(".pais")?.value || "").toUpperCase(),
+          depto: (block.querySelector(".depto")?.value || "").toUpperCase(),
+          municipio: (block.querySelector(".municipio")?.value || "").toUpperCase(),
+          correo: (block.querySelector(".correo")?.value || "").toLowerCase(),
+          telefono: (block.querySelector(".telefono")?.value || "").toUpperCase(),
+          fechaIngreso: block.querySelector(".fechaIngreso")?.value || "",
+          fechaRetiro: block.querySelector(".fechaRetiro")?.value || "",
+          cargo: (block.querySelector(".cargo")?.value || "").toUpperCase(),
+          dependencia: (block.querySelector(".dependencia")?.value || "").toUpperCase(),
+          direccion: (block.querySelector(".direccion")?.value || "").toUpperCase(),
+        });
       });
+      v.experiencias.push(pageExps);
     });
+  }
+  // Fallback a lógica antigua si no hay state (retrocompatibilidad)
+  else {
+    const expContainer = document.getElementById("expContainer");
+    if (expContainer && expContainer.querySelectorAll(".exp-block").length > 0) {
+      v.experiencias = [];
+      const flatExps = [];
+      expContainer.querySelectorAll(".exp-block").forEach((block) => {
+        flatExps.push({
+          empresa: (block.querySelector(".empresa")?.value || "").toUpperCase(),
+          tipoEmpresa: (
+            block.querySelector(".tipoEmpresa")?.value || ""
+          ).toUpperCase(),
+          pais: (block.querySelector(".pais")?.value || "").toUpperCase(),
+          depto: (block.querySelector(".depto")?.value || "").toUpperCase(),
+          municipio: (
+            block.querySelector(".municipio")?.value || ""
+          ).toUpperCase(),
+          correo: (block.querySelector(".correo")?.value || "").toLowerCase(),
+          telefono: (block.querySelector(".telefono")?.value || "").toUpperCase(),
+          fechaIngreso: block.querySelector(".fechaIngreso")?.value || "",
+          fechaRetiro: block.querySelector(".fechaRetiro")?.value || "",
+          cargo: (block.querySelector(".cargo")?.value || "").toUpperCase(),
+          dependencia: (
+            block.querySelector(".dependencia")?.value || ""
+          ).toUpperCase(),
+          direccion: (
+            block.querySelector(".direccion")?.value || ""
+          ).toUpperCase(),
+        });
+      });
+      // Envolver en array para que buildPdfBytes lo trate como la página 0
+      v.experiencias.push(flatExps);
+    }
   }
   return v;
 };
