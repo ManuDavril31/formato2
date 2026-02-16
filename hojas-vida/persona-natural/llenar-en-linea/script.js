@@ -41,6 +41,20 @@ let _lastPdfUrl = null;
 // Página activa (1..3) para vista previa y overlay
 let _currentPreviewPage = 1;
 
+// --- ESTADO CENTRALIZADO DE PÁGINAS 2 ---
+// Almacena la configuración de cada instancia de Página 2 (obligatorio por requerimiento)
+window._page2State = [
+  {
+    id: "main-p2",
+    type: "main",
+    label: "Página 2",
+    containerId: "expContainer",
+    panelId: "panel-p2",
+    tabId: "tab-p2"
+  }
+];
+
+
 // --- OPTIMIZACIÓN: CACHE DE PDF ---
 let basePagesCache = []; // Array de { canvas, width, height }
 let isPdfBaseLoaded = false;
@@ -140,24 +154,40 @@ async function saveFormDataToStorage(formData = null) {
       }
     }
 
-    // Guardar bloques dinámicos de experiencia laboral
-    const expContainer = document.getElementById("expContainer");
-    if (expContainer) {
-      const expBlocks = [];
-      expContainer.querySelectorAll(".exp-block").forEach((block) => {
-        const blockData = {};
-        block.querySelectorAll("input, select").forEach((el) => {
-          const key = el.name || el.id;
-          if (key) {
-            blockData[key] = el.value;
-          }
-        });
-        if (Object.keys(blockData).length > 0) {
-          expBlocks.push(blockData);
+    // Guardar bloques dinámicos de experiencia laboral (Iterando sobre _page2State)
+    if (window._page2State && Array.isArray(window._page2State)) {
+      formData._page2State = window._page2State;
+      formData._page2Data = {}; // Mapa ID -> Array de datos
+
+      window._page2State.forEach((p) => {
+        const container = document.getElementById(p.containerId);
+        if (container) {
+          const blocks = [];
+          container.querySelectorAll(".exp-block").forEach((block) => {
+            const blockData = {
+              empresa: block.querySelector(".empresa")?.value || "",
+              tipoEmpresa: block.querySelector(".tipoEmpresa")?.value || "",
+              pais: block.querySelector(".pais")?.value || "",
+              depto: block.querySelector(".depto")?.value || "",
+              municipio: block.querySelector(".municipio")?.value || "",
+              correo: block.querySelector(".correo")?.value || "",
+              telefono: block.querySelector(".telefono")?.value || "",
+              fechaIngreso: block.querySelector(".fechaIngreso")?.value || "",
+              fechaRetiro: block.querySelector(".fechaRetiro")?.value || "",
+              cargo: block.querySelector(".cargo")?.value || "",
+              dependencia: block.querySelector(".dependencia")?.value || "",
+              direccion: block.querySelector(".direccion")?.value || ""
+            };
+            blocks.push(blockData);
+          });
+          formData._page2Data[p.id] = blocks;
         }
       });
-      if (expBlocks.length > 0) {
-        formData._expBlocks = expBlocks;
+    } else {
+      // Fallback clásico si no hay _page2State (no debería pasar con la nueva inicialización)
+      const expContainer = document.getElementById("expContainer");
+      if (expContainer) {
+        // ... lógica antigua ...
       }
     }
 
@@ -451,8 +481,136 @@ async function restoreFormDataFromStorage() {
       }, 150);
     }
 
-    // Restaurar bloques de experiencia laboral
-    if (formData._expBlocks && Array.isArray(formData._expBlocks) && formData._expBlocks.length > 0) {
+    // Restaurar estructura de páginas dinámicas (Página 2)
+    if (formData._page2State && Array.isArray(formData._page2State)) {
+      // Restaurar estado global
+      window._page2State = formData._page2State;
+
+      // Limpiar contenedores extra existentes y tabs extra
+      const extraPanels = document.getElementById("extraPagePanels");
+      if (extraPanels) extraPanels.innerHTML = "";
+      // Eliminar tabs extra (cualquiera con id tab-p2-ext-*)
+      document.querySelectorAll("button[id^='tab-p2-ext-']").forEach(t => t.remove());
+
+      // Recrear DOM para las páginas extra (índice 1 en adelante)
+      const tablist = document.querySelector(".tablist");
+      const tabP3 = document.getElementById("tab-p3");
+
+      // Helper para recrear inputs dinámicos dentro de un container
+      const restoreExpBlocks = (container, blocksData) => {
+        container.innerHTML = "";
+        blocksData.forEach((data, idx) => {
+          // Crear bloque (misma estructura que setupDynamicExpLogic)
+          const block = document.createElement("div");
+          block.className = "exp-block";
+          block.innerHTML = `
+                  <div class="exp-header" style="display:flex; justify-content:space-between; margin-bottom:5px; background:#f9f9f9; padding:5px;">
+                     <strong>Experiencia ${idx + 1}</strong>
+                     <button type="button" class="remove-exp cancel-btn" style="border:none; background:transparent; color:red; cursor:pointer;">✕</button>
+                  </div>
+                  <div class="form-grid">
+                     <div><label>Empresa:</label><input type="text" class="empresa" value="${data.empresa || ''}"></div>
+                     <div><label>Tipo:</label><select class="tipoEmpresa"><option value="">Seleccionar...</option><option value="PUBLICA" ${data.tipoEmpresa === 'PUBLICA' ? 'selected' : ''}>Pública</option><option value="PRIVADA" ${data.tipoEmpresa === 'PRIVADA' ? 'selected' : ''}>Privada</option></select></div>
+                     <div><label>Cargo:</label><input type="text" class="cargo" value="${data.cargo || ''}"></div>
+                     <div><label>Fecha Ingreso:</label><input type="date" class="fechaIngreso" value="${data.fechaIngreso || ''}"></div>
+                     <div><label>Fecha Retiro:</label><input type="date" class="fechaRetiro" value="${data.fechaRetiro || ''}"></div>
+                     <div><label>País:</label><input type="text" class="pais" value="${data.pais || ''}"></div>
+                     <div><label>Depto:</label><input type="text" class="depto" value="${data.depto || ''}"></div>
+                     <div><label>Municipio:</label><input type="text" class="municipio" value="${data.municipio || ''}"></div>
+                     <div><label>Correo:</label><input type="email" class="correo" value="${data.correo || ''}"></div>
+                     <div><label>Teléfono:</label><input type="text" class="telefono" value="${data.telefono || ''}"></div>
+                     <div><label>Dependencia:</label><input type="text" class="dependencia" value="${data.dependencia || ''}"></div>
+                     <div><label>Dirección:</label><input type="text" class="direccion" value="${data.direccion || ''}"></div>
+                  </div>
+               `;
+          // Listener eliminar
+          block.querySelector(".remove-exp").addEventListener("click", () => {
+            block.remove();
+            // updateLocalBtn... (simplificado: al restaurar asumimos que el usuario puede gestionar después)
+            debouncedUpdate();
+          });
+          // Listeners inputs
+          block.querySelectorAll("input, select").forEach(inp => inp.addEventListener("input", debouncedUpdate));
+          container.appendChild(block);
+        });
+      };
+
+      window._page2State.forEach((page, idx) => {
+        // Si es Main (idx 0), solo restaurar datos
+        if (idx === 0) {
+          const container = document.getElementById(page.containerId);
+          if (container && formData._page2Data && formData._page2Data[page.id]) {
+            restoreExpBlocks(container, formData._page2Data[page.id]);
+          }
+        } else {
+          // Es Extra: Recrear todo
+          const uniqueId = page.id;
+          const panelId = page.panelId;
+          const tabId = page.tabId;
+          const containerId = page.containerId;
+          const numLabel = page.label;
+
+          // CREAR TAB
+          const newTab = document.createElement("button");
+          newTab.id = tabId;
+          newTab.className = "tab";
+          newTab.role = "tab";
+          newTab.setAttribute("aria-selected", "false");
+          newTab.setAttribute("aria-controls", panelId);
+          newTab.innerText = numLabel;
+          if (tablist && tabP3) tablist.insertBefore(newTab, tabP3);
+
+          // CREAR PANEL
+          const newPanel = document.createElement("section");
+          newPanel.id = panelId;
+          newPanel.setAttribute("role", "tabpanel");
+          newPanel.setAttribute("aria-labelledby", tabId);
+          newPanel.hidden = true;
+          newPanel.innerHTML = `
+                <div class="panel-placeholder">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <h2>EXPERIENCIA LABORAL (ADICIONAL)</h2>
+                    <button type="button" class="btn-remove-page" onclick="removeExtraPage2('${uniqueId}')" style="background:#e74c3c; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:12px;">
+                      🗑️ Eliminar Página
+                    </button>
+                  </div>
+                  <details class="section" open>
+                    <summary>Experiencia Laboral (${numLabel})</summary>
+                    <div id="${containerId}" class="exp-container"></div>
+                    <button type="button" id="addExpBtn-${uniqueId}" class="add-exp">➕ Añadir experiencia</button>
+                    <p class="hint" style="font-size: 12px; color: #555; margin-top: 8px">
+                      Esta página permite agregar hasta 4 experiencias laborales adicionales.
+                    </p>
+                  </details>
+                </div>
+               `;
+          if (extraPanels) extraPanels.appendChild(newPanel);
+
+          // Restaurar datos del bloque
+          const container = document.getElementById(containerId);
+          if (container && formData._page2Data && formData._page2Data[uniqueId]) {
+            restoreExpBlocks(container, formData._page2Data[uniqueId]);
+          }
+
+          // Re-bind botón añadir (usando setupDynamicExpLogic si es accesible, o inline)
+          const addBtn = document.getElementById(`addExpBtn-${uniqueId}`);
+          if (addBtn && container) {
+            // Reutilizamos la lógica inline definida en addExtraPage2 (copiada aquí por scope)
+            // O mejor, exponer setupDynamicExpLogic globalmente en el paso anterior
+            if (typeof setupDynamicExpLogic === 'function') {
+              setupDynamicExpLogic(container, addBtn, true);
+            }
+          }
+        }
+      });
+
+      // Reinicializar tabs
+      if (typeof setupTopTabs !== 'undefined') {
+        setupTopTabs.init();
+      }
+    }
+    // Fallback para datos antiguos (si existen bloques _expBlocks pero no _page2State)
+    else if (formData._expBlocks && Array.isArray(formData._expBlocks) && formData._expBlocks.length > 0) {
       setTimeout(() => {
         const expContainer = document.getElementById("expContainer");
         if (expContainer) {
@@ -1350,14 +1508,16 @@ async function buildPdfBytesFromData(v) {
   });
 
   // --- Página 2 y 3: Preparación y dibujo inicial (coordenadas a ajustar) ---
-  // Si el PDF base no trae 3 páginas, creamos páginas en blanco para evitar errores.
+  // const pages = pdfDoc.getPages(); // Ya declarada arriba
   let page2 = pages[1];
   let page3 = pages[2];
+
+  // Asegurar que existan (por si el PDF base está corrupto o incompleto)
   if (!page2) page2 = pdfDoc.addPage();
   if (!page3) page3 = pdfDoc.addPage();
 
-  // PÁGINA 2: Experiencia laboral dinámica (hasta 4 bloques)
-  if (page2) {
+  // Helper para dibujar experiencias en una página dada
+  const drawExperiencesOnPage = (targetPage, expList, isMainPage) => {
     const baseTopY = 552; // línea empresa/entidad de la primera experiencia
     const blockStep = 130; // distancia vertical entre experiencias
     const offsets = { empresa: 0, linea2: -30, fechas: -60, linea4: -90 };
@@ -1369,60 +1529,78 @@ async function buildPdfBytesFromData(v) {
       const dia = String(fecha.getUTCDate()).padStart(2, "0");
       const mes = String(fecha.getUTCMonth() + 1).padStart(2, "0");
       const anio = String(fecha.getUTCFullYear());
-      page2.drawText(dia, { x: xD, y, size: 10, font, color });
-      page2.drawText(mes, { x: xM, y, size: 10, font, color });
-      // Mostrar también el año (antes no se estaba dibujando)
-      page2.drawText(anio, { x: xA, y, size: 10, font, color });
+      targetPage.drawText(dia, { x: xD, y, size: 10, font, color });
+      targetPage.drawText(mes, { x: xM, y, size: 10, font, color });
+      targetPage.drawText(anio, { x: xA, y, size: 10, font, color });
     }
 
-    const startRowOffset = v.trabajaActualmente ? 0 : 1;
-    const list = (v.experiencias || []).slice(
-      0,
-      Math.max(0, 4 - startRowOffset)
-    );
-    list.forEach((e, idx) => {
-      const topY = baseTopY - (idx + startRowOffset) * blockStep;
+    // Para la Main (idx 0), aplica la lógica de "Empleo Actual" que desplaza el inicio
+    // Para las Extras, SIEMPRE empieza arriba (offset 0)
+    let startRowOffset = 0;
+    if (isMainPage) {
+      startRowOffset = v.trabajaActualmente ? 0 : 1;
+    }
+
+    // Dibujar hasta 4 items (la capacidad ya viene paddeada/truncada en getFormData, pero aseguramos)
+    expList.slice(0, 4).forEach((e, idx) => {
+      // Si es MainPage y startRowOffset es 1, el idx 0 se dibuja en la posición visual 1 (y así sucesiv.)
+      // Si NO es Main, startRowOffset es 0, el idx 0 se dibuja en pos 0.
+
+      const visualRowIndex = idx + startRowOffset;
+      if (visualRowIndex >= 4) return; // Safety check
+
+      const topY = baseTopY - visualRowIndex * blockStep;
+
       // Línea 1: Empresa, tipo, país
       // Truncar empresa a 30 caracteres
-      page2.drawText(s(e.empresa).substring(0, 30), { x: 65, y: topY, size: 9, font, color });
+      targetPage.drawText(s(e.empresa).substring(0, 30), { x: 65, y: topY, size: 9, font, color });
       if (e.tipoEmpresa === "PUBLICA")
-        page2.drawText("X", { x: 345, y: topY, size: 10, font, color });
+        targetPage.drawText("X", { x: 345, y: topY, size: 10, font, color });
       else if (e.tipoEmpresa === "PRIVADA")
-        page2.drawText("X", { x: 390, y: topY, size: 10, font, color });
+        targetPage.drawText("X", { x: 390, y: topY, size: 10, font, color });
       // Truncar país a 20 caracteres
-      page2.drawText(s(e.pais).substring(0, 20), { x: 425, y: topY, size: 9, font, color });
+      targetPage.drawText(s(e.pais).substring(0, 20), { x: 425, y: topY, size: 9, font, color });
 
       // Línea 2: Depto, municipio, correo
       const y2 = topY + offsets.linea2;
-      // Truncar depto a 20 caracteres
-      page2.drawText(s(e.depto).substring(0, 20), { x: 65, y: y2, size: 9, font, color });
-      // Truncar municipio a 20 caracteres
-      page2.drawText(s(e.municipio).substring(0, 20), { x: 242, y: y2, size: 9, font, color });
-      // Truncar correo a 25 caracteres
-      page2.drawText(s(e.correo).substring(0, 25), { x: 412, y: y2, size: 6, font, color });
+      targetPage.drawText(s(e.depto).substring(0, 20), { x: 65, y: y2, size: 9, font, color });
+      targetPage.drawText(s(e.municipio).substring(0, 20), { x: 242, y: y2, size: 9, font, color });
+      targetPage.drawText(s(e.correo).substring(0, 25), { x: 412, y: y2, size: 6, font, color });
 
       // Línea 3: Teléfono, fechas ingreso/retiro
       const y3 = topY + offsets.fechas;
-      // Truncar teléfono a 15 caracteres
-      page2.drawText(s(e.telefono).substring(0, 15), { x: 65, y: y3, size: 9, font, color });
+      targetPage.drawText(s(e.telefono).substring(0, 15), { x: 65, y: y3, size: 9, font, color });
       drawFecha(y3, e.fechaIngreso, 263, 312, 362);
       drawFecha(y3, e.fechaRetiro, 430, 479, 529);
 
       // Línea 4: Cargo, dependencia, dirección
       const y4 = topY + offsets.linea4;
-      // Truncar cargo a 25 caracteres
-      page2.drawText(s(e.cargo).substring(0, 25), { x: 65, y: y4, size: 9, font, color });
-      // Truncar dependencia a 20 caracteres
-      page2.drawText(s(e.dependencia).substring(0, 20), {
-        x: 243,
-        y: y4,
-        size: 9,
-        font,
-        color,
-      });
-      // Truncar dirección a 25 caracteres
-      page2.drawText(s(e.direccion).substring(0, 25), { x: 410, y: y4, size: 9, font, color });
+      targetPage.drawText(s(e.cargo).substring(0, 25), { x: 65, y: y4, size: 9, font, color });
+      targetPage.drawText(s(e.dependencia).substring(0, 20), { x: 243, y: y4, size: 9, font, color });
+      targetPage.drawText(s(e.direccion).substring(0, 25), { x: 410, y: y4, size: 9, font, color });
     });
+  };
+
+  // PÁGINA 2 (Principal e instancias extra)
+  // v.experiencias es Array de Arrays
+  if (v.experiencias && v.experiencias.length > 0) {
+    // 1. Dibujar en la P2 original (Main)
+    drawExperiencesOnPage(page2, v.experiencias[0], true);
+
+    // 2. Crear e insertar páginas extra si existen
+    for (let i = 1; i < v.experiencias.length; i++) {
+      // Copiar la página 2 original (índice 1 en el PDF original)
+      // copyPages es asíncrono y devuelve array
+      const [newPage] = await pdfDoc.copyPages(pdfDoc, [1]);
+      // Insertar después de la última página 2 procesada
+      // Original P2 es index 1. La primera extra (i=1) va en index 2.
+      pdfDoc.insertPage(1 + i, newPage);
+
+      drawExperiencesOnPage(newPage, v.experiencias[i], false);
+    }
+  } else {
+    // Si no hay datos (raro), dejar la P2 original en blanco o dibujar vacío
+    // No hacemos nada, queda la P2 original limpia.
   }
 
   // PÁGINA 3: Campos de firma/no inhabilidad
@@ -1824,10 +2002,29 @@ function drawCanvasOverlay(ctx, formData, pageNum, canvasW, canvasH) {
   } else if (pageNum === 2) {
     const baseTopY = 552;
     const blockStep = 130;
-    const startRowOffset = v.trabajaActualmente ? 0 : 1;
-    const list = (v.experiencias || []).slice(0, Math.max(0, 4 - startRowOffset));
-    list.forEach((e, idx) => {
+
+    // Identificar cuál página 2 estamos dibujando (Main, 2.1, 2.2...)
+    // Default a 0 (Main) si no está definido
+    const pageIdx = (typeof window._activePage2Index !== 'undefined') ? window._activePage2Index : 0;
+
+    // Obtener los datos específicos de esa página
+    // v.experiencias es ahora Array de Arrays
+    let pageData = [];
+    if (v.experiencias && v.experiencias[pageIdx]) {
+      pageData = v.experiencias[pageIdx];
+    }
+
+    // Para la Main (idx 0), aplica la lógica de "Empleo Actual" que desplaza el inicio
+    // Para las Extras (idx > 0), SIEMPRE empieza arriba (offset 0) porque tienen capacidad 4 fija
+    let startRowOffset = 0;
+    if (pageIdx === 0) {
+      startRowOffset = v.trabajaActualmente ? 0 : 1;
+    }
+
+    pageData.forEach((e, idx) => {
+      // Ajustar Y basado en el offset
       const topY = baseTopY - (idx + startRowOffset) * blockStep;
+
       ctx.fillText(s(e.empresa).substring(0, 30), 65 * scale, pageH - (topY * scale));
       if (e.tipoEmpresa === "PUBLICA") ctx.fillText("X", 345 * scale, pageH - (topY * scale));
       else if (e.tipoEmpresa === "PRIVADA") ctx.fillText("X", 390 * scale, pageH - (topY * scale));
@@ -1969,25 +2166,55 @@ function getFormData() {
     });
   }
 
-  // Experiencias dinámicas
+  // Experiencias dinámicas (multipage support)
   v.experiencias = [];
-  const expContainer = document.getElementById("expContainer");
-  if (expContainer) {
-    expContainer.querySelectorAll(".exp-block").forEach((block) => {
-      v.experiencias.push({
-        empresa: block.querySelector(".empresa")?.value || "",
-        tipoEmpresa: block.querySelector(".tipoEmpresa")?.value || "",
-        pais: block.querySelector(".pais")?.value || "",
-        depto: block.querySelector(".depto")?.value || "",
-        municipio: block.querySelector(".municipio")?.value || "",
-        correo: block.querySelector(".correo")?.value || "",
-        telefono: block.querySelector(".telefono")?.value || "",
-        fechaIngreso: block.querySelector(".fechaIngreso")?.value || "",
-        fechaRetiro: block.querySelector(".fechaRetiro")?.value || "",
-        cargo: block.querySelector(".cargo")?.value || "",
-        dependencia: block.querySelector(".dependencia")?.value || "",
-        direccion: block.querySelector(".direccion")?.value || "",
-      });
+
+  if (window._page2State && Array.isArray(window._page2State)) {
+    window._page2State.forEach((pageState) => {
+      const container = document.getElementById(pageState.containerId);
+      const pageExps = [];
+      if (container) {
+        container.querySelectorAll(".exp-block").forEach((block) => {
+          pageExps.push({
+            empresa: (block.querySelector(".empresa")?.value || "").toUpperCase(),
+            tipoEmpresa: (block.querySelector(".tipoEmpresa")?.value || "").toUpperCase(),
+            pais: (block.querySelector(".pais")?.value || "").toUpperCase(),
+            depto: (block.querySelector(".depto")?.value || "").toUpperCase(),
+            municipio: (block.querySelector(".municipio")?.value || "").toUpperCase(),
+            correo: (block.querySelector(".correo")?.value || "").toLowerCase(),
+            telefono: (block.querySelector(".telefono")?.value || "").toUpperCase(),
+            fechaIngreso: block.querySelector(".fechaIngreso")?.value || "",
+            fechaRetiro: block.querySelector(".fechaRetiro")?.value || "",
+            cargo: (block.querySelector(".cargo")?.value || "").toUpperCase(),
+            dependencia: (block.querySelector(".dependencia")?.value || "").toUpperCase(),
+            direccion: (block.querySelector(".direccion")?.value || "").toUpperCase(),
+          });
+        });
+      }
+
+      // Lógica de capacidad y padding por página
+      const isMain = pageState.type === "main";
+      const trabajaCurrently = (document.getElementById("trabajaActualmente")?.value || "").toUpperCase();
+      // Capacidad: 3 si es Main y NO trabaja actualmente (se salta renglón 1), sino 4.
+      // Páginas extra siempre 4.
+      let capacity = 4;
+      if (isMain && trabajaCurrently === "NO") {
+        capacity = 3;
+      }
+
+      // Truncar si excede capacidad visual
+      const validExps = pageExps.slice(0, capacity);
+
+      // Rellenar con objetos vacíos para mantener estructura uniforme
+      while (validExps.length < capacity) {
+        validExps.push({
+          empresa: "", tipoEmpresa: "", pais: "", depto: "", municipio: "",
+          correo: "", telefono: "", fechaIngreso: "", fechaRetiro: "",
+          cargo: "", dependencia: "", direccion: ""
+        });
+      }
+
+      v.experiencias.push(validExps);
     });
   }
 
@@ -3532,3 +3759,350 @@ window.addEventListener("load", () => {
     mobileOverlay.hidden = true;
   }
 });
+
+// ==========================================
+// SISTEMA DE PÁGINAS DINÁMICAS (PÁGINA 2.X)
+// ==========================================
+
+const setupTopTabs = {
+  tabs: [],
+  panels: [],
+
+  init: function () {
+    // Recolectar tabs y paneles basados en el estado actual
+    this.tabs = [
+      document.getElementById("tab-p1"),
+      document.getElementById("tab-p2")
+    ];
+    this.panels = [
+      document.getElementById("panel-p1"),
+      document.getElementById("panel-p2")
+    ];
+
+    // Agregar tabs/paneles dinámicos de _page2State (saltando el primero que es main-p2)
+    if (window._page2State && window._page2State.length > 1) {
+      const dynamicPages = window._page2State.slice(1);
+      dynamicPages.forEach(page => {
+        const tab = document.getElementById(page.tabId);
+        const panel = document.getElementById(page.panelId);
+        if (tab && panel) {
+          this.tabs.push(tab);
+          this.panels.push(panel);
+        }
+      });
+    }
+
+    // Agregar P3 al final
+    this.tabs.push(document.getElementById("tab-p3"));
+    this.panels.push(document.getElementById("panel-p3"));
+
+    // Limpiar listeners antiguos y asignar nuevos
+    this.tabs.forEach((t, i) => {
+      if (!t) return;
+      // Clonar para limpiar listeners previos
+      const newTab = t.cloneNode(true);
+      t.replaceWith(newTab);
+      this.tabs[i] = newTab;
+
+      newTab.addEventListener("click", (e) => {
+        e.preventDefault();
+        setupTopTabs.activate(i);
+      });
+    });
+  },
+
+  activate: function (index) {
+    // 1. Gestionar clases active/hidden
+    this.tabs.forEach((t, i) => {
+      if (!t) return;
+      const selected = i === index;
+      t.classList.toggle("active", selected);
+      t.setAttribute("aria-selected", selected);
+      if (this.panels[i]) this.panels[i].hidden = !selected;
+    });
+
+    // 2. Determinar qué página mostrar en el PDF/Canvas
+    const activeTabId = this.tabs[index].id;
+    let pdfPage = 1;
+    let page2Idx = 0; // Índice dentro de _page2State
+
+    if (activeTabId === "tab-p1") {
+      pdfPage = 1;
+    } else if (activeTabId === "tab-p3") {
+      pdfPage = 3;
+    } else {
+      // Es alguna variante de Página 2
+      pdfPage = 2;
+      // Buscar índice en _page2State
+      const stateIdx = window._page2State.findIndex(p => p.tabId === activeTabId);
+      page2Idx = stateIdx >= 0 ? stateIdx : 0;
+    }
+
+    // 3. Actualizar vista previa
+    // NOTA: goToPreviewPage debe ser actualizada para aceptar page2Idx si queremos preview específico
+    // Por ahora, forzamos la actualización global
+    _currentPreviewPage = pdfPage;
+    // Guardamos el índice de P2 activo globalmente para que drawCanvasOverlay lo use
+    window._activePage2Index = page2Idx;
+
+    updateDesktopPreview();
+
+    // 4. Scroll al inicio
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // 5. Gestionar visibilidad botón descarga (solo en P3)
+    const dlBtn = document.getElementById("downloadPdfBtn");
+    if (dlBtn) dlBtn.style.display = (pdfPage === 3) ? "inline-block" : "none";
+  }
+};
+
+// Función para agregar una nueva hoja Página 2
+function addExtraPage2() {
+  const count = window._page2State.length + 1; // Próximo número (visual)
+  const uniqueId = Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+  const panelId = `panel-p2-ext-${uniqueId}`;
+  const tabId = `tab-p2-ext-${uniqueId}`;
+  const containerId = `expContainer-ext-${uniqueId}`;
+  const numLabel = `2.${window._page2State.length}`; // 2.1, 2.2 ...
+
+  // 1. Crear nuevo estado
+  const newPage = {
+    id: uniqueId,
+    type: "extra",
+    label: `Página ${numLabel}`,
+    containerId: containerId,
+    panelId: panelId,
+    tabId: tabId
+  };
+  window._page2State.push(newPage);
+
+  // 2. Crear Tab en el DOM (insertar antes de P3)
+  const tablist = document.querySelector(".tablist");
+  const tabP3 = document.getElementById("tab-p3");
+
+  const newTab = document.createElement("button");
+  newTab.id = tabId;
+  newTab.className = "tab";
+  newTab.role = "tab";
+  newTab.setAttribute("aria-selected", "false");
+  newTab.setAttribute("aria-controls", panelId);
+  newTab.innerText = `Página ${numLabel}`;
+
+  tablist.insertBefore(newTab, tabP3);
+
+  // 3. Crear Panel en el DOM
+  const extrasContainer = document.getElementById("extraPagePanels");
+  const newPanel = document.createElement("section");
+  newPanel.id = panelId;
+  newPanel.setAttribute("role", "tabpanel");
+  newPanel.setAttribute("aria-labelledby", tabId);
+  newPanel.hidden = true;
+
+  // Estructura interna
+  newPanel.innerHTML = `
+    <div class="panel-placeholder">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <h2>EXPERIENCIA LABORAL (ADICIONAL)</h2>
+        <button type="button" class="btn-remove-page" onclick="removeExtraPage2('${uniqueId}')" style="background:#e74c3c; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:12px;">
+          🗑️ Eliminar Página
+        </button>
+      </div>
+      <details class="section" open>
+        <summary>Experiencia Laboral (Página ${numLabel})</summary>
+        <div id="${containerId}" class="exp-container"></div>
+        <button type="button" id="addExpBtn-${uniqueId}" class="add-exp">➕ Añadir experiencia</button>
+        <p class="hint" style="font-size: 12px; color: #555; margin-top: 8px">
+          Esta página permite agregar hasta 4 experiencias laborales adicionales.
+        </p>
+      </details>
+    </div>
+  `;
+  extrasContainer.appendChild(newPanel);
+
+  // 4. Inicializar lógica del botón "Añadir experiencia" para este panel
+  const addExpBtn = document.getElementById(`addExpBtn-${uniqueId}`);
+  const expContainer = document.getElementById(containerId);
+
+  if (addExpBtn && expContainer) {
+    // Definimos función inline para no depender de scope externo complejo
+    const MAX_ITEMS = 4;
+    const updateLocalBtn = () => {
+      addExpBtn.disabled = expContainer.querySelectorAll(".exp-block").length >= MAX_ITEMS;
+    };
+
+    addExpBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const currentCount = expContainer.querySelectorAll(".exp-block").length;
+      if (currentCount >= MAX_ITEMS) return;
+
+      // Crear bloque simplificado
+      const block = document.createElement("div"); // Usar div en vez de details si preferimos o mantener details
+      block.className = "exp-block";
+      // Estructura HTML idéntica a la principal para que CSS aplique
+      block.innerHTML = `
+          <div class="exp-header" style="display:flex; justify-content:space-between; margin-bottom:5px; background:#f9f9f9; padding:5px;">
+             <strong>Experiencia ${currentCount + 1}</strong>
+             <button type="button" class="remove-exp cancel-btn" style="border:none; background:transparent; color:red; cursor:pointer;">✕</button>
+          </div>
+          <div class="form-grid">
+             <div><label>Empresa:</label><input type="text" class="empresa"></div>
+             <div><label>Tipo:</label><select class="tipoEmpresa"><option value="">Seleccionar...</option><option value="PUBLICA">Pública</option><option value="PRIVADA">Privada</option></select></div>
+             <div><label>Cargo:</label><input type="text" class="cargo"></div>
+             <div><label>Fecha Ingreso:</label><input type="date" class="fechaIngreso"></div>
+             <div><label>Fecha Retiro:</label><input type="date" class="fechaRetiro"></div>
+             <div><label>País:</label><input type="text" class="pais"></div>
+             <div><label>Depto:</label><input type="text" class="depto"></div>
+             <div><label>Municipio:</label><input type="text" class="municipio"></div>
+             <div><label>Correo:</label><input type="email" class="correo"></div>
+             <div><label>Teléfono:</label><input type="text" class="telefono"></div>
+             <div><label>Dependencia:</label><input type="text" class="dependencia"></div>
+             <div><label>Dirección:</label><input type="text" class="direccion"></div>
+          </div>
+        `;
+
+      // Listener eliminar
+      block.querySelector(".remove-exp").addEventListener("click", () => {
+        block.remove();
+        updateLocalBtn();
+        // Reindexar visualmente
+        expContainer.querySelectorAll(".exp-block").forEach((b, i) => {
+          b.querySelector("strong").textContent = `Experiencia ${i + 1}`;
+        });
+        debouncedUpdate();
+      });
+
+      // Listeners updates
+      block.querySelectorAll("input, select").forEach(inp => {
+        inp.addEventListener("input", debouncedUpdate);
+      });
+
+      expContainer.appendChild(block);
+      updateLocalBtn();
+      debouncedUpdate();
+    });
+  }
+
+  // 5. Reinicializar tabs y activar la nueva
+  setupTopTabs.init();
+  // El índice de la nueva tab es justo antes de P3. 
+  // setupTopTabs.tabs tiene [P1, P2(main), P2.1, ... P3]
+  // Queremos activar la penúltimo (Length - 2)
+  const newIndex = setupTopTabs.tabs.length - 2;
+  setupTopTabs.activate(newIndex);
+}
+
+// Función para eliminar una hoja extra (debe ser global para el onclick)
+window.removeExtraPage2 = function (uniqueId) {
+  if (!confirm("¿Seguro que deseas eliminar esta página y todo su contenido?")) return;
+
+  // 1. Eliminar del DOM
+  const pageState = window._page2State.find(p => p.id === uniqueId);
+  if (pageState) {
+    const tab = document.getElementById(pageState.tabId);
+    const panel = document.getElementById(pageState.panelId);
+    if (tab) tab.remove();
+    if (panel) panel.remove();
+  }
+
+  // 2. Eliminar del estado
+  window._page2State = window._page2State.filter(p => p.id !== uniqueId);
+
+  // 3. Renombrar pestañas restantes
+  // (Opcional, pero para mantener orden visual 2.1, 2.2 si se borró la 2.1)
+  let extraCount = 1;
+  window._page2State.forEach((p, idx) => {
+    if (idx === 0) return; // Skip main
+    const newNum = `2.${extraCount++}`;
+    const tab = document.getElementById(p.tabId);
+    const panel = document.getElementById(p.panelId);
+
+    if (tab) tab.innerText = `Página ${newNum}`;
+    if (panel) {
+      const summary = panel.querySelector("summary");
+      if (summary) summary.innerText = `Experiencia Laboral (Página ${newNum})`;
+    }
+    p.label = `Página ${newNum}`;
+  });
+
+  // 4. Reinicializar tabs y volver a P2 principal
+  setupTopTabs.init();
+  setupTopTabs.activate(1); // Ir a main P2
+  debouncedUpdate();
+};
+
+// Inicializar al carga
+window.addEventListener("load", () => {
+  setupTopTabs.init();
+
+  // Bind botón agregar (asegurar que exista)
+  const addPageBtn = document.getElementById("addExtraPageBtn");
+  if (addPageBtn) {
+    addPageBtn.onclick = (e) => {
+      e.preventDefault();
+      addExtraPage2();
+    };
+  }
+});
+
+// Helper global para inicializar lógica de experiencias dinámicas
+window.setupDynamicExpLogic = function (container, btn, isExtra) {
+  const MAX_ITEMS = 4;
+  const updateBtnState = () => {
+    const count = container.querySelectorAll(".exp-block").length;
+    btn.disabled = count >= MAX_ITEMS;
+  };
+
+  btn.onclick = (e) => {
+    e.preventDefault();
+    const count = container.querySelectorAll(".exp-block").length;
+    if (count >= MAX_ITEMS) return;
+
+    const idx = count;
+
+    const block = document.createElement("div");
+    block.className = "exp-block";
+    block.innerHTML = `
+          <div class="exp-header" style="display:flex; justify-content:space-between; margin-bottom:5px; background:#f9f9f9; padding:5px;">
+             <strong>Experiencia ${idx + 1}</strong>
+             <button type="button" class="remove-exp cancel-btn" style="border:none; background:transparent; color:red; cursor:pointer;">✕</button>
+          </div>
+          <div class="form-grid">
+             <div><label>Empresa:</label><input type="text" class="empresa"></div>
+             <div><label>Tipo:</label><select class="tipoEmpresa"><option value="">Seleccionar...</option><option value="PUBLICA">Pública</option><option value="PRIVADA">Privada</option></select></div>
+             <div><label>Cargo:</label><input type="text" class="cargo"></div>
+             <div><label>Fecha Ingreso:</label><input type="date" class="fechaIngreso"></div>
+             <div><label>Fecha Retiro:</label><input type="date" class="fechaRetiro"></div>
+             <div><label>País:</label><input type="text" class="pais"></div>
+             <div><label>Depto:</label><input type="text" class="depto"></div>
+             <div><label>Municipio:</label><input type="text" class="municipio"></div>
+             <div><label>Correo:</label><input type="email" class="correo"></div>
+             <div><label>Teléfono:</label><input type="text" class="telefono"></div>
+             <div><label>Dependencia:</label><input type="text" class="dependencia"></div>
+             <div><label>Dirección:</label><input type="text" class="direccion"></div>
+          </div>
+        `;
+
+    block.querySelector(".remove-exp").addEventListener("click", () => {
+      block.remove();
+      updateBtnState();
+      // Reindexar visualmente
+      container.querySelectorAll(".exp-block").forEach((b, i) => {
+        b.querySelector("strong").textContent = `Experiencia ${i + 1}`;
+      });
+      debouncedUpdate();
+    });
+
+    // Listeners updates
+    block.querySelectorAll("input, select").forEach(inp => {
+      inp.addEventListener("input", debouncedUpdate);
+    });
+
+    container.appendChild(block);
+    updateBtnState();
+    debouncedUpdate();
+  };
+
+  // Inicializar estado del botón
+  updateBtnState();
+};
+
