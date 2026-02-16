@@ -3155,6 +3155,36 @@ collectFormValues = function () {
 })();
 
 // -----------------------
+// Botón "Ver PDF en nueva pestaña"
+// -----------------------
+(function setupOpenPdfTab() {
+  const btn = document.getElementById("btn-open-pdf-tab");
+  if (!btn) return;
+  btn.addEventListener("click", async () => {
+    try {
+      btn.disabled = true;
+      btn.textContent = "Generando...";
+      const bytes = await buildPdfBytes();
+      const blob = new Blob([bytes], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+      window.open(url, "_blank");
+
+      // Restaurar botón
+      btn.textContent = "Ver PDF en nueva pestaña";
+      btn.disabled = false;
+
+      // Revocar URL después de un tiempo prudente
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+    } catch (e) {
+      console.error("Error abriendo PDF:", e);
+      alert("Error generando el PDF. Revisa la consola.");
+      btn.textContent = "Ver PDF en nueva pestaña";
+      btn.disabled = false;
+    }
+  });
+})();
+
+// -----------------------
 // Botón Descargar PDF (Página 3)
 // -----------------------
 (function setupDownloadPdf() {
