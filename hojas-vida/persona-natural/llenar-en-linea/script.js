@@ -1535,8 +1535,8 @@ async function buildPdfBytesFromData(v) {
     }
 
     // Para la Main (idx 0), aplica la lógica de "Empleo Actual" que desplaza el inicio
-    // Para las Extras, SIEMPRE empieza arriba (offset 0)
-    let startRowOffset = 0;
+    // Para las Extras, SIEMPRE empieza en el segundo bloque (offset 1) según requerimiento
+    let startRowOffset = 1;
     if (isMainPage) {
       startRowOffset = v.trabajaActualmente ? 0 : 1;
     }
@@ -3959,7 +3959,7 @@ function addExtraPage2() {
         <div id="${containerId}" class="exp-container"></div>
         <button type="button" id="addExpBtn-${uniqueId}" class="add-exp">➕ Añadir experiencia</button>
         <p class="hint" style="font-size: 12px; color: #555; margin-top: 8px">
-          Esta página permite agregar hasta 4 experiencias laborales adicionales.
+          Esta página permite agregar hasta 3 experiencias laborales adicionales.
         </p>
       </details>
     </div>
@@ -3972,7 +3972,7 @@ function addExtraPage2() {
 
   if (addExpBtn && expContainer) {
     // Definimos función inline para no depender de scope externo complejo
-    const MAX_ITEMS = 4;
+    const MAX_ITEMS = 3;
     const updateLocalBtn = () => {
       addExpBtn.disabled = expContainer.querySelectorAll(".exp-block").length >= MAX_ITEMS;
     };
@@ -4093,7 +4093,7 @@ window.addEventListener("load", () => {
 
 // Helper global para inicializar lógica de experiencias dinámicas
 window.setupDynamicExpLogic = function (container, btn, isExtra) {
-  const MAX_ITEMS = 4;
+  const MAX_ITEMS = isExtra ? 3 : 4;
   const updateBtnState = () => {
     const count = container.querySelectorAll(".exp-block").length;
     btn.disabled = count >= MAX_ITEMS;
